@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>404 – Lost Bones</title>
+  <style>
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -2;
+      object-fit: cover;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: #00d5ff url('/bg.mp4') center center / cover no-repeat fixed;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
+      color: #00a5c2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .astronaut {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-size: 25%;
+      animation: bounce 6s ease-in-out infinite;
+      z-index: 0;
+      background-color: transparent;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+      100% { transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin: 1rem 0 0.5rem 0;
+      color: #007eb0;
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+    }
+
+    a {
+      color: #1100fd;
+      text-decoration: underline;
+    }
+
+    .content {
+      position: top;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop id="starfield">
+    <source src="/bg.mp4" type="video/mp4">
+  </video>
+  <div class="astronaut" style="background: url('/skeleton-floating.png') no-repeat center; background-size: 25%;"></div>
+  <div class="content">
+    <h1>404</h1>
+    <p>A spoopy skeleton got lost in the void…</p>
+    <p><a href="/">Return to safety</a></p>
+  </div>
+</body>
+</html> 

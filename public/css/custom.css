@@ -1,0 +1,515 @@
+/* Terminal Theme for skelli.win */
+
+:root {
+  --terminal-blue: #007acc;
+  --terminal-bright-blue: #39a5ff;
+  --terminal-dim-blue: #00477a;
+  --terminal-black: #000;
+  --terminal-dark: #111;
+  --terminal-gray: #333;
+  --terminal-header: #222;
+  --terminal-text: #c8e1ff;
+  --terminal-cursor: #39a5ff;
+}
+
+@font-face {
+  font-family: 'VT323';
+  src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--terminal-black);
+  color: var(--terminal-text);
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: normal;
+  letter-spacing: 0.3px;
+}
+
+.mainbg {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--terminal-black);
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+}
+
+/* Terminal window styling */
+.terminal-window {
+  background-color: var(--terminal-black);
+  border: 1px solid #444;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.terminal-header {
+  background-color: #2d2d2d;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+}
+
+.terminal-title {
+  color: #aaa;
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.terminal-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+}
+
+.control:nth-child(1) {
+  background-color: #ff5f57;
+}
+
+.control:nth-child(2) {
+  background-color: #febc2e;
+}
+
+.control:nth-child(3) {
+  background-color: #28c840;
+}
+
+.terminal-content {
+  padding: 15px;
+  min-height: 400px;
+}
+
+.container, article, .about-content, .post-card {
+  background-color: var(--terminal-black);
+  border: 1px solid var(--terminal-blue);
+  box-shadow: 0 0 10px var(--terminal-dim-blue);
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Terminal prompt styling */
+.terminal-prompt {
+  color: var(--terminal-bright-blue);
+  margin-bottom: 5px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.terminal-prompt::before {
+  content: "$ ";
+  color: var(--terminal-bright-blue);
+}
+
+/* Cursor blinking effect */
+.content::after, .card-title::after, .welcome-message .animatedText::after {
+  content: "█";
+  animation: blink 1s steps(1) infinite;
+  color: var(--terminal-cursor);
+  font-weight: normal;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--terminal-bright-blue);
+  font-family: 'Courier New', monospace;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+/* Terminal-style links */
+a {
+  color: var(--terminal-bright-blue);
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--terminal-bright-blue);
+  text-decoration: underline;
+  background-color: var(--terminal-gray);
+}
+
+/* Terminal style buttons */
+.btn-outline-light, .btn-primary {
+  background-color: var(--terminal-black);
+  color: var(--terminal-blue);
+  border: 1px solid var(--terminal-blue);
+  padding: 8px 16px;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.btn-outline-light:hover, .btn-primary:hover {
+  background-color: var(--terminal-blue);
+  color: var(--terminal-black);
+}
+
+/* Typewriter effect */
+.animatedText {
+  color: var(--terminal-bright-blue);
+  font-size: 1.4em;
+  min-height: 1.5em;
+  margin-bottom: 20px;
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding: 5px 0;
+}
+
+/* Nav buttons */
+.contentbtn {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Code blocks */
+pre {
+  background-color: var(--terminal-dark);
+  border-left: 3px solid var(--terminal-dim-blue);
+  color: var(--terminal-bright-blue);
+  padding: 15px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  margin: 15px 0;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  color: var(--terminal-bright-blue);
+  background-color: var(--terminal-dark);
+  padding: 2px 4px;
+}
+
+/* Lists with terminal-style bullets */
+ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+ul li::before {
+  content: "> ";
+  color: var(--terminal-bright-blue);
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+ol {
+  padding-left: 20px;
+}
+
+ol li::marker {
+  color: var(--terminal-bright-blue);
+}
+
+/* Terminal scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--terminal-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-blue);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-bright-blue);
+}
+
+/* Blog post cards */
+.post-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.post-card:hover {
+  box-shadow: 0 0 15px var(--terminal-blue);
+}
+
+.post-card .card-title {
+  color: var(--terminal-bright-blue);
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.post-card .card-subtitle {
+  color: var(--terminal-dim-blue);
+  margin-bottom: 10px;
+}
+
+.post-card .card-text {
+  color: var(--terminal-text);
+}
+
+/* Terminal CRT effect */
+.mainbg::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+/* Footer styling */
+footer {
+  color: var(--terminal-blue);
+  text-align: center;
+  margin-top: 30px;
+  padding: 10px;
+  border-top: 1px solid var(--terminal-blue);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Typography adjustments */
+p {
+  margin-bottom: 1em;
+  letter-spacing: 0.3px;
+  word-spacing: 1px;
+}
+
+/* Welcome message */
+.welcome-message {
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--terminal-dim-blue);
+  border-top: 1px dashed var(--terminal-dim-blue);
+}
+
+/* File listing styling */
+.file-listing {
+  margin: 10px 0 20px;
+  font-family: 'Courier New', monospace;
+}
+
+.file-item {
+  margin-bottom: 15px;
+  padding-left: 5px;
+  border-left: 2px solid var(--terminal-dim-blue);
+}
+
+.file-name {
+  font-weight: bold;
+  display: block;
+}
+
+.file-name a {
+  color: var(--terminal-bright-blue);
+  text-decoration: none;
+}
+
+.file-name a:hover {
+  text-decoration: underline;
+}
+
+.file-date {
+  color: var(--terminal-dim-blue);
+  font-size: 0.9em;
+  padding-left: 10px;
+}
+
+.file-summary {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: var(--terminal-text);
+  padding-left: 10px;
+  border-left: 1px dotted var(--terminal-dim-blue);
+  letter-spacing: 0.3px;
+  word-spacing: 1px;
+}
+
+/* Content title */
+.content-title {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--terminal-blue);
+}
+
+.content-title h1 {
+  margin-bottom: 0;
+}
+
+/* Additional readability improvements */
+li {
+  letter-spacing: 0.3px;
+  word-spacing: 1px;
+}
+
+/* Update text colors for better contrast */
+p, .file-summary, .card-text {
+  color: var(--terminal-text);
+}
+
+/* Fix white background issues */
+.container, .terminal-window, article, .about-content, .post-card, .file-item {
+  background-color: var(--terminal-black);
+}
+
+.row, .col-lg-4, .col-md-6, .posts-list, .file-listing, .content-container {
+  background-color: var(--terminal-black);
+}
+
+/* Fix file listing text colors */
+.file-summary {
+  color: var(--terminal-text);
+}
+
+/* Fix post cards */
+.post-card .card-body {
+  background-color: var(--terminal-black);
+  color: var(--terminal-text);
+}
+
+/* Fix content container */
+.content-container {
+  color: var(--terminal-text);
+}
+
+/* Improve contrast for links */
+a {
+  color: var(--terminal-bright-blue);
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+/* Better contrast for terminal title */
+.terminal-title {
+  color: var(--terminal-text);
+}
+
+/* Override Bootstrap backgrounds */
+.container, .container-fluid, .row, [class^="col-"], .card, .card-body {
+  background-color: var(--terminal-black) !important;
+  color: var(--terminal-text) !important;
+}
+
+/* Ensure content is visible */
+body, html, .mainbg, .terminal-window, .terminal-content {
+  background-color: var(--terminal-black) !important;
+}
+
+/* Fix for any Bootstrap spacing that might expose white background */
+.container, .row, .col, [class^="col-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Only add margins back to content containers */
+.terminal-window {
+  margin: 0 auto !important;
+  max-width: 800px !important;
+}
+
+/* Better contrast for muted text */
+.text-muted {
+  color: var(--terminal-dim-blue) !important;
+  opacity: 0.9;
+}
+
+/* Date styling */
+.terminal-date {
+  color: var(--terminal-bright-blue);
+  opacity: 0.8;
+  font-size: 0.9em;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* Improve code highlighting */
+code, pre {
+  color: var(--terminal-bright-blue);
+  background-color: var(--terminal-dark);
+  border: 1px solid var(--terminal-dim-blue);
+  border-radius: 3px;
+}
+
+pre {
+  padding: 15px;
+  overflow-x: auto;
+}
+
+pre code {
+  border: none;
+  padding: 0;
+}
+
+/* Improve link visibility */
+a:not(.btn) {
+  color: var(--terminal-bright-blue);
+  text-decoration: underline;
+  transition: all 0.2s ease;
+  font-weight: bold;
+}
+
+a:not(.btn):hover {
+  color: #ffffff;
+  background-color: var(--terminal-dim-blue);
+}
+
+/* Increase contrast for all text */
+.terminal-content, .content, .file-summary, .card-text, p, li {
+  color: #d8e8ff !important;
+} 

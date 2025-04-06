@@ -1,0 +1,41 @@
+{{ define "main" }}
+    <div class="mainbg">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">{{ .Site.Params.title }} ~ warp</span>
+                <span class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </span>
+            </div>
+            <div class="terminal-content">
+                <p class="terminal-prompt">Last login: {{ now.Format "Mon Jan 2 15:04:05" }} on ttys000</p>
+                <p class="terminal-prompt">skelli@macbook ~ % whoami</p>
+                <p>{{ .Site.Params.profile_title | default "Security researcher" }}</p>
+                
+                <p class="terminal-prompt">skelli@macbook ~ % cat welcome.txt</p>
+                <div class="welcome-message">
+                    <div class="animatedText"></div>
+                </div>
+                
+                <p class="terminal-prompt">skelli@macbook ~ % ls -la links/</p>
+                <div class="contentbtn">
+                    {{ range .Site.Params.links }}
+                        <a href="{{ .url }}" class='btn btn-outline-light' role='button'
+                            {{ if .newTab }}
+                                target="_blank" rel="noopener"
+                            {{ end }}
+                        >{{ .name }}</a>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS for typewriter -->
+    <script>
+        const textArray = {{ .Site.Params.phrases | jsonify | safeJS }};
+    </script>
+    <script src='/js/typewriter.js'></script>
+{{ end }} 

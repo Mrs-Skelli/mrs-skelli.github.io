@@ -1,0 +1,31 @@
+baseURL = "https://skelli.win/"
+languageCode = "en-us"
+title = "Skelli"
+theme = "glim"
+
+[params]
+  title = "Skelli"
+  description = "Cyberpunk nonsense and writeups"
+  # Background image path
+  backgroundImage = "/images/skeleton-bg.jpg"
+  
+  # Add phrases for the typewriter effect
+  phrases = [
+    "Hacker",
+    "Skeleton with Sudo Access",
+    "Chaos Itself",
+    "Anxiety as a Service",
+    "Therapy via Terminal",
+    "Shell Gremlin",
+  ]
+  
+  # Add your navigation links/buttons
+  links = [
+    { name = "About", url = "/about", newTab = false },
+    { name = "Blog Posts", url = "/posts", newTab = false },
+    { name = "Digital Overdose", url = "https://digitaloverdose.tech/", newTab = true },
+    { name = "BlueSky", url = "https://bsky.app/profile/skelli@skelli.win", newTab = true },
+    { name = "Mastodon", url = "https://infosec.exchange/@Mrs_Skelli", newTab = true },
+    { name = "LinkedIn", url = "https://www.linkedin.com/in/💀-eden-stroet-b9b3b2201/?originalSubdomain=nl", newTab = true },
+    { name = "BeReal", url = "https://bere.al/skellitheshrike", newTab = true }
+  ]

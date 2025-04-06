@@ -1,0 +1,49 @@
+
+
+.card {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00ff00;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    border-color: #00ff00;
+}
+
+.card-title {
+    color: #00ff00;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.card-subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    color: #ccc;
+    flex: 1;
+}
+
+.btn-primary {
+    color: #00ff00;
+    background-color: transparent;
+    border: 1px solid #00ff00;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    color: #000;
+    background-color: #00ff00;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}

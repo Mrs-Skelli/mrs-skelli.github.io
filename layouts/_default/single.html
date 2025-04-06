@@ -1,0 +1,37 @@
+{{ define "main" }}
+    <div class="mainbg">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">{{ .Title }} ~ warp</span>
+                <span class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </span>
+            </div>
+            <div class="terminal-content">
+                <p class="terminal-prompt">skelli@macbook ~ % cd {{ .Section }}</p>
+                <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % cat {{ .Title | urlize }}.md</p>
+                
+                <div class="content-title">
+                    <h1>{{ .Title }}</h1>
+                    {{ if .Date }}
+                    <p class="terminal-date">{{ .Date.Format "January 2, 2006" }}</p>
+                    {{ end }}
+                </div>
+                
+                <div class="content">
+                    {{ .Content }}
+                </div>
+                
+                <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % cd ..</p>
+                <p class="terminal-prompt">skelli@macbook ~ % ls</p>
+                
+                <div class="mt-4">
+                    <a href="javascript:history.back()" class="btn btn-outline-light">← Back</a>
+                    <a href="/" class="btn btn-outline-light">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ end }}

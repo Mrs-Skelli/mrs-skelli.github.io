@@ -1,0 +1,23 @@
+{{ define "main" }}
+    <div>
+        <div class='contenthead'>
+            <h1 class='contentheading'>{{ .Title }}</h1>
+        </div>
+        <div class='contenttypewritter'>
+            <div class="posts-list">
+                {{ range .Pages }}
+                <article class="post-preview">
+                    <h2>{{ .Title }}</h2>
+                    {{ if .Date }}
+                    <p class="text-muted">{{ .Date.Format "January 2, 2006" }}</p>
+                    {{ end }}
+                    <div class="post-summary">
+                        {{ .Summary }}
+                    </div>
+                    <a href="{{ .RelPermalink }}" class="btn btn-outline-light">Read More</a>
+                </article>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+{{ end }} 

@@ -1,0 +1,49 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-title">{{ .Title }} ~ warp</span>
+            <span class="terminal-controls">
+                <span class="control"></span>
+                <span class="control"></span>
+                <span class="control"></span>
+            </span>
+        </div>
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd {{ .Section }}</p>
+            <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % ls -la</p>
+            
+            <div class="content-title">
+                <h1>{{ .Title }}</h1>
+            </div>
+            
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+            
+            <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % find . -name "*.md" | sort</p>
+            
+            <div class="file-listing">
+                {{ range .Pages }}
+                <div class="file-item">
+                    <span class="file-name">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </span>
+                    {{ if .Date }}
+                    <span class="file-date">{{ .Date.Format "Jan 02 2006" }}</span>
+                    {{ end }}
+                    <p class="file-summary">{{ .Summary | truncate 100 }}</p>
+                </div>
+                {{ end }}
+            </div>
+            
+            <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % cd ..</p>
+            <p class="terminal-prompt">skelli@macbook ~ % ls</p>
+            
+            <div class="mt-4">
+                <a href="/" class="btn btn-outline-light">← Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Skelli</title><link>https://skelli.win/posts/</link><description>Recent content in Posts on Skelli</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 05 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://skelli.win/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Unauthenticated Arbitrary Shortcode Execution POC - CVE-2024-13346</title><link>https://skelli.win/posts/cve-2024-13346/</link><pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate><guid>https://skelli.win/posts/cve-2024-13346/</guid><description>&lt;h1 id="unauthenticated-arbitrary-shortcode-execution---cve-2024-13346">Unauthenticated Arbitrary Shortcode Execution - CVE-2024-13346&lt;/h1>
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;p>I discovered a vulnerability in a WordPress plugin that allows unauthenticated users to execute arbitrary shortcodes. This can lead to various security issues including XSS, data exposure, and in some configurations, remote code execution.&lt;/p>
+&lt;h2 id="timeline">Timeline&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>March 15, 2024&lt;/strong>: Vulnerability discovered while pentesting a client&amp;rsquo;s website&lt;/li>
+&lt;li>&lt;strong>March 18, 2024&lt;/strong>: Reported to plugin vendor&lt;/li>
+&lt;li>&lt;strong>March 25, 2024&lt;/strong>: Vendor acknowledged the issue&lt;/li>
+&lt;li>&lt;strong>April 2, 2024&lt;/strong>: Patch released in version 2.5.8&lt;/li>
+&lt;li>&lt;strong>April 5, 2024&lt;/strong>: Public disclosure&lt;/li>
+&lt;/ul>
+&lt;h2 id="technical-details">Technical Details&lt;/h2>
+&lt;p>The vulnerability exists in the way the plugin processes user input from a specific endpoint. The code fails to properly validate input before passing it to WordPress&amp;rsquo;s &lt;code>do_shortcode()&lt;/code> function.&lt;/p></description></item><item><title>Writeups, Blogs, Projects</title><link>https://skelli.win/posts/</link><pubDate>Fri, 05 Apr 2024 00:00:00 +0000</pubDate><guid>https://skelli.win/posts/</guid><description>&lt;h2 id="writeups-and-blogs">Writeups and Blogs&lt;/h2>
+&lt;p>&lt;a href="CVE-2024-13346.md">Unauthenticated Arbitrary Shortcode Execution POC - CVE-2024-13346&lt;/a>&lt;br>
+&lt;em>A detailed write-up on discovering and exploiting unauthenticated arbitrary shortcode execution in a WordPress plugin, including timeline, technical details, and mitigation strategies.&lt;/em>&lt;/p>
+&lt;p>&lt;a href="writeup-title-2.md">Setting Up a Red Team Lab Environment&lt;/a>&lt;br>
+&lt;em>A comprehensive guide to building your own isolated lab environment for practicing offensive security techniques, including network design, vulnerable configurations, and defensive measures.&lt;/em>&lt;/p>
+&lt;p>&lt;a href="writeup-title-3.md">Implementing Zero Trust: Beyond the Buzzword&lt;/a>&lt;br>
+&lt;em>Real-world experience implementing Zero Trust architecture in a mid-sized organization, with practical advice on identity management, network segmentation, and overcoming cultural resistance.&lt;/em>&lt;/p></description></item><item><title>Setting Up a Red Team Lab Environment</title><link>https://skelli.win/posts/writeup-title-2/</link><pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate><guid>https://skelli.win/posts/writeup-title-2/</guid><description>&lt;h1 id="setting-up-a-red-team-lab-environment">Setting Up a Red Team Lab Environment&lt;/h1>
+&lt;p>In this guide, I&amp;rsquo;ll walk through how I set up my personal red team lab environment for practicing offensive security techniques in a safe, isolated network. This setup allows me to simulate real-world attacks without risking any actual systems.&lt;/p>
+&lt;h2 id="lab-architecture">Lab Architecture&lt;/h2>
+&lt;p>My lab consists of:&lt;/p>
+&lt;ol>
+&lt;li>1 pfSense firewall VM (to create network isolation)&lt;/li>
+&lt;li>3 Windows Server 2019 VMs (one configured as domain controller)&lt;/li>
+&lt;li>5 Windows 10 workstation VMs&lt;/li>
+&lt;li>2 Linux servers (Ubuntu and CentOS)&lt;/li>
+&lt;li>1 Kali Linux VM for attack operations&lt;/li>
+&lt;/ol>
+&lt;p>The setup uses VMware Workstation as the hypervisor with multiple virtual networks that mimic a corporate environment:&lt;/p></description></item><item><title>Implementing Zero Trust: Beyond the Buzzword</title><link>https://skelli.win/posts/writeup-title-3/</link><pubDate>Sun, 18 Feb 2024 00:00:00 +0000</pubDate><guid>https://skelli.win/posts/writeup-title-3/</guid><description>&lt;h1 id="implementing-zero-trust-beyond-the-buzzword">Implementing Zero Trust: Beyond the Buzzword&lt;/h1>
+&lt;p>Zero Trust has become one of the biggest buzzwords in cybersecurity, but there&amp;rsquo;s substance behind the hype. This article explores my journey implementing Zero Trust principles in a mid-sized organization, with practical lessons learned along the way.&lt;/p>
+&lt;h2 id="moving-beyond-the-perimeter">Moving Beyond the Perimeter&lt;/h2>
+&lt;p>Traditional security models operate on the concept of &amp;ldquo;trust but verify&amp;rdquo; - once you&amp;rsquo;re past the perimeter, you have access to everything. Zero Trust flips this to &amp;ldquo;never trust, always verify,&amp;rdquo; requiring continuous validation regardless of where the connection originates.&lt;/p></description></item></channel></rss>
