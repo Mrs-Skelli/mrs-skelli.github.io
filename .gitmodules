@@ -1,0 +1,3 @@
+[submodule "themes/glim"]
+	path = themes/glim
+	url = https://github.com/mansoorbarri/glim-midnight.git
