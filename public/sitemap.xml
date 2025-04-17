@@ -1,1 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url><loc>https://skelli.win/about/</loc><lastmod>2024-04-05T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/posts/</loc><lastmod>2024-04-05T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/</loc><lastmod>2024-04-05T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/posts/cve-2024-13346/</loc><lastmod>2024-04-05T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/posts/</loc><lastmod>2024-04-05T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/posts/writeup-title-2/</loc><lastmod>2024-03-12T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/posts/writeup-title-3/</loc><lastmod>2024-02-18T00:00:00+00:00</lastmod></url><url><loc>https://skelli.win/categories/</loc></url><url><loc>https://skelli.win/tags/</loc></url></urlset>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://localhost:1313/posts/cve-2024-13346/</loc>
+    <lastmod>2025-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-04-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/writeup-title-2/</loc>
+    <lastmod>2025-04-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/writeup-title-3/</loc>
+    <lastmod>2024-04-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/about/</loc>
+    <lastmod>2024-04-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-04-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+  </url>
+</urlset>

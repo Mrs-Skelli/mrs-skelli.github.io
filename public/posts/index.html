@@ -1,2 +1,81 @@
-<!doctype html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Cyberpunk nonsense and writeups"><link href=https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css rel=stylesheet integrity=sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin=anonymous referrerpolicy=no-referrer><link rel=stylesheet href=/css/custom.css><link rel=icon type=image/x-icon href=/favicon.ico><title>Posts | Skelli
-</title><meta name=theme-color content="#000000"></head><body style=background-color:#000;color:#d8e8ff><div><div class=contenthead><h1 class=contentheading>Posts</h1></div><div class=contenttypewritter><div class=posts-list><article class=post-preview><h2>Unauthenticated Arbitrary Shortcode Execution POC - CVE-2024-13346</h2><p class=text-muted>April 5, 2024</p><div class=post-summary><h1 id=unauthenticated-arbitrary-shortcode-execution---cve-2024-13346>Unauthenticated Arbitrary Shortcode Execution - CVE-2024-13346</h1><h2 id=summary>Summary</h2><p>I discovered a vulnerability in a WordPress plugin that allows unauthenticated users to execute arbitrary shortcodes. This can lead to various security issues including XSS, data exposure, and in some configurations, remote code execution.</p><h2 id=timeline>Timeline</h2><ul><li><strong>March 15, 2024</strong>: Vulnerability discovered while pentesting a client&rsquo;s website</li><li><strong>March 18, 2024</strong>: Reported to plugin vendor</li><li><strong>March 25, 2024</strong>: Vendor acknowledged the issue</li><li><strong>April 2, 2024</strong>: Patch released in version 2.5.8</li><li><strong>April 5, 2024</strong>: Public disclosure</li></ul><h2 id=technical-details>Technical Details</h2><p>The vulnerability exists in the way the plugin processes user input from a specific endpoint. The code fails to properly validate input before passing it to WordPress&rsquo;s <code>do_shortcode()</code> function.</p></div><a href=/posts/cve-2024-13346/ class="btn btn-outline-light">Read More</a></article><article class=post-preview><h2>Writeups, Blogs, Projects</h2><p class=text-muted>April 5, 2024</p><div class=post-summary><h2 id=writeups-and-blogs>Writeups and Blogs</h2><p><a href=CVE-2024-13346.md>Unauthenticated Arbitrary Shortcode Execution POC - CVE-2024-13346</a><br><em>A detailed write-up on discovering and exploiting unauthenticated arbitrary shortcode execution in a WordPress plugin, including timeline, technical details, and mitigation strategies.</em></p><p><a href=writeup-title-2.md>Setting Up a Red Team Lab Environment</a><br><em>A comprehensive guide to building your own isolated lab environment for practicing offensive security techniques, including network design, vulnerable configurations, and defensive measures.</em></p><p><a href=writeup-title-3.md>Implementing Zero Trust: Beyond the Buzzword</a><br><em>Real-world experience implementing Zero Trust architecture in a mid-sized organization, with practical advice on identity management, network segmentation, and overcoming cultural resistance.</em></p></div><a href=/posts/ class="btn btn-outline-light">Read More</a></article><article class=post-preview><h2>Setting Up a Red Team Lab Environment</h2><p class=text-muted>March 12, 2024</p><div class=post-summary><h1 id=setting-up-a-red-team-lab-environment>Setting Up a Red Team Lab Environment</h1><p>In this guide, I&rsquo;ll walk through how I set up my personal red team lab environment for practicing offensive security techniques in a safe, isolated network. This setup allows me to simulate real-world attacks without risking any actual systems.</p><h2 id=lab-architecture>Lab Architecture</h2><p>My lab consists of:</p><ol><li>1 pfSense firewall VM (to create network isolation)</li><li>3 Windows Server 2019 VMs (one configured as domain controller)</li><li>5 Windows 10 workstation VMs</li><li>2 Linux servers (Ubuntu and CentOS)</li><li>1 Kali Linux VM for attack operations</li></ol><p>The setup uses VMware Workstation as the hypervisor with multiple virtual networks that mimic a corporate environment:</p></div><a href=/posts/writeup-title-2/ class="btn btn-outline-light">Read More</a></article><article class=post-preview><h2>Implementing Zero Trust: Beyond the Buzzword</h2><p class=text-muted>February 18, 2024</p><div class=post-summary><h1 id=implementing-zero-trust-beyond-the-buzzword>Implementing Zero Trust: Beyond the Buzzword</h1><p>Zero Trust has become one of the biggest buzzwords in cybersecurity, but there&rsquo;s substance behind the hype. This article explores my journey implementing Zero Trust principles in a mid-sized organization, with practical lessons learned along the way.</p><h2 id=moving-beyond-the-perimeter>Moving Beyond the Perimeter</h2><p>Traditional security models operate on the concept of &ldquo;trust but verify&rdquo; - once you&rsquo;re past the perimeter, you have access to everything. Zero Trust flips this to &ldquo;never trust, always verify,&rdquo; requiring continuous validation regardless of where the connection originates.</p></div><a href=/posts/writeup-title-3/ class="btn btn-outline-light">Read More</a></article></div></div></div><footer class="footer py-3 mt-5"><div class="container text-center"><span class=text-muted>© 2025 Skelli. All rights reserved.</span></div><script src=/js/script.js></script></footer></body></html>
+<!DOCTYPE html>
+<html><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyberpunk nonsense and writeups">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    <link rel="stylesheet" href="/css/custom.css">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <title>
+        
+            Posts | Skelli
+        
+    </title>
+    
+    
+    <meta name="theme-color" content="#000000">
+</head> <body style="background-color: black; color: #d8e8ff;">
+    <div>
+        <div class='contenthead'>
+            <h1 class='contentheading'>Posts</h1>
+        </div>
+        <div class='contenttypewritter'>
+            <div class="posts-list">
+                
+                <article class="post-preview">
+                    <h2>From Shortcodes to Sensitive Data: Exploiting CVE-2024-13346 and Beyond</h2>
+                    
+                    <p class="text-muted">April 17, 2025</p>
+                    
+                    <div class="post-summary">
+                        <h1 id="read-before-continuing">Read Before Continuing!</h1>
+<p>There are two other blog posts relating to this one!</p>
+<p><a href="https://hadrian.io/blog/exploiting-cve-2024-13346-shortcode-abuse-data-leaks-and-xss-in-wordpress">Exploiting CVE-2024-13346: Shortcode Abuse, Data Leaks, and XSS in WordPress - This is the blog post I wrote for Hadrian about this!</a></p>
+<p><strong>Other note:</strong> This blog isn’t linear in time, and these bugs were found over the course of 4 days, and many sleepless nights.</p>
+<h1 id="too-long-didnt-read">Too Long, Didn’t Read:</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Vuln</span> <span style="color:#66d9ef">Chain</span> <span style="color:#66d9ef">Overview</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Unauthenticated</span> <span style="color:#66d9ef">Shortcode</span> <span style="color:#66d9ef">Execution</span><span style="color:#f92672">]</span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">The</span> <span style="color:#66d9ef">Avada</span> theme allowed unauthenticated users to send arbitrary shortcodes to a <span style="color:#66d9ef">REST</span> endpoint<span style="color:#960050;background-color:#1e0010">—</span>no auth required
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Gravity</span> <span style="color:#66d9ef">Forms</span> shortcode exposes hidden <span style="color:#66d9ef">PII</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">These</span> shortcodes loaded internal forms that leaked employee forms <span style="color:#f92672">and</span> privileged information<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>embed shortcode triggers callback via oEmbed fetch<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">The</span> <span style="color:#f92672">[</span>embed<span style="color:#f92672">]</span> shortcode led to a callback via oEmbed fetch<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Unauthenticated</span> wp<span style="color:#f92672">/</span>v2<span style="color:#f92672">/</span>pages <span style="color:#f92672">and</span> wp<span style="color:#f92672">/</span>v2<span style="color:#f92672">/</span>media <span style="color:#66d9ef">REST</span> <span style="color:#66d9ef">API</span> leaks sensitive internal content<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Public</span> <span style="color:#66d9ef">API</span> exposed internal pages, including names, phone numbers, emails, <span style="color:#f92672">and</span> confidential docs
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Chained</span> plugin shortcodes (<span style="color:#66d9ef">WPDM</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">GravityForms</span>) <span style="color:#66d9ef">yield</span> <span style="color:#66d9ef">XSS</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Chained</span> shortcodes with a text<span style="color:#f92672">/</span>html <span style="color:#66d9ef">Content</span><span style="color:#f92672">-</span><span style="color:#66d9ef">Type</span> header led to successful client<span style="color:#f92672">-</span>side <span style="color:#66d9ef">JavaScript</span> execution<span style="color:#f92672">.</span>
+</span></span></code></pre></div><h1 id="the-preface">The Preface</h1>
+<p>On a long flight to India to be with my team, I was thinking about our next pentest target. I can’t publicly disclose their name here, because I actually like my job for the most part, but I can say it&rsquo;s within the transportation industry here in the Netherlands.</p>
+                    </div>
+                    <a href="/posts/cve-2024-13346/" class="btn btn-outline-light">Read More</a>
+                </article>
+                
+            </div>
+        </div>
+    </div>
+<footer class="footer py-3 mt-5">
+    <div class="container text-center">
+        <span class="text-muted">© 2025 Skelli. All rights reserved.</span>
+    </div>
+    
+    
+    <script src='/js/script.js'></script>
+</footer> </body>
+</html> 
