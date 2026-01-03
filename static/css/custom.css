@@ -271,32 +271,6 @@ ol li::marker {
   background: var(--terminal-bright-blue);
 }
 
-/* Blog post cards */
-.post-card {
-  height: 100%;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.post-card:hover {
-  box-shadow: 0 0 15px var(--terminal-blue);
-}
-
-.post-card .card-title {
-  color: var(--terminal-bright-blue);
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.post-card .card-subtitle {
-  color: var(--terminal-dim-blue);
-  margin-bottom: 10px;
-}
-
-.post-card .card-text {
-  color: var(--terminal-text);
-}
-
 /* Terminal CRT effect */
 .mainbg::before {
   content: "";

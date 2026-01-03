@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyberpunk nonsense and writeups">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/posts.css">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <title>
+        
+            SQL Injection in University | Skelli
+        
+    </title>
+    
+    
+    <meta name="theme-color" content="#000000">
+</head> <body style="background-color: black; color: #d8e8ff;">
+    <div class="mainbg">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">SQL Injection in University ~ warp</span>
+                <span class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </span>
+            </div>
+            <div class="terminal-content">
+                <p class="terminal-prompt">skelli@macbook ~ % cd posts</p>
+                <p class="terminal-prompt">skelli@macbook ~/posts % cat sql-injection-in-university.md</p>
+                
+                <div class="content-title">
+                    <h1>SQL Injection in University</h1>
+                    
+                    <p class="terminal-date">November 18, 2025</p>
+                    
+                </div>
+                
+                <div class="content">
+                    <h1 id="too-long-didnt-read">Too Long, Didn&rsquo;t Read:</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">SQL</span> <span style="color:#66d9ef">Injection</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">University</span> <span style="color:#66d9ef">Application</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Unparameterized</span> <span style="color:#66d9ef">Query</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">AJAX</span> <span style="color:#66d9ef">Endpoint</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>A <span style="color:#66d9ef">European</span> university<span style="color:#960050;background-color:#1e0010">&#39;</span>s application accepts user input directly <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">SQL</span> queries without proper sanitization
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Stack</span> <span style="color:#66d9ef">Trace</span> <span style="color:#66d9ef">Information</span> <span style="color:#66d9ef">Disclosure</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SQL</span> syntax errors reveal database structure, file paths, <span style="color:#f92672">and</span> application framework details
+</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Potential</span> <span style="color:#66d9ef">Data</span> <span style="color:#66d9ef">Exfiltration</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Vulnerable</span> parameter allows <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">SQL</span> injection, enabling database enumeration <span style="color:#f92672">and</span> data extraction
+</span></span></code></pre></div><h1 id="the-preface">The Preface</h1>
+<p>Full disclosure, a lot of pieces in this blog post will be redacted. That&rsquo;s the nature of the beast sometimes. However I found a SQL injection vulnerability in a European university&rsquo;s application, which was quite a nice find for me. Injection attacks are slowly declining, and are moving down the leaderboard of OWASP&rsquo;s Top 10 most common attacks. It&rsquo;s becoming increasingly more rare to find SQLi vulnerabilities, but I wanted to document my finding</p>
+<h1 id="the-discovery">The Discovery</h1>
+<p>Burp is a girls best friend. I had thrown my target into Burp and began crawling the website when an interesting endpoint was flagged. I noticed 33 parameters, some of them mentioning columns and order. This was very interesting to me because it immediately indicated that this was a good attack vector for SQLi. Although, I did encounter WAF limiting issues returning a 530 status error, which occurs at the DNS level. Despite that, I had begun looking at testing each parameter one by one and noticed a very interesting AJAX endpoint that handled DataTables requests.</p>
+<p>I wasn&rsquo;t able to retrieve any database information <em>yet</em>, but I was able to receive stack trace errors when a quote was injected within one of the parameters.</p>
+<h2 id="vulnerability-details">Vulnerability Details</h2>
+<ul>
+<li><strong>Vulnerability Type</strong>: SQL Injection</li>
+<li><strong>Affected Software</strong>: CodeIgniter-based application (appears to be version 5.4.7)</li>
+<li><strong>Database</strong>: MariaDB</li>
+<li><strong>Severity</strong>: Critical</li>
+</ul>
+<h1 id="the-exploitation">The Exploitation</h1>
+<h3 id="technical-explanation">Technical Explanation</h3>
+<p>The vulnerability exists in an AJAX endpoint that handles DataTables requests. The application fails to properly sanitize user input before incorporating it into SQL queries. When a single quote (<code>'</code>) is injected into the <code>filter[]</code> parameter, the application generates a SQL syntax error that reveals:</p>
+<ol>
+<li>The database structure and query being executed</li>
+<li>Full file paths on the server</li>
+<li>The application framework (CodeIgniter)</li>
+<li>The database driver being used (mysqli)</li>
+<li>Internal application structure and model/controller names</li>
+</ol>
+<p>The error message shows that user input is being directly concatenated into the SQL query without parameterization or proper escaping.</p>
+<h3 id="method-1-using-a-get-request">Method 1: Using a GET Request</h3>
+<p>Send the following GET request to the vulnerable endpoint:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> /[REDACTED]/[REDACTED]/ajax?filter%5B%5D=1))%20AND--%20 <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>Host<span style="color:#f92672">:</span> <span style="color:#ae81ff">[REDACTED]</span>
+</span></span><span style="display:flex;"><span>User-Agent<span style="color:#f92672">:</span> <span style="color:#ae81ff">[REDACTED]</span>
+</span></span><span style="display:flex;"><span>X-Requested-With<span style="color:#f92672">:</span> <span style="color:#ae81ff">XMLHttpRequest</span>
+</span></span><span style="display:flex;"><span>Referer<span style="color:#f92672">:</span> <span style="color:#ae81ff">https://[REDACTED]/[REDACTED]/[REDACTED]</span>
+</span></span></code></pre></div><h3 id="method-2-using-curl">Method 2: Using cURL</h3>
+<p>Alternatively, you can use the following cURL command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl --path-as-is -i -s -k -X <span style="color:#e6db74">$&#39;GET&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -H <span style="color:#e6db74">$&#39;Host: [REDACTED]&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -H <span style="color:#e6db74">$&#39;X-Requested-With: XMLHttpRequest&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -H <span style="color:#e6db74">$&#39;Referer: https://[REDACTED]/[REDACTED]/[REDACTED]&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    <span style="color:#e6db74">$&#39;https://[REDACTED]/[REDACTED]/[REDACTED]/ajax?filter%5B%5D=1))%20AND--%20&#39;</span>
+</span></span></code></pre></div><p><strong>Note</strong>: The injection payload <code>1))%20AND--%20</code> (URL decoded: <code>1)) AND-- </code>) is injected into the <code>filter[]</code> parameter to trigger the SQL syntax error.</p>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p>Below are additional HTTP request and HTTP response examples that demonstrate the vulnerability:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> /[REDACTED]/[REDACTED]/ajax?filter%5B%5D=3&#39; <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>Host<span style="color:#f92672">:</span> <span style="color:#ae81ff">[REDACTED]</span>
+</span></span><span style="display:flex;"><span>Accept<span style="color:#f92672">:</span> <span style="color:#ae81ff">application/json, text/javascript, */*; q=0.01</span>
+</span></span><span style="display:flex;"><span>Cookie<span style="color:#f92672">:</span> <span style="color:#ae81ff">[REDACTED]</span>
+</span></span><span style="display:flex;"><span>X-Requested-With<span style="color:#f92672">:</span> <span style="color:#ae81ff">XMLHttpRequest</span>
+</span></span></code></pre></div><p><strong>Key injection point</strong>: <code>filter%5B%5D=3'</code> (URL decoded: <code>filter[]=3'</code>)</p>
+<p>Within the response we received both a stack trace and fatal SQL error.</p>
+<p>The stack trace reveals:</p>
+<ul>
+<li>The application is using CodeIgniter framework</li>
+<li>The vulnerable code is in a model file, specifically in a method that handles DataTables list loading</li>
+<li>The controller handling this is in an AJAX endpoint method</li>
+<li>The database query involves published status checks and name-based ordering</li>
+<li>Full server file paths are exposed (though redacted here)</li>
+</ul>
+<h1 id="impact-assessment">Impact Assessment</h1>
+<p>An attacker can exploit this vulnerability to execute arbitrary SQL queries on the server, potentially gaining unauthorized access to sensitive data, modifying/deleting data, or performing other malicious actions.</p>
+<p>Specific impacts include:</p>
+<ul>
+<li><strong>Database Enumeration</strong>: An attacker could enumerate database structure, table names, and column names</li>
+<li><strong>Data Exfiltration</strong>: Sensitive data stored in the database could be extracted, potentially including user information, academic records, or other confidential data</li>
+<li><strong>Information Disclosure</strong>: The stack trace reveals internal application structure, file paths, and framework details that could aid in further attacks</li>
+<li><strong>Data Manipulation</strong>: Depending on database permissions, an attacker could potentially:
+<ul>
+<li>Read arbitrary data from the database</li>
+<li>Modify or delete existing records</li>
+<li>Insert malicious data</li>
+<li>Potentially achieve remote code execution if certain conditions are met</li>
+</ul>
+</li>
+</ul>
+<h1 id="remediation">Remediation</h1>
+<p>Input validation and sanitization should be implemented to prevent SQL injection attacks. It&rsquo;s also important to ensure that [the university&rsquo;s] developers:</p>
+<ul>
+<li><strong>Use Parameterized Queries</strong>: All database queries must use prepared statements to prevent injection. CodeIgniter provides query binding methods that should be used instead of direct string interpolation. Replace all direct string concatenation in SQL queries with parameterized/prepared statements.</li>
+<li><strong>Input Validation</strong>: Restrict input fields to expected values (e.g., numbers for IDs). Implement strict input validation and sanitization for all user-supplied parameters, especially array parameters like <code>filter[]</code></li>
+<li><strong>Error Handling</strong>: Disable detailed error messages in production environments. Stack traces should not be exposed to end users as they reveal sensitive information about the application structure.</li>
+<li><strong>WAF Configuration</strong>: While a WAF is in place, it should be configured to detect and block SQL injection attempts more effectively.</li>
+</ul>
+<h1 id="final-words">Final Words</h1>
+<p>Finding this SQL injection in the wild was a significant milestone for me. It reinforced the importance of thorough testing, even when automated tools hit roadblocks like WAF restrictions. Sometimes the manual approach and paying attention to error messages can reveal vulnerabilities that automated scanners might miss. Doing it the hard way continues to prevail.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special Elements used in an SQL Command (&lsquo;SQL Injection&rsquo;)</a></li>
+<li><a href="https://owasp.org/www-community/attacks/SQL_Injection">OWASP: SQL Injection</a></li>
+<li><a href="https://portswigger.net/web-security/sql-injection">PortSwigger: SQL Injection</a></li>
+</ul>
+
+                </div>
+                
+                <p class="terminal-prompt">skelli@macbook ~/posts % cd ..</p>
+                <p class="terminal-prompt">skelli@macbook ~ % ls</p>
+                
+                <div class="mt-4">
+                    <a href="javascript:history.back()" class="btn btn-outline-light">← Back</a>
+                    <a href="/" class="btn btn-outline-light">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="footer py-3 mt-5">
+    <div class="container text-center">
+        <span class="text-muted">Still Hacking Anyway</span>
+    </div>
+    
+    
+    <script src="/js/script.js"></script>
+</footer> </body>
+</html> 

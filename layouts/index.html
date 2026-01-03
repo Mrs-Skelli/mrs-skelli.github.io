@@ -22,11 +22,10 @@
                 <p class="terminal-prompt">skelli@macbook ~ % ls -la links/</p>
                 <div class="contentbtn">
                     {{ range .Site.Params.links }}
-                        <a href="{{ .url }}" class='btn btn-outline-light' role='button'
-                            {{ if .newTab }}
-                                target="_blank" rel="noopener"
-                            {{ end }}
-                        >{{ .name }}</a>
+                    <a href="{{ .url }}" class="btn btn-outline-light" role="button"
+                        {{ if .newTab }}target="_blank" rel="noopener"{{ end }}>
+                        {{ .name }}
+                    </a>
                     {{ end }}
                 </div>
             </div>
@@ -37,5 +36,5 @@
     <script>
         const textArray = {{ .Site.Params.phrases | jsonify | safeJS }};
     </script>
-    <script src='/js/typewriter.js'></script>
+    <script src="{{ "/js/typewriter.js" | relURL }}"></script>
 {{ end }} 

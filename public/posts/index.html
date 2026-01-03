@@ -14,6 +14,7 @@
     
     
     <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/posts.css">
     
     
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -27,55 +28,60 @@
     
     <meta name="theme-color" content="#000000">
 </head> <body style="background-color: black; color: #d8e8ff;">
-    <div>
-        <div class='contenthead'>
-            <h1 class='contentheading'>Posts</h1>
+<div class="mainbg">
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-title">Posts ~ warp</span>
+            <span class="terminal-controls">
+                <span class="control"></span>
+                <span class="control"></span>
+                <span class="control"></span>
+            </span>
         </div>
-        <div class='contenttypewritter'>
-            <div class="posts-list">
-                
-                <article class="post-preview">
-                    <h2>From Shortcodes to Sensitive Data: Exploiting CVE-2024-13346 and Beyond</h2>
+        <div class="terminal-content">
+            <div class="contenthead">
+                <h1 class="contentheading">Posts</h1>
+            </div>
+            <div class="contenttypewritter">
+                <div class="posts-list">
                     
-                    <p class="text-muted">April 17, 2025</p>
+                    <article class="post-card">
+                        <div class="post-card-content">
+                            <h2 class="card-title">SQL Injection in University</h2>
+                            
+                            <p class="card-subtitle">November 18, 2025</p>
+                            
+                            <div class="card-text">
+                                An SQL Injection Attack found on a European university.
+                            </div>
+                            <a href="/posts/sqli-university/" class="read-more">Read More →</a>
+                        </div>
+                    </article>
                     
-                    <div class="post-summary">
-                        <h1 id="read-before-continuing">Read Before Continuing!</h1>
-<p>There are two other blog posts relating to this one!</p>
-<p><a href="https://hadrian.io/blog/exploiting-cve-2024-13346-shortcode-abuse-data-leaks-and-xss-in-wordpress">Exploiting CVE-2024-13346: Shortcode Abuse, Data Leaks, and XSS in WordPress - This is the blog post I wrote for Hadrian about this!</a></p>
-<p><strong>Other note:</strong> This blog isn’t linear in time, and these bugs were found over the course of 4 days, and many sleepless nights.</p>
-<h1 id="too-long-didnt-read">Too Long, Didn’t Read:</h1>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Vuln</span> <span style="color:#66d9ef">Chain</span> <span style="color:#66d9ef">Overview</span><span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Unauthenticated</span> <span style="color:#66d9ef">Shortcode</span> <span style="color:#66d9ef">Execution</span><span style="color:#f92672">]</span> 
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">The</span> <span style="color:#66d9ef">Avada</span> theme allowed unauthenticated users to send arbitrary shortcodes to a <span style="color:#66d9ef">REST</span> endpoint<span style="color:#960050;background-color:#1e0010">—</span>no auth required
-</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Gravity</span> <span style="color:#66d9ef">Forms</span> shortcode exposes hidden <span style="color:#66d9ef">PII</span><span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">These</span> shortcodes loaded internal forms that leaked employee forms <span style="color:#f92672">and</span> privileged information<span style="color:#f92672">.</span>
-</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>embed shortcode triggers callback via oEmbed fetch<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">The</span> <span style="color:#f92672">[</span>embed<span style="color:#f92672">]</span> shortcode led to a callback via oEmbed fetch<span style="color:#f92672">.</span>
-</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Unauthenticated</span> wp<span style="color:#f92672">/</span>v2<span style="color:#f92672">/</span>pages <span style="color:#f92672">and</span> wp<span style="color:#f92672">/</span>v2<span style="color:#f92672">/</span>media <span style="color:#66d9ef">REST</span> <span style="color:#66d9ef">API</span> leaks sensitive internal content<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Public</span> <span style="color:#66d9ef">API</span> exposed internal pages, including names, phone numbers, emails, <span style="color:#f92672">and</span> confidential docs
-</span></span><span style="display:flex;"><span>                   <span style="color:#960050;background-color:#1e0010">↓</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span><span style="color:#66d9ef">Chained</span> plugin shortcodes (<span style="color:#66d9ef">WPDM</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">GravityForms</span>) <span style="color:#66d9ef">yield</span> <span style="color:#66d9ef">XSS</span><span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Chained</span> shortcodes with a text<span style="color:#f92672">/</span>html <span style="color:#66d9ef">Content</span><span style="color:#f92672">-</span><span style="color:#66d9ef">Type</span> header led to successful client<span style="color:#f92672">-</span>side <span style="color:#66d9ef">JavaScript</span> execution<span style="color:#f92672">.</span>
-</span></span></code></pre></div><h1 id="the-preface">The Preface</h1>
-<p>On a long flight to India to be with my team, I was thinking about our next pentest target. I can’t publicly disclose their name here, because I actually like my job for the most part, but I can say it&rsquo;s within the transportation industry here in the Netherlands.</p>
-                    </div>
-                    <a href="/posts/cve-2024-13346/" class="btn btn-outline-light">Read More</a>
-                </article>
-                
+                    <article class="post-card">
+                        <div class="post-card-content">
+                            <h2 class="card-title">From Shortcodes to Sensitive Data: Exploiting CVE-2024-13346 and Beyond</h2>
+                            
+                            <p class="card-subtitle">April 17, 2025</p>
+                            
+                            <div class="card-text">
+                                Exploiting unauthenticated shortcode execution in WordPress Avada theme to chain vulnerabilities, exposing PII, triggering callbacks, and achieving XSS.
+                            </div>
+                            <a href="/posts/cve-2024-13346/" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+                    
+                </div>
             </div>
         </div>
     </div>
+</div>
 <footer class="footer py-3 mt-5">
     <div class="container text-center">
-        <span class="text-muted">© 2025 Skelli. All rights reserved.</span>
+        <span class="text-muted">Still Hacking Anyway</span>
     </div>
     
     
-    <script src='/js/script.js'></script>
+    <script src="/js/script.js"></script>
 </footer> </body>
 </html> 

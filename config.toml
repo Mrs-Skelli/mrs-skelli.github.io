@@ -24,8 +24,8 @@ theme = "glim"
     { name = "About", url = "/about", newTab = false },
     { name = "Blog Posts", url = "/posts", newTab = false },
     { name = "Digital Overdose", url = "https://digitaloverdose.tech/", newTab = true },
+    { name = "Github", url = "https://github.com/Mrs-Skelli", newTab = true },
     { name = "BlueSky", url = "https://bsky.app/profile/skelli@skelli.win", newTab = true },
     { name = "Mastodon", url = "https://infosec.exchange/@Mrs_Skelli", newTab = true },
     { name = "LinkedIn", url = "https://www.linkedin.com/in/💀-eden-stroet-b9b3b2201/?originalSubdomain=nl", newTab = true },
-    { name = "BeReal", url = "https://bere.al/skellitheshrike", newTab = true }
   ]

@@ -1,23 +1,37 @@
 {{ define "main" }}
-    <div>
-        <div class='contenthead'>
-            <h1 class='contentheading'>{{ .Title }}</h1>
+<div class="mainbg">
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-title">{{ .Title }} ~ warp</span>
+            <span class="terminal-controls">
+                <span class="control"></span>
+                <span class="control"></span>
+                <span class="control"></span>
+            </span>
         </div>
-        <div class='contenttypewritter'>
-            <div class="posts-list">
-                {{ range .Pages }}
-                <article class="post-preview">
-                    <h2>{{ .Title }}</h2>
-                    {{ if .Date }}
-                    <p class="text-muted">{{ .Date.Format "January 2, 2006" }}</p>
+        <div class="terminal-content">
+            <div class="contenthead">
+                <h1 class="contentheading">{{ .Title }}</h1>
+            </div>
+            <div class="contenttypewritter">
+                <div class="posts-list">
+                    {{ range .Pages }}
+                    <article class="post-card">
+                        <div class="post-card-content">
+                            <h2 class="card-title">{{ .Title }}</h2>
+                            {{ if .Date }}
+                            <p class="card-subtitle">{{ .Date.Format "January 2, 2006" }}</p>
+                            {{ end }}
+                            <div class="card-text">
+                                {{ .Summary }}
+                            </div>
+                            <a href="{{ .RelPermalink }}" class="read-more">Read More →</a>
+                        </div>
+                    </article>
                     {{ end }}
-                    <div class="post-summary">
-                        {{ .Summary }}
-                    </div>
-                    <a href="{{ .RelPermalink }}" class="btn btn-outline-light">Read More</a>
-                </article>
-                {{ end }}
+                </div>
             </div>
         </div>
     </div>
+</div>
 {{ end }} 
