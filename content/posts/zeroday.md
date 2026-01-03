@@ -3,7 +3,7 @@ title: "Baby's First 0day?"
 date: 2025-12-27
 draft: false
 description: "The painstaking process of responsibly disclosing a vulnerability for it to be completely ignored."
-summary: "A timeline breaking down the responsible disclosure process from finding to failure."
+summary: "A timeline breaking down the responsible disclosure process from finding to discosure."
 ---
 
 # Preface
