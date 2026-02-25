@@ -6,8 +6,22 @@
     <description>Recent content on Skelli</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 18 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GitBlit 0day: Client Side Template Injection Leading to XSS Without HTML</title>
+      <link>http://localhost:1313/posts/gitblit-0day/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/gitblit-0day/</guid>
+      <description>A timeline breaking down the responsible disclosure process from finding to disclosure of a CSTI in GitBlit.</description>
+    </item>
+    <item>
+      <title>Supabase Shenanigans</title>
+      <link>http://localhost:1313/posts/supabase-shenanigans/</link>
+      <pubDate>Fri, 20 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/supabase-shenanigans/</guid>
+      <description>Supabase is quite permissive by default, by not implementing Row-Level Security, you could be exposing PII of thousands of users.</description>
+    </item>
     <item>
       <title>SQL Injection in University</title>
       <link>http://localhost:1313/posts/sqli-university/</link>
