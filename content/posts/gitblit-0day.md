@@ -140,13 +140,15 @@ To break down this timeline:
 
 # Coordinated Disclosure
 
-As you can see, I've had very little luck with reporting this bug to all the channels I know to be available. So I took matters into my own hands. Where appropriate, we attempted limited, good-faith notifications to operators of publicly exposed instances, based solely on passive identification and without interaction beyond initial contact. Unfortunately many of the vulnerable applications are in a country where being a Western security researcher is ill advised. I have heard horror stories both pertaining to security and also unrelated to security about this country, and there are consequences for fucking up otherwise. That's a game I'm just not willing to play, I'm not a gambling man because the house always wins. I narrowed the scope down to EU, US, and AU based targets. I reached out to educational institutions, security companies, and your run of the mill retail or ecommerce companies who happen to be hosting this software. 
+I've had very little luck with reporting this bug to all the channels I know to be available. So I took matters into my own hands. Where appropriate, we attempted limited, good-faith notifications to operators of publicly exposed instances, based solely on passive identification and without interaction beyond initial contact. 
 
-I have also received no responses, but in all honesty, only the educational institution seemed promising because the websites were otherwise incredibly shady and looked rather unmaintained or abandoned. I'm hoping after the holiday season DIVD will follow up and help me coordinate disclosure to impacted entities. 
+Unfortunately many of the vulnerable applications are in a country where being a Western security researcher is ill advised. I have heard horror stories both pertaining to security and also unrelated to security about this country, and there are consequences for fucking up otherwise, so I decided to not take my chances. I narrowed the scope down to EU, US, and AU based targets. I reached out to educational institutions, security companies, and your run of the mill retail or ecommerce companies who happen to be hosting this software. 
+
+As of February 25th I have received no responses from those impacted, DIVD is now helping me coordinate disclosure to these hosts, as well as the maintainer.
 
 # Final Remarks
 
-The sad truth about responsible disclosure, especially for open source projects is that the maintainers may not respond at all. I hope that individual is okay. I know my story isn't unique, and this isn't me trying to blast anyone, I'm just really excited about a cool, novel bug I found. I'm bursting at the seams with excitement and I just want to share my research with the world. I have a lot of thoughts around the current responsible disclosure process and some of the pitfalls it has, which is another blog post in the making, but I wanted to give a very special shoutout to my sick team at Hadrian, and send a lot of love to the other researchers who bust their ass day and night even if their work, progress and research goes unappreciated, unseen, and unfunded. I hope to bring positive updates soon, but there will be an update by 25 February, 2026 regardless. 
+I wanted to give a very special shoutout to my sick team at Hadrian, and send a lot of love to them as well as to the other researchers who bust their ass day and night even if their work, progress and research goes unappreciated, unseen, and unfunded. 
 
 
 ### Resources:
