@@ -1,0 +1,5 @@
+.DS_Store
+.hugo_build.lock
+
+# Hugo build output (GitHub Pages action uploads ./public)
+public/

@@ -10,6 +10,13 @@ summary: "Supabase is quite permissive by default, by not implementing Row-Level
 
 I pentested two separate apps built on Supabase in one week. Both had Row-Level Security disabled. One let me gather all users full names and emails. The other let me take over any server on the platform with a single curl command, or read every user's private messages. This is that story.
 
+## DEF CON Holland
+
+- **Slides**: [Supabase Shenanigans (DEF CON Holland)](https://docs.google.com/presentation/d/1jOGZSrVrBlRFaM3yCnUKxSLxVSXrM2or/edit?slide=id.p21#slide=id.p21)
+- **Photo**:
+
+![Eden presenting “Supabase Shenanigans” at DEF CON Holland](/images/defcon-holland.jpg)
+
 ---
 
 ## The Preface

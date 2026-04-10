@@ -134,6 +134,16 @@ html, body {
   font-weight: normal;
 }
 
+/* Make post images responsive (avoid huge/cropped renders). */
+.terminal-content .content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
