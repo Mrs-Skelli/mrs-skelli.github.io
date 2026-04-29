@@ -23,6 +23,9 @@ theme = "glim"
   links = [
     { name = "About", url = "/about", newTab = false },
     { name = "Blog Posts", url = "/posts", newTab = false },
+    { name = "HackerOne", url = "https://hackerone.com/mrsskelli", newTab = true },
+    { name = "Bugcrowd", url = "https://bugcrowd.com/h/mrs-skelli", newTab = true },
+    { name = "Intigriti", url = "https://app.intigriti.com/researcher/profile/mrs_sk3ll1", newTab = true },
     { name = "Digital Overdose", url = "https://digitaloverdose.tech/", newTab = true },
     { name = "Github", url = "https://github.com/Mrs-Skelli", newTab = true },
     { name = "BlueSky", url = "https://bsky.app/profile/skelli@skelli.win", newTab = true },
