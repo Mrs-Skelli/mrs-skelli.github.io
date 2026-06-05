@@ -11,6 +11,7 @@ My name is Mrs Skelli. Welcome to my infosec blog and personal website. This is 
 ## Work & Volunteering
 
 - Security Operations Analyst - Hadrian
+- [DIVD](https://www.divd.nl/who-we-are/team/people/eden-stroet/)
 - SOC Goon - DEF CON [August 2024 - Present]
 - Former Chaos Wrangler - AppSecVillage [August 2020 - August 2024]
 - Digital Overdose - Community Manager and Conference Co-Host

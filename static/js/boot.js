@@ -1,48 +1,23 @@
 (function () {
-  const BOOT_KEY = 'skelli-boot-seen';
-
-  const bootLines = [
-    'Skelli OS 2.6.0 (warp terminal edition)',
-    '',
-    '[ OK ] Started skeleton.service',
-    '[ OK ] Mounted /dev/brain',
-    '[ OK ] Loaded mrs-skelli.key',
-    '[ OK ] Reached target network-online.target',
-    '[ OK ] Started security-researcher.target',
-    { loading: true, text: 'loading terminal.theme' },
-    '',
-    'login: skelli',
-  ];
-
-  function getMainbg() {
-    return document.querySelector('.mainbg');
-  }
-
   function initTheme(mainbg) {
-    if (!mainbg || !window.SkelliBg) return null;
-    mainbg.classList.add('has-bg-theme');
-    return SkelliBg.createManager(SkelliBg.refsFromMainbg(mainbg));
+    return window.SkelliBg ? SkelliBg.initHomeTheme(mainbg) : null;
   }
 
   function revealTerminal(terminal, onDone) {
     requestAnimationFrame(function () {
       terminal.classList.remove('boot-hidden');
-      if (onDone) {
-        setTimeout(onDone, 600);
-      }
+      if (onDone) setTimeout(onDone, 600);
     });
   }
 
   function finishBoot(bootScreen, terminal, themeMgr, selectedTheme) {
-    if (themeMgr && selectedTheme) {
-      themeMgr.save(selectedTheme);
-    }
+    if (themeMgr && selectedTheme) themeMgr.save(selectedTheme);
 
     setTimeout(function () {
       bootScreen.classList.add('is-done');
       document.body.classList.remove('booting');
       document.body.classList.add('boot-done');
-      sessionStorage.setItem(BOOT_KEY, '1');
+      sessionStorage.setItem('skelli-boot-seen', '1');
 
       setTimeout(function () {
         bootScreen.remove();
@@ -56,9 +31,7 @@
   function skipBoot(bootScreen, terminal, mainbg) {
     if (bootScreen) bootScreen.remove();
     const themeMgr = initTheme(mainbg);
-    if (themeMgr) {
-      themeMgr.setPattern(themeMgr.getSaved());
-    }
+    if (themeMgr) themeMgr.setPattern(themeMgr.getSaved());
     terminal.classList.remove('boot-hidden');
     document.body.classList.remove('booting');
     document.dispatchEvent(new Event('skelli:boot-complete'));
@@ -89,25 +62,18 @@
     list.setAttribute('role', 'listbox');
 
     SkelliBg.bootThemes.forEach(function (theme) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'boot-theme-option';
-      btn.dataset.pattern = theme.id;
-      btn.setAttribute('role', 'option');
-      btn.innerHTML =
-        '<span class="boot-theme-name">' + theme.label + '</span>' +
-        '<span class="boot-theme-desc">' + theme.desc + '</span>';
-      btn.classList.toggle('is-active', theme.id === selected);
-
-      btn.addEventListener('click', function () {
-        selected = theme.id;
-        themeMgr.setPattern(selected);
-        list.querySelectorAll('.boot-theme-option').forEach(function (option) {
-          option.classList.toggle('is-active', option === btn);
-        });
-      });
-
-      list.appendChild(btn);
+      list.appendChild(SkelliBg.createBootThemeButton(
+        theme,
+        'boot-theme-option',
+        theme.id === selected,
+        function (patternId, btn) {
+          selected = patternId;
+          themeMgr.setPattern(selected);
+          list.querySelectorAll('.boot-theme-option').forEach(function (option) {
+            option.classList.toggle('is-active', option === btn);
+          });
+        }
+      ));
     });
 
     picker.appendChild(list);
@@ -116,7 +82,6 @@
     launch.type = 'button';
     launch.className = 'boot-theme-launch';
     launch.textContent = '→ launch terminal';
-    picker.appendChild(launch);
 
     function launchTerminal() {
       document.removeEventListener('keydown', onKeydown);
@@ -132,6 +97,7 @@
 
     launch.addEventListener('click', launchTerminal);
     document.addEventListener('keydown', onKeydown);
+    picker.appendChild(launch);
 
     linesContainer.classList.add('is-collapsed');
     bootScreen.classList.add('boot-screen--picker');
@@ -161,6 +127,19 @@
   }
 
   function runBootSequence(bootScreen, linesContainer, terminal, mainbg) {
+    const bootLines = [
+      'Skelli OS 2.6.0 (warp terminal edition)',
+      '',
+      '[ OK ] Started skeleton.service',
+      '[ OK ] Mounted /dev/brain',
+      '[ OK ] Loaded mrs-skelli.key',
+      '[ OK ] Reached target network-online.target',
+      '[ OK ] Started security-researcher.target',
+      { loading: true, text: 'loading terminal.theme' },
+      '',
+      'login: skelli',
+    ];
+
     document.body.classList.add('booting');
     let index = 0;
 
@@ -186,7 +165,7 @@
       line.className = 'boot-line';
       if (entry === '') {
         line.className += ' boot-line-spacer';
-        line.innerHTML = '&nbsp;';
+        line.textContent = '\u00a0';
       } else {
         line.textContent = entry;
       }
@@ -203,14 +182,14 @@
     const bootScreen = document.getElementById('boot-screen');
     const linesContainer = document.getElementById('boot-lines');
     const terminal = document.getElementById('terminal-window');
-    const mainbg = getMainbg();
+    const mainbg = document.getElementById('home-mainbg');
 
     if (!bootScreen || !linesContainer || !terminal) {
       document.dispatchEvent(new Event('skelli:boot-complete'));
       return;
     }
 
-    const shouldSkip = sessionStorage.getItem(BOOT_KEY) === '1' ||
+    const shouldSkip = sessionStorage.getItem('skelli-boot-seen') === '1' ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (shouldSkip) {

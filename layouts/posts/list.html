@@ -1,14 +1,7 @@
 {{ define "main" }}
 <div class="mainbg">
     <div class="terminal-window">
-        <div class="terminal-header">
-            <span class="terminal-controls">
-                <span class="control"></span>
-                <span class="control"></span>
-                <span class="control"></span>
-            </span>
-            <span class="terminal-title">{{ .Title }} ~ warp</span>
-        </div>
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
         <div class="terminal-content">
             <div class="contenthead">
                 <h1 class="contentheading">{{ .Title }}</h1>
@@ -34,4 +27,4 @@
         </div>
     </div>
 </div>
-{{ end }} 
+{{ end }}

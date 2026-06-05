@@ -242,9 +242,8 @@
     }
 
     function save(name) {
-      if (patterns.includes(name)) {
-        localStorage.setItem(THEME_KEY, name);
-      }
+      if (!bootThemes.some(function (t) { return t.id === name; })) return;
+      localStorage.setItem(THEME_KEY, name);
     }
 
     const manager = {
@@ -269,12 +268,43 @@
     };
   }
 
+  function initHomeTheme(mainbg) {
+    if (!mainbg) return null;
+    mainbg.classList.add('has-bg-theme');
+    return createManager(refsFromMainbg(mainbg));
+  }
+
+  function createBootThemeButton(theme, className, isActive, onSelect) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = className;
+    btn.dataset.pattern = theme.id;
+    btn.setAttribute('role', 'option');
+
+    const name = document.createElement('span');
+    name.className = 'boot-theme-name';
+    name.textContent = theme.label;
+
+    const desc = document.createElement('span');
+    desc.className = 'boot-theme-desc';
+    desc.textContent = theme.desc;
+
+    btn.append(name, desc);
+    btn.classList.toggle('is-active', isActive);
+    btn.addEventListener('click', function () {
+      onSelect(theme.id, btn);
+    });
+    return btn;
+  }
+
   global.SkelliBg = {
     THEME_KEY: THEME_KEY,
     DEFAULT: DEFAULT,
     patterns: patterns,
     bootThemes: bootThemes,
     createManager: createManager,
-    refsFromMainbg: refsFromMainbg
+    refsFromMainbg: refsFromMainbg,
+    initHomeTheme: initHomeTheme,
+    createBootThemeButton: createBootThemeButton
   };
 })(window);

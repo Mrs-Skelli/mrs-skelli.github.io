@@ -23,6 +23,7 @@ theme = "glim"
   links = [
     { name = "About", url = "/about", newTab = false },
     { name = "Blog Posts", url = "/posts", newTab = false },
+    { name = "DIVD", url = "https://www.divd.nl/who-we-are/team/people/eden-stroet/", newTab = true },
     { name = "HackerOne", url = "https://hackerone.com/mrsskelli", newTab = true },
     { name = "Bugcrowd", url = "https://bugcrowd.com/h/mrs-skelli", newTab = true },
     { name = "Intigriti", url = "https://app.intigriti.com/researcher/profile/mrs_sk3ll1", newTab = true },
@@ -32,3 +33,8 @@ theme = "glim"
     { name = "Mastodon", url = "https://infosec.exchange/@Mrs_Skelli", newTab = true },
     { name = "LinkedIn", url = "https://www.linkedin.com/in/💀-eden-stroet-b9b3b2201/?originalSubdomain=nl", newTab = true },
   ]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = false

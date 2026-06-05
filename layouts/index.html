@@ -7,21 +7,7 @@
             <div class="boot-lines" id="boot-lines"></div>
         </div>
         <div class="terminal-window boot-hidden" id="terminal-window">
-            <div class="terminal-header">
-                <span class="terminal-controls">
-                    <span class="control"></span>
-                    <span class="control"></span>
-                    <span class="control"></span>
-                </span>
-                <span class="terminal-title">{{ .Site.Params.title }} ~ warp</span>
-                <div class="theme-switcher" id="theme-switcher" hidden>
-                    <button type="button" class="theme-switcher-btn" id="theme-switcher-btn"
-                        aria-haspopup="listbox" aria-expanded="false" aria-controls="theme-switcher-menu">
-                        theme
-                    </button>
-                    <ul class="theme-switcher-menu" id="theme-switcher-menu" role="listbox" aria-label="Background theme"></ul>
-                </div>
-            </div>
+            {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Site.Params.title) "showThemeSwitcher" true) }}
             <div class="terminal-content">
                 <p class="terminal-prompt">Last login: {{ now.Format "Mon Jan 2 15:04:05" }} on ttys000</p>
                 <p class="terminal-prompt">skelli@macbook ~ % whoami</p>
@@ -36,7 +22,7 @@
                 <div class="contentbtn">
                     {{ range .Site.Params.links }}
                     <a href="{{ .url }}" class="btn btn-outline-light" role="button"
-                        {{ if .newTab }}target="_blank" rel="noopener"{{ end }}>
+                        {{ if .newTab }}target="_blank" rel="noopener noreferrer"{{ end }}>
                         {{ .name }}
                     </a>
                     {{ end }}
@@ -45,12 +31,9 @@
         </div>
     </div>
 
-    <!-- JS for typewriter -->
-    <script>
-        const textArray = {{ .Site.Params.phrases | jsonify | safeJS }};
-    </script>
+    {{ partial "typewriter-config.html" . }}
     <script src="{{ "/js/bg-theme.js" | relURL }}"></script>
     <script src="{{ "/js/boot.js" | relURL }}"></script>
     <script src="{{ "/js/theme-switcher.js" | relURL }}"></script>
     <script src="{{ "/js/typewriter.js" | relURL }}"></script>
-{{ end }} 
+{{ end }}

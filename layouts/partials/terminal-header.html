@@ -1,0 +1,17 @@
+<div class="terminal-header">
+    <span class="terminal-controls">
+        <span class="control"></span>
+        <span class="control"></span>
+        <span class="control"></span>
+    </span>
+    <span class="terminal-title">{{ .title }}</span>
+    {{ if .showThemeSwitcher }}
+    <div class="theme-switcher" id="theme-switcher" hidden>
+        <button type="button" class="theme-switcher-btn" id="theme-switcher-btn"
+            aria-haspopup="listbox" aria-expanded="false" aria-controls="theme-switcher-menu">
+            theme
+        </button>
+        <ul class="theme-switcher-menu" id="theme-switcher-menu" role="listbox" aria-label="Background theme"></ul>
+    </div>
+    {{ end }}
+</div>

@@ -50,14 +50,7 @@
   <div class="matrix-rain" id="matrix-layer" aria-hidden="true"></div>
   <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
   <div class="terminal-window">
-    <div class="terminal-header">
-      <span class="terminal-controls">
-        <span class="control"></span>
-        <span class="control"></span>
-        <span class="control"></span>
-      </span>
-      <span class="terminal-title">{{ .Site.Params.title }} ~ warp</span>
-    </div>
+    {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Site.Params.title)) }}
     <div class="terminal-content">
       <p class="terminal-prompt">skelli@macbook ~ % echo "background preview"</p>
       <p>Pick a pattern from the bars above to preview it behind the terminal.</p>
@@ -69,7 +62,7 @@
       <div class="contentbtn">
         {{ range .Site.Params.links }}
         <a href="{{ .url }}" class="btn btn-outline-light" role="button"
-          {{ if .newTab }}target="_blank" rel="noopener"{{ end }}>
+          {{ if .newTab }}target="_blank" rel="noopener noreferrer"{{ end }}>
           {{ .name }}
         </a>
         {{ end }}
@@ -78,9 +71,7 @@
   </div>
 </div>
 
-<script>
-  const textArray = {{ .Site.Params.phrases | jsonify | safeJS }};
-</script>
+{{ partial "typewriter-config.html" . }}
 <script src="{{ "/js/typewriter.js" | relURL }}"></script>
 <script src="{{ ("/js/bg-theme.js" | relURL) }}?v={{ now.Unix }}"></script>
 <script src="{{ ("/js/bg-preview.js" | relURL) }}?v={{ now.Unix }}"></script>

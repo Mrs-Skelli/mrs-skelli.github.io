@@ -1,14 +1,7 @@
 {{ define "main" }}
 <div class="mainbg">
     <div class="terminal-window">
-        <div class="terminal-header">
-            <span class="terminal-controls">
-                <span class="control"></span>
-                <span class="control"></span>
-                <span class="control"></span>
-            </span>
-            <span class="terminal-title">{{ .Title }} ~ warp</span>
-        </div>
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
         <div class="terminal-content">
             <p class="terminal-prompt">skelli@macbook ~ % cd {{ .Section }}</p>
             <p class="terminal-prompt">skelli@macbook ~/{{ .Section }} % ls -la</p>
@@ -41,7 +34,7 @@
             <p class="terminal-prompt">skelli@macbook ~ % ls</p>
             
             <div class="mt-4">
-                <a href="/" class="btn btn-outline-light">← Home</a>
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
             </div>
         </div>
     </div>

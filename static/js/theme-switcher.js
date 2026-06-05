@@ -7,7 +7,7 @@
 
     if (!mainbg || !switcher || !btn || !menu || !window.SkelliBg) return;
 
-    const mgr = SkelliBg.createManager(SkelliBg.refsFromMainbg(mainbg));
+    const mgr = SkelliBg.initHomeTheme(mainbg);
     let isOpen = false;
 
     SkelliBg.bootThemes.forEach(function (theme) {
@@ -20,7 +20,6 @@
       option.dataset.pattern = theme.id;
       option.setAttribute('role', 'option');
       option.textContent = theme.label;
-
       option.addEventListener('click', function () {
         mgr.setPattern(theme.id);
         mgr.save(theme.id);
@@ -52,23 +51,13 @@
       btn.setAttribute('aria-expanded', 'false');
     }
 
-    function toggleMenu() {
-      if (isOpen) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    }
-
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      toggleMenu();
+      isOpen ? closeMenu() : openMenu();
     });
 
     document.addEventListener('click', function (e) {
-      if (isOpen && !switcher.contains(e.target)) {
-        closeMenu();
-      }
+      if (isOpen && !switcher.contains(e.target)) closeMenu();
     });
 
     document.addEventListener('keydown', function (e) {
@@ -79,18 +68,13 @@
     });
 
     function activate() {
-      mainbg.classList.add('has-bg-theme');
-      const saved = mgr.getSaved();
-      mgr.setPattern(saved);
-      updateActive(saved);
+      mgr.setPattern(mgr.getSaved());
+      updateActive(mgr.getSaved());
       switcher.hidden = false;
       switcher.classList.add('is-ready');
     }
 
     document.addEventListener('skelli:boot-complete', activate, { once: true });
-
-    if (!document.getElementById('boot-screen')) {
-      activate();
-    }
+    if (!document.getElementById('boot-screen')) activate();
   });
 })();

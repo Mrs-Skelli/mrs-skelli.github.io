@@ -1,1 +1,0 @@
-// Terminal-style typewriter effect
