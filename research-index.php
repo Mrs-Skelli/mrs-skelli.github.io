@@ -75,8 +75,8 @@ html, body {
   background-color: #2d2d2d;
   padding: 8px 12px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  position: relative;
   border-bottom: 1px solid #333;
 }
 
@@ -84,13 +84,16 @@ html, body {
   color: #aaa;
   font-size: 13px;
   text-align: center;
-  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .terminal-controls {
   display: flex;
   gap: 7px;
+  flex-shrink: 0;
 }
 
 .control {
@@ -583,12 +586,12 @@ a:not(.btn):hover {
     <div class="mainbg">
         <div class="terminal-window">
             <div class="terminal-header">
-                <span class="terminal-title">Skelli ~ warp</span>
                 <span class="terminal-controls">
                     <span class="control"></span>
                     <span class="control"></span>
                     <span class="control"></span>
                 </span>
+                <span class="terminal-title">Skelli ~ warp</span>
             </div>
             <div class="terminal-content">
                 <p class="terminal-prompt">Last login: <?php echo date('D M j H:i:s'); ?> on ttys000</p>
