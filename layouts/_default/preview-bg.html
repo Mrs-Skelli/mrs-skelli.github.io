@@ -1,0 +1,87 @@
+{{ define "main" }}
+<div class="bg-preview-shell">
+  <div class="bg-preview-picker">
+    <span>Static:</span>
+    <button type="button" data-pattern="none">None</button>
+    <button type="button" data-pattern="hex">Hex Grid</button>
+    <button type="button" data-pattern="circuit">Circuit</button>
+    <button type="button" data-pattern="dots">Dot Matrix</button>
+    <button type="button" data-pattern="topo">Topographic</button>
+    <button type="button" data-pattern="crowskull">Crowskull</button>
+  </div>
+  <div class="bg-preview-picker">
+    <span>Core:</span>
+    <button type="button" data-pattern="aurora">Aurora</button>
+    <button type="button" data-pattern="datastream">Data Stream</button>
+    <button type="button" data-pattern="pulse-hex">Pulse Hex</button>
+    <button type="button" data-pattern="matrix">Matrix Rain</button>
+  </div>
+  <div class="bg-preview-picker">
+    <span>Grid:</span>
+    <button type="button" data-pattern="circuit-pulse">Circuit Pulse</button>
+    <button type="button" data-pattern="hex-scan">Hex Scan</button>
+    <button type="button" data-pattern="dot-twinkle">Dot Twinkle</button>
+    <button type="button" data-pattern="topo-drift">Topo Drift</button>
+  </div>
+  <div class="bg-preview-picker">
+    <span>Terminal:</span>
+    <button type="button" data-pattern="phosphor">Phosphor</button>
+    <button type="button" data-pattern="scan-sweep">Scan Sweep</button>
+    <button type="button" data-pattern="cursor-field">Cursor Field</button>
+    <button type="button" data-pattern="boot-log">Boot Log</button>
+  </div>
+  <div class="bg-preview-picker">
+    <span>Sec:</span>
+    <button type="button" data-pattern="packet-sniff">Packet Sniff</button>
+    <button type="button" data-pattern="port-scan">Port Scan</button>
+    <button type="button" data-pattern="hash-rain">Hash Rain</button>
+    <button type="button" data-pattern="glitch">Glitch</button>
+  </div>
+  <div class="bg-preview-picker">
+    <span>Atmo:</span>
+    <button type="button" data-pattern="deep-ocean">Deep Ocean</button>
+    <button type="button" data-pattern="starfield">Starfield</button>
+    <button type="button" data-pattern="breathe">Breathe</button>
+  </div>
+</div>
+
+<div class="mainbg preview-mainbg" id="preview-bg">
+  <div class="bg-layer bg-aurora" id="bg-layer" aria-hidden="true"></div>
+  <div class="matrix-rain" id="matrix-layer" aria-hidden="true"></div>
+  <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <span class="terminal-controls">
+        <span class="control"></span>
+        <span class="control"></span>
+        <span class="control"></span>
+      </span>
+      <span class="terminal-title">{{ .Site.Params.title }} ~ warp</span>
+    </div>
+    <div class="terminal-content">
+      <p class="terminal-prompt">skelli@macbook ~ % echo "background preview"</p>
+      <p>Pick a pattern from the bars above to preview it behind the terminal.</p>
+      <p class="terminal-prompt">skelli@macbook ~ % cat welcome.txt</p>
+      <div class="welcome-message">
+        <div class="animatedText"></div>
+      </div>
+      <p class="terminal-prompt">skelli@macbook ~ % ls -la links/</p>
+      <div class="contentbtn">
+        {{ range .Site.Params.links }}
+        <a href="{{ .url }}" class="btn btn-outline-light" role="button"
+          {{ if .newTab }}target="_blank" rel="noopener"{{ end }}>
+          {{ .name }}
+        </a>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const textArray = {{ .Site.Params.phrases | jsonify | safeJS }};
+</script>
+<script src="{{ "/js/typewriter.js" | relURL }}"></script>
+<script src="{{ ("/js/bg-theme.js" | relURL) }}?v={{ now.Unix }}"></script>
+<script src="{{ ("/js/bg-preview.js" | relURL) }}?v={{ now.Unix }}"></script>
+{{ end }}

@@ -10,6 +10,7 @@
   --terminal-header: #222;
   --terminal-text: #c8e1ff;
   --terminal-cursor: #39a5ff;
+  --crowskull-pattern: url('/img/bg/crowskull-blue.webp');
 }
 
 @font-face {
@@ -41,6 +42,246 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   padding-top: 50px;
+  isolation: isolate;
+}
+
+/* Atmospheric background — opt-in via class on .mainbg */
+.mainbg.bg-crowskull::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at center, rgba(20, 60, 160, 0.12) 0%, rgba(0, 0, 0, 0.55) 80%),
+    var(--crowskull-pattern);
+  background-size: 100% 100%, 45%;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Boot sequence (home page) */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background-color: var(--terminal-black);
+  padding: 48px 36px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(57, 165, 255, 0.8);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.boot-screen.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.boot-lines {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.boot-line {
+  opacity: 0;
+  animation: boot-line-in 0.15s ease forwards;
+  text-shadow: 0 0 8px rgba(57, 165, 255, 0.2);
+}
+
+.boot-line-spacer {
+  animation: none;
+  opacity: 1;
+  height: 0.6em;
+}
+
+.boot-line-loading {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes boot-line-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal-window {
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.terminal-window.boot-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.96) translateY(18px);
+  pointer-events: none;
+  transition: none;
+}
+
+body.booting footer {
+  opacity: 0;
+}
+
+body.boot-done footer {
+  opacity: 1;
+  transition: opacity 0.4s ease 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen,
+  .terminal-window.boot-hidden {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+.mainbg.has-bg-theme {
+  background-color: transparent !important;
+}
+
+.mainbg.has-bg-theme::before {
+  opacity: 0.08;
+}
+
+.boot-screen.boot-screen--picker {
+  justify-content: center;
+  gap: 24px;
+  padding: 32px 24px;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(3px);
+}
+
+.boot-lines.is-collapsed {
+  opacity: 0.4;
+  max-height: 120px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.boot-theme-picker {
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.boot-theme-picker.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.boot-theme-title {
+  margin: 0 0 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--terminal-bright-blue);
+  text-shadow: 0 0 10px rgba(57, 165, 255, 0.25);
+}
+
+.boot-theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.boot-theme-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(0, 122, 204, 0.35);
+  color: rgba(57, 165, 255, 0.85);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.boot-theme-option:hover,
+.boot-theme-option.is-active {
+  border-color: var(--terminal-blue);
+  background: rgba(0, 122, 204, 0.15);
+  color: var(--terminal-bright-blue);
+}
+
+.boot-theme-option.is-active .boot-theme-name::before {
+  content: '> ';
+  color: var(--terminal-bright-blue);
+}
+
+.boot-theme-name {
+  flex-shrink: 0;
+}
+
+.boot-theme-desc {
+  font-size: 11px;
+  color: rgba(57, 165, 255, 0.45);
+  text-align: right;
+}
+
+.boot-theme-option:hover .boot-theme-desc,
+.boot-theme-option.is-active .boot-theme-desc {
+  color: rgba(57, 165, 255, 0.65);
+}
+
+.boot-theme-launch {
+  display: block;
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--terminal-blue);
+  border: 1px solid var(--terminal-blue);
+  color: var(--terminal-black);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.boot-theme-launch:hover {
+  background: var(--terminal-bright-blue);
+  border-color: var(--terminal-bright-blue);
+}
+
+@media (max-width: 520px) {
+  .boot-theme-option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .boot-theme-desc {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-theme-picker,
+  .boot-lines.is-collapsed {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* Terminal window styling */
@@ -53,6 +294,8 @@ html, body {
   margin: 0 auto;
   overflow: hidden;
   border-radius: 8px;
+  position: relative;
+  z-index: 1;
 }
 
 .terminal-header {
@@ -97,6 +340,111 @@ html, body {
 
 .control:nth-child(3) {
   background-color: #28c840;
+}
+
+.theme-switcher.is-ready {
+  display: block;
+}
+
+.theme-switcher {
+  display: none;
+  margin-left: auto;
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
+  width: fit-content;
+}
+
+.theme-switcher-btn {
+  background: transparent;
+  border: 1px solid rgba(170, 170, 170, 0.35);
+  border-radius: 4px;
+  color: #aaa;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  padding: 4px 10px;
+  text-transform: lowercase;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.theme-switcher-btn::after {
+  content: " ▾";
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.theme-switcher-btn:hover,
+.theme-switcher.is-open .theme-switcher-btn {
+  background: rgba(0, 122, 204, 0.12);
+  border-color: var(--terminal-blue);
+  color: var(--terminal-bright-blue);
+}
+
+.theme-switcher-menu {
+  background: #1a1a1a;
+  border: 1px solid var(--terminal-blue);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  list-style: none;
+  margin: 4px 0 0;
+  min-width: 140px;
+  opacity: 0;
+  padding: 4px !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 2px);
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  visibility: hidden;
+}
+
+.theme-switcher-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+.theme-switcher-menu li::before {
+  content: none !important;
+  display: none !important;
+}
+
+.theme-switcher.is-open .theme-switcher-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.theme-switcher-option {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: rgba(57, 165, 255, 0.85);
+  cursor: pointer;
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 7px 10px;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.theme-switcher-option:hover,
+.theme-switcher-option.is-active {
+  background: rgba(0, 122, 204, 0.18);
+  color: var(--terminal-bright-blue);
+}
+
+.theme-switcher-option.is-active::before {
+  content: "› ";
+  color: var(--terminal-bright-blue);
 }
 
 .terminal-content {

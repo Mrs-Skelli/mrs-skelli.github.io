@@ -31,6 +31,7 @@
   --terminal-header: #222;
   --terminal-text: #c8e1ff;
   --terminal-cursor: #39a5ff;
+  --crowskull-pattern: url('/img/bg/crowskull-blue.webp');
 }
 
 html, body {
@@ -57,6 +58,23 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   padding-top: 50px;
+  isolation: isolate;
+}
+
+/* Atmospheric Crowskull background — pattern by Casper Spell via BG2COOL */
+.mainbg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at center, rgba(20, 60, 160, 0.12) 0%, rgba(0, 0, 0, 0.55) 80%),
+    var(--crowskull-pattern);
+  background-size: 100% 100%, 45%;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Terminal window styling */
@@ -69,6 +87,8 @@ html, body {
   margin: 0 auto;
   overflow: hidden;
   border-radius: 8px;
+  position: relative;
+  z-index: 1;
 }
 
 .terminal-header {

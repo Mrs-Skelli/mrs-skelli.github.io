@@ -16,6 +16,9 @@
     {{ $cssVersion := now.Unix }}
     <link rel="stylesheet" href="{{ ("/css/custom.css" | relURL) }}?v={{ $cssVersion }}">
     <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ if or (eq .Layout "preview-bg") .IsHome }}
+    <link rel="stylesheet" href="{{ ("/css/bg-patterns.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ end }}
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ "/favicon.ico" | relURL}}">

@@ -1,0 +1,32 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-controls">
+                <span class="control"></span>
+                <span class="control"></span>
+                <span class="control"></span>
+            </span>
+            <span class="terminal-title">{{ .Title }} ~ warp</span>
+        </div>
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd about</p>
+            <p class="terminal-prompt">skelli@macbook ~/about % ls -la</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/about % ./select-profile.sh</p>
+            <div class="contentbtn">
+                <a href="{{ "/about/professional/" | relURL }}" class="btn btn-outline-light" role="button">Professional</a>
+                <a href="{{ "/about/personal/" | relURL }}" class="btn btn-outline-light" role="button">Personal</a>
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
