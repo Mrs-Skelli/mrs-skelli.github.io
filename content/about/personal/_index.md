@@ -1,6 +1,6 @@
 ---
 title: "Personal"
-draft: true
+draft: false
 ---
 
 ## About Me:
@@ -17,7 +17,7 @@ A quick guide to the basics:
 - Vegetarian/flexitarian
 - Disabled
 - Stoner
-- Partner/girlfriend of [smiegles]([https://nitter.net/smiegles](https://nitter.net/smiegles))
+- Partner/girlfriend of [smiegles](https://nitter.net/smiegles)
 
 ## Hobbies:
 
@@ -29,4 +29,4 @@ Outside of work, I am an aerialist, specifically aerial hoop. I'm also an avid g
 - Stardew Valley
 - Warzone (yes, I know!)
 
-I also play a lot indie games, horror games, and games that I can socailize with my friends while we play together.  Outside of gaming, I crochet, though I'm not very good at it. I enjoy and pride myself in my cooking, and I like to experiment in the kitchen. My favorite cookbook is the Stardew Valley cookbook! It's got a ton of vegetarian/pescatarian friendly recipes and the food is outstanding. When I have spare time I like to read, travel (if I can afford it) and spend time with my loved ones. 
+I also play a lot of indie games, horror games, and games that I can socialize with my friends while we play together. Outside of gaming, I crochet, though I'm not very good at it. I enjoy and pride myself in my cooking, and I like to experiment in the kitchen. My favorite cookbook is the Stardew Valley cookbook! It's got a ton of vegetarian/pescatarian friendly recipes and the food is outstanding. When I have spare time I like to read, travel (if I can afford it) and spend time with my loved ones.
