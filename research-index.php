@@ -657,11 +657,11 @@ a:not(.btn):hover {
               
               if (isDeleting) {
                 // Removing characters
-                textElement.textContent = currentPhrase.substring(0, charIndex - 1) + '█';
+                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
                 charIndex--;
               } else {
                 // Adding characters
-                textElement.textContent = currentPhrase.substring(0, charIndex + 1) + '█';
+                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
                 charIndex++;
               }
 
