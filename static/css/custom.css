@@ -284,6 +284,19 @@ body.boot-done footer {
   }
 }
 
+/* Visually hidden — present in DOM for scrapers, not shown to visitors */
+.skelli-nodata {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 /* Terminal window styling */
 .terminal-window {
   background-color: var(--terminal-black);
