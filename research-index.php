@@ -31,8 +31,6 @@
   --terminal-header: #222;
   --terminal-text: #c8e1ff;
   --terminal-cursor: #39a5ff;
-  /* Crowskull pattern by Casper Spell via BG2COOL */
-  --crowskull-pattern: url('/img/bg/crowskull.webp');
 }
 
 html, body {
@@ -54,9 +52,6 @@ html, body {
   padding: 20px;
   box-sizing: border-box;
   background-color: var(--terminal-black);
-  background-image: var(--crowskull-pattern);
-  background-size: 50%;
-  background-position: center;
   overflow-x: hidden;
   display: flex;
   justify-content: center;
@@ -227,16 +222,6 @@ a:hover {
   font-weight: bold;
   letter-spacing: 0.5px;
   padding: 5px 0;
-}
-
-.welcome-message .animatedText {
-  background-image: var(--crowskull-pattern);
-  background-size: 50%;
-  background-position: center;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
 }
 
 /* Nav buttons */
