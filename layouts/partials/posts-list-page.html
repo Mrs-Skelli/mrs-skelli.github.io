@@ -1,0 +1,10 @@
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }}</p>
+            {{ partial "posts-section.html" . }}
+        </div>
+    </div>
+</div>
+{{ partial "post-filters-script.html" . }}

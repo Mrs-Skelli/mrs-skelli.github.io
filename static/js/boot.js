@@ -4,6 +4,10 @@
   }
 
   function revealTerminal(terminal, onDone) {
+    if (!terminal.classList.contains('boot-hidden')) {
+      if (onDone) onDone();
+      return;
+    }
     requestAnimationFrame(function () {
       terminal.classList.remove('boot-hidden');
       if (onDone) setTimeout(onDone, 600);
@@ -21,9 +25,7 @@
 
       setTimeout(function () {
         bootScreen.remove();
-        revealTerminal(terminal, function () {
-          document.dispatchEvent(new Event('skelli:boot-complete'));
-        });
+        revealTerminal(terminal);
       }, 520);
     }, 350);
   }

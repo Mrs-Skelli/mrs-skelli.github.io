@@ -1,7 +1,13 @@
 baseURL = "https://skelli.win/"
-languageCode = "en-us"
 title = "Skelli"
 theme = "glim"
+defaultContentLanguage = "en"
+disableKinds = ["taxonomy", "term"]
+
+[languages.en]
+locale = "en-us"
+label = "English"
+weight = 1
 
 [taxonomies]
   technology = "technologies"
@@ -10,8 +16,6 @@ theme = "glim"
 [params]
   title = "Skelli"
   description = "Cyberpunk nonsense and writeups"
-  # Background image path
-  backgroundImage = "/images/skeleton-bg.jpg"
   
   # Add phrases for the typewriter effect
   phrases = [

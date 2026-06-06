@@ -18,7 +18,7 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: var(--terminal-black);
-  color: var(--terminal-text);
+  color: #d8e8ff;
   font-family: 'Courier New', monospace;
   font-size: 16px;
   line-height: 1.6;
@@ -538,17 +538,17 @@ h3 {
   font-size: 1.5em;
 }
 
-/* Terminal-style links */
-a {
+/* Terminal-style links (content links, not nav buttons) */
+a:not(.btn) {
   color: var(--terminal-bright-blue);
   text-decoration: underline;
   transition: all 0.2s ease;
+  font-weight: bold;
 }
 
-a:hover {
-  color: var(--terminal-bright-blue);
-  text-decoration: underline;
-  background-color: var(--terminal-gray);
+a:not(.btn):hover {
+  color: #ffffff;
+  background-color: var(--terminal-dim-blue);
 }
 
 /* Terminal style buttons */
@@ -801,19 +801,6 @@ body, html, .mainbg, .terminal-window, .terminal-content {
   font-size: 0.9em;
   margin-top: 5px;
   font-style: italic;
-}
-
-/* Improve contrast for links */
-a:not(.btn) {
-  color: var(--terminal-bright-blue);
-  text-decoration: underline;
-  transition: all 0.2s ease;
-  font-weight: bold;
-}
-
-a:not(.btn):hover {
-  color: #ffffff;
-  background-color: var(--terminal-dim-blue);
 }
 
 /* Increase contrast for all text */

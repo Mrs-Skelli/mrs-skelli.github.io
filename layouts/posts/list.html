@@ -1,4 +1,8 @@
 {{ define "main" }}
+{{ $sectionSlug := path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }}
+{{ if in (slice "blog" "hadrian") $sectionSlug }}
+  {{ partial "posts-list-page.html" . }}
+{{ else }}
 <div class="mainbg">
     <div class="terminal-window">
         {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
@@ -12,8 +16,8 @@
 
             <p class="terminal-prompt">skelli@macbook ~/posts % ./select-blog.sh</p>
             <div class="contentbtn">
-                <a href="{{ "/posts/blog/" | relURL }}" class="btn btn-outline-light" role="button">Blog Posts</a>
-                <a href="{{ "/posts/hadrian/" | relURL }}" class="btn btn-outline-light" role="button">Hadrian Blogs</a>
+                <a href="{{ "/posts/blog/" | relURL }}" class="btn btn-outline-light">Blog Posts</a>
+                <a href="{{ "/posts/hadrian/" | relURL }}" class="btn btn-outline-light">Hadrian Blogs</a>
             </div>
 
             <div class="mt-4">
@@ -22,4 +26,5 @@
         </div>
     </div>
 </div>
+{{ end }}
 {{ end }}

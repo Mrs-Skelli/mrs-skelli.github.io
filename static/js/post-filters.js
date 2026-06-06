@@ -20,6 +20,11 @@
         const key = group.dataset.filterGroup;
         const value = params.get(key);
         if (!value) return;
+        let known = null;
+        group.querySelectorAll('.post-filter-btn').forEach(function (btn) {
+          if (btn.dataset.filter === value) known = btn;
+        });
+        if (!known) return;
         active[key] = value;
         group.querySelectorAll('.post-filter-btn').forEach(function (btn) {
           btn.classList.toggle('is-active', btn.dataset.filter === value);

@@ -21,7 +21,7 @@
                 <p class="terminal-prompt">skelli@macbook ~ % ls -la links/</p>
                 <div class="contentbtn">
                     {{ range .Site.Params.links }}
-                    <a href="{{ .url }}" class="btn btn-outline-light" role="button"
+                    <a href="{{ .url }}" class="btn btn-outline-light"
                         {{ if .newTab }}target="_blank" rel="noopener noreferrer"{{ end }}>
                         {{ .name }}
                     </a>
