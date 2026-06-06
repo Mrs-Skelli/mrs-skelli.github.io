@@ -631,7 +631,7 @@ a:not(.btn):hover {
                     <a href="https://github.com/Mrs-Skelli" class='btn btn-outline-light' role='button' target="_blank" rel="noopener">Github</a>
                     <a href="https://bsky.app/profile/skelli@skelli.win" class='btn btn-outline-light' role='button' target="_blank" rel="noopener">BlueSky</a>
                     <a href="https://infosec.exchange/@Mrs_Skelli" class='btn btn-outline-light' role='button' target="_blank" rel="noopener">Mastodon</a>
-                    <a href="https://www.linkedin.com/in/💀-eden-stroet-b9b3b2201/?originalSubdomain=nl" class='btn btn-outline-light' role='button' target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/mrsskelli/" class='btn btn-outline-light' role='button' target="_blank" rel="noopener">LinkedIn</a>
                 </div>
                 
                 <p class="terminal-prompt">skelli@macbook ~ % cat README.md</p>
