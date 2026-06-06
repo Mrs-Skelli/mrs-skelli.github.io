@@ -150,6 +150,15 @@ body.boot-done footer {
   padding: 32px 24px;
   background: rgba(0, 0, 0, 0.78);
   backdrop-filter: blur(3px);
+  pointer-events: none;
+}
+
+.boot-screen.boot-screen--picker ~ .terminal-window {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  z-index: 15;
 }
 
 .boot-lines.is-collapsed {
@@ -167,6 +176,9 @@ body.boot-done footer {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: auto;
+  position: relative;
+  z-index: 21;
 }
 
 .boot-theme-picker.is-visible {

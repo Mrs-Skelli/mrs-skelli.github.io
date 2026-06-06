@@ -101,6 +101,8 @@
 
     linesContainer.classList.add('is-collapsed');
     bootScreen.classList.add('boot-screen--picker');
+    terminal.classList.remove('boot-hidden');
+    document.dispatchEvent(new Event('skelli:boot-complete'));
     bootScreen.appendChild(picker);
 
     requestAnimationFrame(function () {
@@ -197,6 +199,14 @@
       return;
     }
 
+    const failsafe = setTimeout(function () {
+      skipBoot(bootScreen, terminal, mainbg);
+    }, 45000);
+
     runBootSequence(bootScreen, linesContainer, terminal, mainbg);
+
+    document.addEventListener('skelli:boot-complete', function () {
+      clearTimeout(failsafe);
+    }, { once: true });
   });
 })();
