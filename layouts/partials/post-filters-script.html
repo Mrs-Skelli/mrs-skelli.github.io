@@ -1,1 +1,1 @@
-<script src="{{ "/js/post-filters.js" | relURL }}" defer></script>
+<script src="{{ (printf "/js/post-filters.js?v=%d" now.Unix) | relURL }}" defer></script>

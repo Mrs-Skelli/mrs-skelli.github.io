@@ -83,10 +83,19 @@
       if (!group) return;
 
       const key = group.dataset.filterGroup;
-      active[key] = btn.dataset.filter;
+      const filter = btn.dataset.filter;
+
+      if (filter === 'all' || active[key] === filter) {
+        active[key] = 'all';
+      } else {
+        active[key] = filter;
+      }
 
       group.querySelectorAll('.post-filter-btn').forEach(function (option) {
-        option.classList.toggle('is-active', option === btn);
+        const selected = active[key] === 'all'
+          ? option.dataset.filter === 'all'
+          : option.dataset.filter === active[key];
+        option.classList.toggle('is-active', selected);
       });
 
       applyFilters();
