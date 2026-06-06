@@ -2,6 +2,8 @@
 title: "WordPress Hacking Tips"
 date: 2025-08-02
 draft: true
+aliases:
+  - /posts/wordpress-hacking/
 description: "Tips and tricks I've learned along the way when hacking WordPress websites."
 ---
 

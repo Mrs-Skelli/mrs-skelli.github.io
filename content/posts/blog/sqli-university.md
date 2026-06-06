@@ -2,8 +2,12 @@
 title: "SQL Injection in University"
 date: 2025-11-18
 draft: false
+aliases:
+  - /posts/sqli-university/
 description: "An SQL Injection Attack found on a European university."
 summary: "An SQL Injection Attack found on a European university."
+technologies: ["web-app"]
+vulnerabilities: ["sqli"]
 ---
 
 

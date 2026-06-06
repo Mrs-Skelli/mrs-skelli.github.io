@@ -3,26 +3,21 @@
     <div class="terminal-window">
         {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
         <div class="terminal-content">
-            <div class="contenthead">
-                <h1 class="contentheading">{{ .Title }}</h1>
+            <p class="terminal-prompt">skelli@macbook ~ % cd posts</p>
+            <p class="terminal-prompt">skelli@macbook ~/posts % ls -la</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
             </div>
-            <div class="contenttypewritter">
-                <div class="posts-list">
-                    {{ range .Pages }}
-                    <article class="post-card">
-                        <div class="post-card-content">
-                            <h2 class="card-title">{{ .Title }}</h2>
-                            {{ if .Date }}
-                            <p class="card-subtitle">{{ .Date.Format "January 2, 2006" }}</p>
-                            {{ end }}
-                            <div class="card-text">
-                                {{ .Summary }}
-                            </div>
-                            <a href="{{ .RelPermalink }}" class="read-more">Read More →</a>
-                        </div>
-                    </article>
-                    {{ end }}
-                </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/posts % ./select-blog.sh</p>
+            <div class="contentbtn">
+                <a href="{{ "/posts/blog/" | relURL }}" class="btn btn-outline-light" role="button">Blog Posts</a>
+                <a href="{{ "/posts/hadrian/" | relURL }}" class="btn btn-outline-light" role="button">Hadrian Blogs</a>
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
             </div>
         </div>
     </div>

@@ -457,7 +457,7 @@ body.boot-done footer {
   min-height: 400px;
 }
 
-.container, article, .about-content, .post-card {
+.container, article, .about-content {
   background-color: var(--terminal-black);
   border: 1px solid var(--terminal-blue);
   box-shadow: 0 0 10px var(--terminal-dim-blue);
@@ -483,7 +483,7 @@ body.boot-done footer {
 }
 
 /* Cursor blinking effect */
-.content::after, .card-title::after, .welcome-message .animatedText::after {
+.content::after, .welcome-message .animatedText::after {
   content: "█";
   animation: blink 1s steps(1) infinite;
   color: var(--terminal-cursor);
@@ -744,7 +744,7 @@ p, .file-summary, .card-text {
 }
 
 /* Fix white background issues */
-.container, .terminal-window, article, .about-content, .post-card, .file-item {
+.container, .terminal-window, article, .about-content, .file-item {
   background-color: var(--terminal-black);
 }
 
@@ -758,11 +758,6 @@ p, .file-summary, .card-text {
 }
 
 /* Fix post cards */
-.post-card .card-body {
-  background-color: var(--terminal-black);
-  color: var(--terminal-text);
-}
-
 /* Fix content container */
 .content-container {
   color: var(--terminal-text);

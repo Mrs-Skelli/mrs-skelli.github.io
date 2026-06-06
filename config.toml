@@ -3,6 +3,10 @@ languageCode = "en-us"
 title = "Skelli"
 theme = "glim"
 
+[taxonomies]
+  technology = "technologies"
+  vulnerability = "vulnerabilities"
+
 [params]
   title = "Skelli"
   description = "Cyberpunk nonsense and writeups"
@@ -22,7 +26,7 @@ theme = "glim"
   # Add your navigation links/buttons
   links = [
     { name = "About", url = "/about", newTab = false },
-    { name = "Blog Posts", url = "/posts", newTab = false },
+    { name = "Blog", url = "/posts", newTab = false },
     { name = "DIVD", url = "https://www.divd.nl/who-we-are/team/people/eden-stroet/", newTab = true },
     { name = "HackerOne", url = "https://hackerone.com/mrsskelli", newTab = true },
     { name = "Bugcrowd", url = "https://bugcrowd.com/h/mrs-skelli", newTab = true },

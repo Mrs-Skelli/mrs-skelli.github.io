@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd posts/hadrian</p>
+            {{ partial "posts-section.html" . }}
+            <script src="{{ "/js/post-filters.js" | relURL }}"></script>
+        </div>
+    </div>
+</div>
+{{ end }}

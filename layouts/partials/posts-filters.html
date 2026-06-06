@@ -1,0 +1,40 @@
+{{ $technologies := slice }}
+{{ $vulnerabilities := slice }}
+{{ range .RegularPages }}
+  {{ $technologies = union $technologies (.Params.technologies | default slice) }}
+  {{ $vulnerabilities = union $vulnerabilities (.Params.vulnerabilities | default slice) }}
+{{ end }}
+{{ $technologies = sort $technologies }}
+{{ $vulnerabilities = sort $vulnerabilities }}
+
+{{ if or $technologies $vulnerabilities }}
+<div class="post-filters" id="post-filters">
+  <p class="terminal-prompt post-filters-prompt">skelli@macbook ~/posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }} % grep -E 'technologies|vulnerabilities'</p>
+
+  {{ if $technologies }}
+  <div class="post-filter-group" data-filter-group="technology">
+    <span class="post-filter-label">technology:</span>
+    <div class="post-filter-options" role="group" aria-label="Filter by technology">
+      <button type="button" class="post-filter-btn is-active" data-filter="all">all</button>
+      {{ range $technologies }}
+      <button type="button" class="post-filter-btn" data-filter="{{ . }}">{{ . | upper }}</button>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+
+  {{ if $vulnerabilities }}
+  <div class="post-filter-group" data-filter-group="vulnerability">
+    <span class="post-filter-label">vulnerability:</span>
+    <div class="post-filter-options" role="group" aria-label="Filter by vulnerability class">
+      <button type="button" class="post-filter-btn is-active" data-filter="all">all</button>
+      {{ range $vulnerabilities }}
+      <button type="button" class="post-filter-btn" data-filter="{{ . }}">{{ . | upper }}</button>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+
+  <p class="post-filter-status" id="post-filter-status" aria-live="polite"></p>
+</div>
+{{ end }}

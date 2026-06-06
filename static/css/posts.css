@@ -1,131 +1,179 @@
-.posts-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 2rem 0;
-    max-width: 1200px;
-    margin: 0 auto;
+/* Blog listing — terminal file-list style */
+
+.post-filters {
+  margin: 0.75rem 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed rgba(0, 122, 204, 0.25);
 }
 
-.contenthead {
-    margin-bottom: 2rem;
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px dashed var(--terminal-blue, #00a5c2);
+.post-filters-prompt {
+  margin-bottom: 0.65rem;
 }
 
-.contentheading {
-    color: var(--terminal-bright-blue, #00d5ff);
-    font-size: 2rem;
-    margin: 0;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(0, 213, 255, 0.5);
+.post-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.65rem;
+  margin-bottom: 0.55rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
 }
 
-.contenttypewritter {
-    width: 100%;
-    padding: 1rem 0;
+.post-filter-label {
+  color: var(--terminal-bright-blue);
+  flex-shrink: 0;
+  min-width: 6.5rem;
 }
 
-.post-card {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--terminal-blue, #00a5c2);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.post-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
-.post-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(0, 165, 194, 0.3);
-    border-color: var(--terminal-bright-blue, #00d5ff);
+.post-filter-btn {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 122, 204, 0.35);
+  border-radius: 3px;
+  color: rgba(57, 165, 255, 0.85);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  padding: 3px 8px;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.post-card-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.post-filter-btn:hover {
+  border-color: var(--terminal-blue);
+  color: var(--terminal-bright-blue);
 }
 
-.post-card h2 {
-    color: var(--terminal-bright-blue, #00d5ff);
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
+.post-filter-btn.is-active {
+  background: rgba(0, 122, 204, 0.2);
+  border-color: var(--terminal-blue);
+  color: var(--terminal-bright-blue);
 }
 
-.post-date {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+.post-filter-status {
+  margin: 0.35rem 0 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  color: rgba(57, 165, 255, 0.55);
 }
 
-.post-summary {
-    color: #ccc;
-    margin-bottom: 1.5rem;
-    flex: 1;
+.posts-file-listing {
+  margin-top: 0.5rem;
+  max-width: none;
 }
 
-.read-more {
-    color: var(--terminal-bright-blue, #00d5ff);
-    text-decoration: none;
-    font-weight: bold;
-    align-self: flex-start;
-    transition: all 0.3s ease;
+.posts-file-listing .post-file-item {
+  padding: 12px 14px 14px;
+  margin: 0;
+  border: 1px solid rgba(0, 122, 204, 0.4);
+  border-left: 3px solid var(--terminal-dim-blue);
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.3);
+  max-width: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.read-more:hover {
-    color: #fff;
-    text-shadow: 0 0 5px rgba(0, 213, 255, 0.5);
+.posts-file-listing .post-file-item + .post-file-item {
+  margin-top: 10px;
 }
 
-.card {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--terminal-blue, #00a5c2);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.posts-file-listing .post-file-item:hover {
+  border-color: rgba(0, 122, 204, 0.65);
+  border-left-color: var(--terminal-bright-blue);
+  background: rgba(0, 122, 204, 0.08);
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(0, 165, 194, 0.3);
-    border-color: var(--terminal-bright-blue, #00d5ff);
+.post-file-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--terminal-dim-blue);
+  margin-bottom: 0.35rem;
 }
 
-.card-title {
-    color: var(--terminal-bright-blue, #00d5ff);
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+.post-file-perms {
+  color: rgba(57, 165, 255, 0.5);
 }
 
-.card-subtitle {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+.post-file-meta .file-date {
+  padding-left: 0;
+  color: rgba(57, 165, 255, 0.65);
 }
 
-.card-text {
-    color: #ccc;
-    flex: 1;
+.post-file-slug {
+  color: rgba(57, 165, 255, 0.75);
 }
 
-.btn-primary {
-    color: var(--terminal-bright-blue, #00d5ff);
-    background-color: transparent;
-    border: 1px solid var(--terminal-blue, #00a5c2);
-    font-weight: bold;
-    transition: all 0.3s ease;
+.post-file-tag {
+  color: var(--terminal-bright-blue);
+  font-size: 0.76rem;
+  opacity: 0.8;
 }
 
-.btn-primary:hover {
-    color: #fff;
-    background-color: var(--terminal-blue, #00a5c2);
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+.posts-file-listing .post-file-title {
+  margin: 0 0 0.4rem;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.35;
 }
 
+.posts-file-listing .post-file-title a {
+  color: var(--terminal-bright-blue);
+  text-decoration: none;
+}
+
+.posts-file-listing .post-file-title a:hover {
+  text-decoration: underline;
+}
+
+.posts-file-listing .post-file-summary {
+  margin: 0 0 0.5rem;
+  padding: 0 0 0 2px;
+  border: none;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(200, 225, 255, 0.78);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.posts-file-listing .post-file-action {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.84rem;
+  color: var(--terminal-blue);
+  text-decoration: none;
+}
+
+.posts-file-listing .post-file-action:hover {
+  color: var(--terminal-bright-blue);
+  text-decoration: underline;
+}
+
+.post-file-item-external .post-file-tag {
+  opacity: 0.95;
+}
+
+@media (max-width: 520px) {
+  .post-file-meta {
+    font-size: 0.72rem;
+  }
+
+  .posts-file-listing .post-file-title {
+    font-size: 0.95rem;
+  }
+}

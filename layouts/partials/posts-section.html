@@ -1,0 +1,50 @@
+<div class="content-container mb-4">
+    {{ .Content }}
+</div>
+
+<p class="terminal-prompt">skelli@macbook ~/posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }} % ls -la *.md</p>
+
+{{ partial "posts-filters.html" . }}
+
+<div class="file-listing posts-file-listing" id="posts-file-listing">
+    {{ range .RegularPages.ByDate.Reverse }}
+    {{ $external := .Params.external_url }}
+    {{ $link := cond $external $external .RelPermalink }}
+    {{ $slug := .File.ContentBaseName }}
+    <article class="file-item post-file-item{{ if $external }} post-file-item-external{{ end }}"
+        data-technologies="{{ delimit (.Params.technologies | default slice) "," }}"
+        data-vulnerabilities="{{ delimit (.Params.vulnerabilities | default slice) "," }}">
+        <div class="post-file-meta">
+            <span class="post-file-perms">-rw-r--r--</span>
+            <span class="file-date">{{ if .Date }}{{ .Date.Format "Jan 02 2006" }}{{ else }}---------{{ end }}</span>
+            <span class="post-file-slug">{{ $slug }}.md</span>
+            {{ if $external }}
+            <span class="post-file-tag">[hadrian.io]</span>
+            {{ else }}
+            <span class="post-file-tag">[local]</span>
+            {{ end }}
+        </div>
+        <p class="post-file-title">
+            <a href="{{ $link }}"{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>{{ .Title }}</a>
+        </p>
+        {{ $summary := .Summary | plainify | strings.TrimSpace }}
+        {{ if $summary }}
+        <p class="file-summary post-file-summary">{{ $summary }}</p>
+        {{ else if $external }}
+        <p class="file-summary post-file-summary">Published on Hadrian's blog.</p>
+        {{ end }}
+        <a href="{{ $link }}" class="post-file-action"{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>
+            {{ if $external }}→ open hadrian.io{{ else }}→ cat {{ $slug }}.md{{ end }}
+        </a>
+    </article>
+    {{ else }}
+    <p class="file-summary">No posts yet. Check back soon.</p>
+    {{ end }}
+</div>
+
+<p class="terminal-prompt">skelli@macbook ~/posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }} % cd ..</p>
+
+<div class="mt-4 contentbtn">
+    <a href="{{ "/posts/" | relURL }}" class="btn btn-outline-light">← Blog</a>
+    <a href="{{ "/" | relURL }}" class="btn btn-outline-light">Home</a>
+</div>

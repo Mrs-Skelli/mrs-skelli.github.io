@@ -21,7 +21,7 @@
             <p class="terminal-prompt">skelli@macbook ~ % ls</p>
             
             <div class="mt-4">
-                <a href="{{ "/" | relURL }}{{ .Section }}/" class="btn btn-outline-light">← Back</a>
+                <a href="{{ with .Parent }}{{ .RelPermalink }}{{ else }}{{ "/" | relURL }}{{ .Section }}/{{ end }}" class="btn btn-outline-light">← Back</a>
                 <a href="{{ "/" | relURL }}" class="btn btn-outline-light">Home</a>
             </div>
         </div>

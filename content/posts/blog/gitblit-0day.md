@@ -2,8 +2,12 @@
 title: "GitBlit 0day: Client Side Template Injection Leading to XSS Without HTML"
 date: 2026-02-25
 draft: false
+aliases:
+  - /posts/gitblit-0day/
 description: "The update to 'Baby's First 0day?' where I disclose the full proof of concept and details "
 summary: "A timeline breaking down the responsible disclosure process from finding to disclosure of a CSTI in GitBlit."
+technologies: ["gitblit", "java"]
+vulnerabilities: ["csti", "xss"]
 ---
 
 # Preface

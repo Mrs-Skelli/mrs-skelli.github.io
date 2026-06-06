@@ -2,8 +2,12 @@
 title: "Supabase Shenanigans"
 date: 2026-02-20
 draft: false
+aliases:
+  - /posts/supabase-shenanigans/
 description: "Supabase Shenanigans: If you're going to use Supabase, implement RLS"
 summary: "Supabase is quite permissive by default, by not implementing Row-Level Security, you could be exposing PII of thousands of users."
+technologies: ["supabase", "postgresql"]
+vulnerabilities: ["broken-access-control", "information-disclosure"]
 ---
 
 ## Too Long, Didn't Read

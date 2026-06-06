@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % open {{ .Params.external_url }}</p>
+            <p>This post lives on Hadrian's blog.</p>
+            <p class="terminal-prompt">skelli@macbook ~ %</p>
+            <div class="mt-4 contentbtn">
+                <a href="{{ .Params.external_url }}" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">Continue to hadrian.io →</a>
+                <a href="{{ "/posts/hadrian/" | relURL }}" class="btn btn-outline-light">← Hadrian Blogs</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
