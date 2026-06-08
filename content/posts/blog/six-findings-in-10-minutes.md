@@ -80,10 +80,10 @@ That digest is the fingerprint. The server failed to handle the reference. The a
 
 The request that triggers it looks like this:
 
-```
+```http
 POST / HTTP/2
 Host: [REDACTED]
-Content-Type: multipart/form-data; boundary=poc_boundary
+Content-Type: multipart/form-data; boundary=yf6thz7m0luy8flb
 Next-Action: [ACTION_HASH]
 Next-Router-State-Tree: [""]
 
@@ -96,7 +96,6 @@ Content-Disposition: form-data; name="0"
 
 ["$1:a:a"]
 --yf6thz7m0luy8flb--
-
 ```
 
 Patched versions exist. React 19.0.1, 19.1.2, 19.2.1, and any stable non-canary release. Next.js 15.3.6 or newer. The fix is a version bump and a redeploy.
@@ -196,7 +195,7 @@ The vulnerabilities here are architectural defaults and easy misses:
 - Environment variables with `NEXT_PUBLIC_` go to the browser. Everything else stays server-side.
 - Spring Boot Actuator ships open. You have to close it.
 - Spring Security doesn't auto-apply to all routes. You have to configure it explicitly.
-- Supabase RLS is off by default. Spring Security authorization is also not magic. You have to write the rules.
+- Documenting Bearer auth in your OpenAPI spec does not enforce it. Spring Security authorization is not magic. You have to write the rules.
 
 The recurring theme: frameworks don't protect you by default. They give you the tools and then let you misconfigure them in production.
 
