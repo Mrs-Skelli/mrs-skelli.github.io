@@ -2,7 +2,7 @@
 title: "Six Findings in 10 Minutes: A Free Pentest Story"
 date: 2026-06-08
 draft: false
-description: "A portfolio pentest that escalated into six findings on a university recruitment platform: CVSS 10.0 RCE, unauthenticated PII, exposed Actuator, and secrets in a JS bundle."
+description: "A portfolio pentest that escalated into six findings on a university recruitment platform: a Burp-flagged CVSS 10.0 RCE I confirmed, unauthenticated PII, exposed Actuator, and secrets in a JS bundle."
 summary: "Six findings in ten minutes on a Next.js portfolio and its connected Spring Boot university platform."
 technologies: ["nextjs", "react", "spring-boot", "vercel", "cloudflare"]
 vulnerabilities: ["rce", "information-disclosure", "misconfiguration", "credential-exposure"]
@@ -12,7 +12,7 @@ vulnerabilities: ["rce", "information-disclosure", "misconfiguration", "credenti
 
 ## Too Long, Didn't Read
 
-A developer friend asked me to pentest their portfolio site. Scope expanded to a production university recruitment platform with 20,000+ student records. Found a CVSS 10.0 RCE, unauthenticated PII enumeration on a live student data API, Spring Boot Actuator fully exposed, and a hardcoded webhook in a public JavaScript bundle. Six findings total. Wrote it all up and delivered it the same day, and all in a matter of **minutes.** I was given permission on 8 June, 2026 19:45 and by 19:54, I already had my first crit.
+A developer friend asked me to pentest their portfolio site. Scope expanded to a production university recruitment platform with 20,000+ student records. Burp flagged a CVSS 10.0 RCE, which I confirmed, along with unauthenticated PII enumeration on a live student data API, Spring Boot Actuator fully exposed, and a hardcoded webhook in a public JavaScript bundle. Six findings total. Wrote it all up and delivered it the same day, and all in a matter of **minutes.** I was given permission on 8 June, 2026 19:45 and by 19:54, I already had my first crit.
 
 ---
 
@@ -62,13 +62,13 @@ I probed it. It came back 404, with a Discord error code 10015, `Unknown Webhook
 
 ## Finding 1: CVSS 10.0
 
-While I was doing that JS analysis, Burp's passive scanner had been quietly doing its thing. It flagged something.
+While I was doing that JS analysis, Burp's passive scanner had been quietly doing its thing. It flagged a CVSS 10.0 RCE against the portfolio site.
 
 React Server Components, the architecture Next.js uses under the hood, had a critical vulnerability published earlier this year: `CVE-2025-55182` and `CVE-2025-66478`. The short version is that the RSC Flight protocol doesn't validate property existence in colon-delimited reference strings. A malformed multipart POST body, specifically a reference `["$1:a:a"]`, causes the server to attempt to deserialize an invalid property chain. That throws an unhandled exception. In vulnerable configurations, that primitive is exploitable for unauthenticated remote code execution on the Node.js process.
 
 CVSS 10.0. No authentication. No user interaction. No special configuration.
 
-The scanner confirmed it with a 500 response and a Next.js error digest:
+I confirmed what Burp had found with a 500 response and a Next.js error digest. I did not deploy a full RCE payload against production:
 
 ```
 0:{"a":"$@1","f":"","b":"[BUILD_ID]"}
@@ -215,7 +215,7 @@ This is that writeup.
 
 | ID   | Finding                                                       | Severity |
 | ---- | ------------------------------------------------------------- | -------- |
-| F-01 | React Server Components RCE (CVE-2025-55182 / CVE-2025-66478) | Critical |
+| F-01 | React Server Components RCE (CVE-2025-55182 / CVE-2025-66478), confirmed via Burp | Critical |
 | F-02 | Unauthenticated faculty/user PII enumeration                  | High     |
 | F-03 | Spring Boot Actuator fully exposed                            | High     |
 | F-04 | Discord webhook hardcoded in client JS bundle                 | High     |
