@@ -2,7 +2,7 @@
 title: "Six Findings in 10 Minutes: A Free Pentest Story"
 date: 2026-06-08
 draft: false
-description: "A portfolio pentest that escalated into six findings on a university recruitment platform — CVSS 10.0 RCE, unauthenticated PII, exposed Actuator, and secrets in a JS bundle."
+description: "A portfolio pentest that escalated into six findings on a university recruitment platform: CVSS 10.0 RCE, unauthenticated PII, exposed Actuator, and secrets in a JS bundle."
 summary: "Six findings in ten minutes on a Next.js portfolio and its connected Spring Boot university platform."
 technologies: ["nextjs", "react", "spring-boot", "vercel", "cloudflare"]
 vulnerabilities: ["rce", "information-disclosure", "misconfiguration", "credential-exposure"]
@@ -151,9 +151,9 @@ It's also meant to be locked down before you go to production. This one wasn't.
 
 `/actuator` returned a full index of available sub-endpoints. All of them were accessible without authentication:
 
-- `/actuator/env` — environment property sources. Sensitive values are masked, but the key names are visible. You can see the shape of what secrets exist, even if you can't read the values.
-- `/actuator/beans` — full internal bean graph with fully qualified Java class names and package paths. A detailed map of the application internals.
-- `/actuator/prometheus` — JVM metrics, database connection pool statistics, HTTP request latency histograms, cache hit rates.
+- `/actuator/env`: environment property sources. Sensitive values are masked, but the key names are visible. You can see the shape of what secrets exist, even if you can't read the values.
+- `/actuator/beans`: full internal bean graph with fully qualified Java class names and package paths. A detailed map of the application internals.
+- `/actuator/prometheus`: JVM metrics, database connection pool statistics, HTTP request latency histograms, cache hit rates.
 
 This is reconnaissance infrastructure. It doesn't give an attacker credentials directly, but it tells them what's running, how it's structured, and where to look.
 
@@ -182,7 +182,7 @@ I didn't pull the full list. I confirmed the endpoint returned data, took a samp
 
 The last finding is less dramatic but worth documenting because it's the root cause of the webhook issue and probably a broader pattern.
 
-The contact form sends visitor data — name, email, and project description — directly to an external API from the browser. The data passes through the visitor's browser before it reaches its destination, which means any intercepting proxy, browser extension, or injected script can see it. Anyone can script a loop and flood the endpoint. It can be triggered cross-origin from any page. Therefore, moving the call server-side also fixes the rate-limiting gap, and you can apply it in one place without depending on client behaviour.
+The contact form sends visitor data (name, email, and project description) directly to an external API from the browser. The data passes through the visitor's browser before it reaches its destination, which means any intercepting proxy, browser extension, or injected script can see it. Anyone can script a loop and flood the endpoint. It can be triggered cross-origin from any page. Therefore, moving the call server-side also fixes the rate-limiting gap, and you can apply it in one place without depending on client behaviour.
 
 ---
 
@@ -196,7 +196,7 @@ The vulnerabilities here are architectural defaults and easy misses:
 - Environment variables with `NEXT_PUBLIC_` go to the browser. Everything else stays server-side.
 - Spring Boot Actuator ships open. You have to close it.
 - Spring Security doesn't auto-apply to all routes. You have to configure it explicitly.
-- Supabase RLS is off by default. Spring Security authorization is also not magic — you have to write the rules.
+- Supabase RLS is off by default. Spring Security authorization is also not magic. You have to write the rules.
 
 The recurring theme: frameworks don't protect you by default. They give you the tools and then let you misconfigure them in production.
 
@@ -230,6 +230,6 @@ This is that writeup.
 - [CVE-2025-55182](https://www.cve.org/CVERecord?id=CVE-2025-55182)
 - [CVE-2025-66478](https://www.cve.org/CVERecord?id=CVE-2025-66478)
 - [Next.js Security Advisories](https://nextjs.org/blog/security-advisories)
-- [Spring Boot Actuator — Production Ready Features](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Spring Security — Authorize HTTP Requests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)
+- [Spring Boot Actuator: Production Ready Features](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
+- [Spring Security: Authorize HTTP Requests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)
 
