@@ -17,6 +17,10 @@
     {{ if and (eq .Kind "section") .Parent (eq .Parent.RelPermalink "/posts/") }}
     <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
     {{ end }}
+    {{ if eq .Section "projects" }}
+    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ ("/css/projects.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ end }}
     {{ if or (eq .Layout "preview-bg") .IsHome }}
     <link rel="stylesheet" href="{{ ("/css/bg-patterns.css" | relURL) }}?v={{ $cssVersion }}">
     {{ end }}

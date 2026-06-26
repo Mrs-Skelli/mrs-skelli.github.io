@@ -1,0 +1,59 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd projects</p>
+            <p class="terminal-prompt">skelli@macbook ~/projects % ls -la</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/projects % find . -type f -name '*.md'</p>
+
+            <div class="file-listing projects-file-listing">
+                {{ range .RegularPages.ByWeight }}
+                {{ $slug := .File.ContentBaseName }}
+                <article class="file-item project-file-item"
+                    data-technologies="{{ delimit (.Params.technologies | default slice) "," }}">
+                    <div class="post-file-meta">
+                        <span class="post-file-perms">-rwxr-xr-x</span>
+                        {{ if .Date }}<span class="file-date">{{ .Date.Format "Jan 02 2006" }}</span>{{ end }}
+                        <span class="post-file-slug">{{ $slug }}/</span>
+                        {{ range .Params.technologies }}
+                        <span class="project-file-tag">[{{ . }}]</span>
+                        {{ end }}
+                    </div>
+                    <p class="post-file-title">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </p>
+                    {{ $summary := .Params.summary | default (.Summary | plainify | strings.TrimSpace) }}
+                    {{ if $summary }}
+                    <p class="file-summary post-file-summary">{{ $summary }}</p>
+                    {{ end }}
+                    <div class="project-file-links">
+                        <a href="{{ .RelPermalink }}" class="post-file-action">→ cat {{ $slug }}.md</a>
+                        {{ with .Params.project_url }}
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ open live</a>
+                        {{ end }}
+                        {{ with .Params.source_url }}
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ view source</a>
+                        {{ end }}
+                    </div>
+                </article>
+                {{ else }}
+                <p class="file-summary">No projects yet. Something's brewing.</p>
+                {{ end }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/projects % cd ~</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
+                <a href="{{ "/posts/" | relURL }}" class="btn btn-outline-light">Blog</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

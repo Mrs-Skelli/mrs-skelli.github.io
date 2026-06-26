@@ -31,6 +31,7 @@ weight = 1
   links = [
     { name = "About", url = "/about", newTab = false },
     { name = "Blog", url = "/posts", newTab = false },
+    { name = "Projects", url = "/projects", newTab = false },
     { name = "DIVD", url = "https://www.divd.nl/who-we-are/team/people/eden-stroet/", newTab = true },
     { name = "HackerOne", url = "https://hackerone.com/mrsskelli", newTab = true },
     { name = "Bugcrowd", url = "https://bugcrowd.com/h/mrs-skelli", newTab = true },

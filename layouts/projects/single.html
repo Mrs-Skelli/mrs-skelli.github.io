@@ -1,0 +1,48 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd projects/{{ .File.ContentBaseName }}</p>
+            <p class="terminal-prompt">skelli@macbook ~/projects/{{ .File.ContentBaseName }} % cat README.md</p>
+
+            <div class="content-title">
+                <h1>{{ .Title }}</h1>
+                {{ if .Date }}
+                <p class="terminal-date">{{ .Date.Format "January 2, 2006" }}</p>
+                {{ end }}
+            </div>
+
+            {{ if or .Params.project_url .Params.source_url }}
+            <div class="project-detail-links contentbtn">
+                {{ with .Params.project_url }}
+                <a href="{{ . }}" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">Open Live</a>
+                {{ end }}
+                {{ with .Params.source_url }}
+                <a href="{{ . }}" class="btn btn-outline-light" target="_blank" rel="noopener noreferrer">View Source</a>
+                {{ end }}
+            </div>
+            {{ end }}
+
+            {{ with .Params.technologies }}
+            <div class="project-detail-tags">
+                {{ range . }}
+                <span class="project-file-tag">[{{ . }}]</span>
+                {{ end }}
+            </div>
+            {{ end }}
+
+            <div class="content">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/projects/{{ .File.ContentBaseName }} % cd ..</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/projects/" | relURL }}" class="btn btn-outline-light">← Projects</a>
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
