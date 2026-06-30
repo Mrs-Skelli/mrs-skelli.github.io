@@ -36,6 +36,7 @@ weight = 1
     { name = "HackerOne", url = "https://hackerone.com/mrsskelli", newTab = true },
     { name = "Bugcrowd", url = "https://bugcrowd.com/h/mrs-skelli", newTab = true },
     { name = "Intigriti", url = "https://app.intigriti.com/researcher/profile/mrs_sk3ll1", newTab = true },
+    { name = "Patchstack", url = "https://vdp.patchstack.com/database/researchers/e07dca4f-a20e-4804-979a-193415b9720a", newTab = true },
     { name = "Digital Overdose", url = "https://digitaloverdose.tech/", newTab = true },
     { name = "Github", url = "https://github.com/Mrs-Skelli", newTab = true },
     { name = "BlueSky", url = "https://bsky.app/profile/skelli@skelli.win", newTab = true },
