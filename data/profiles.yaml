@@ -28,10 +28,3 @@
   tag: wordpress vdp
   weight: 4
   blurb: WordPress-focused vulnerability disclosure program researcher page.
-
-- platform: Digital Overdose
-  handle: ""
-  url: https://digitaloverdose.tech/
-  tag: community
-  weight: 5
-  blurb: Cybersecurity community and learning platform.
