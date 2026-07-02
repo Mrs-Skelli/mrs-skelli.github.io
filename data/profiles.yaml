@@ -1,0 +1,37 @@
+# Bug bounty / security platform profiles — edit handles, blurbs, and stats here.
+# All fields are rendered as escaped text; URLs open in a new tab with noopener.
+
+- platform: HackerOne
+  handle: mrsskelli
+  url: https://hackerone.com/mrsskelli
+  tag: bug bounty
+  weight: 1
+  blurb: Coordinated vulnerability disclosure and private program research.
+
+- platform: Bugcrowd
+  handle: mrs-skelli
+  url: https://bugcrowd.com/h/mrs-skelli
+  tag: bug bounty
+  weight: 2
+  blurb: Public researcher profile and submitted findings.
+
+- platform: Intigriti
+  handle: mrs_sk3ll1
+  url: https://app.intigriti.com/researcher/profile/mrs_sk3ll1
+  tag: bug bounty
+  weight: 3
+  blurb: European bug bounty platform — researcher profile and program participation.
+
+- platform: Patchstack
+  handle: ""
+  url: https://vdp.patchstack.com/database/researchers/e07dca4f-a20e-4804-979a-193415b9720a
+  tag: wordpress vdp
+  weight: 4
+  blurb: WordPress-focused vulnerability disclosure program researcher page.
+
+- platform: Digital Overdose
+  handle: ""
+  url: https://digitaloverdose.tech/
+  tag: community
+  weight: 5
+  blurb: Cybersecurity community and learning platform.

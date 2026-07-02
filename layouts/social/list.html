@@ -1,0 +1,52 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd social</p>
+            <p class="terminal-prompt">skelli@macbook ~/social % ls -la accounts/</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/social % cat accounts/*.json</p>
+
+            <div class="file-listing social-file-listing">
+                {{ range sort hugo.Data.social "weight" }}
+                <article class="file-item social-card">
+                    <div class="post-file-meta">
+                        <span class="post-file-perms">-rw-r--r--</span>
+                        <span class="post-file-slug">{{ .platform | urlize }}/account.json</span>
+                        {{ with .tag }}
+                        <span class="social-file-tag">[{{ . }}]</span>
+                        {{ end }}
+                    </div>
+                    <p class="post-file-title">
+                        <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .platform }}</a>
+                    </p>
+                    {{ with .handle }}
+                    <p class="social-handle">handle: <span class="social-handle-value">{{ . }}</span></p>
+                    {{ end }}
+                    {{ with .blurb }}
+                    <p class="file-summary post-file-summary social-blurb">{{ . }}</p>
+                    {{ end }}
+                    <div class="social-card-links">
+                        <a href="{{ .url }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ open profile</a>
+                    </div>
+                </article>
+                {{ else }}
+                <p class="file-summary">No social accounts configured yet.</p>
+                {{ end }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/social % cd ~</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
+                <a href="{{ "/profiles/" | relURL }}" class="btn btn-outline-light">Bug Bounty</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

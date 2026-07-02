@@ -1,0 +1,23 @@
+# Social media profiles — edit handles, blurbs, and tags here.
+# All fields are rendered as escaped text; URLs open in a new tab with noopener.
+
+- platform: BlueSky
+  handle: skelli@skelli.win
+  url: https://bsky.app/profile/skelli@skelli.win
+  tag: microblog
+  weight: 1
+  blurb: Short-form posts, security chatter, and general chaos.
+
+- platform: Mastodon
+  handle: "@Mrs_Skelli"
+  url: https://infosec.exchange/@Mrs_Skelli
+  tag: fediverse
+  weight: 2
+  blurb: Infosec.exchange — longer thoughts and community interaction.
+
+- platform: LinkedIn
+  handle: in/mrsskelli
+  url: https://www.linkedin.com/in/mrsskelli/
+  tag: professional
+  weight: 3
+  blurb: Professional profile, work history, and networking.

@@ -1,0 +1,61 @@
+/* Social profile cards — extends blog/projects file-list styling */
+
+.social-file-listing {
+  margin-top: 0.5rem;
+  max-width: none;
+}
+
+.social-file-listing .social-card {
+  padding: 12px 14px 14px;
+  margin: 0;
+  border: 1px solid rgba(0, 122, 204, 0.4);
+  border-left: 3px solid var(--terminal-dim-blue);
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.3);
+  max-width: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.social-file-listing .social-card + .social-card {
+  margin-top: 10px;
+}
+
+.social-file-listing .social-card:hover {
+  border-color: rgba(0, 122, 204, 0.65);
+  border-left-color: var(--terminal-bright-blue);
+  background: rgba(0, 122, 204, 0.08);
+}
+
+.social-file-tag {
+  color: var(--terminal-bright-blue);
+  font-family: 'Courier New', monospace;
+  font-size: 0.76rem;
+  opacity: 0.8;
+}
+
+.social-handle {
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.84rem;
+  color: rgba(57, 165, 255, 0.65);
+}
+
+.social-blurb {
+  -webkit-line-clamp: 3;
+}
+
+.social-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 520px) {
+  .social-card-links {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}

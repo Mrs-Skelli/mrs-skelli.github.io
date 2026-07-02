@@ -1,0 +1,62 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd profiles</p>
+            <p class="terminal-prompt">skelli@macbook ~/profiles % ls -la platforms/</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/profiles % cat platforms/*.json</p>
+
+            <div class="file-listing profiles-file-listing">
+                {{ range sort hugo.Data.profiles "weight" }}
+                <article class="file-item profile-card">
+                    <div class="post-file-meta">
+                        <span class="post-file-perms">-rw-r--r--</span>
+                        <span class="post-file-slug">{{ .platform | urlize }}/profile.json</span>
+                        {{ with .tag }}
+                        <span class="profile-file-tag">[{{ . }}]</span>
+                        {{ end }}
+                    </div>
+                    <p class="post-file-title">
+                        <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .platform }}</a>
+                    </p>
+                    {{ with .handle }}
+                    <p class="profile-handle">handle: <span class="profile-handle-value">{{ . }}</span></p>
+                    {{ end }}
+                    {{ with .blurb }}
+                    <p class="file-summary post-file-summary profile-blurb">{{ . }}</p>
+                    {{ end }}
+                    {{ with .stats }}
+                    <dl class="profile-stats">
+                        {{ range . }}
+                        <div class="profile-stat">
+                            <dt>{{ .label }}</dt>
+                            <dd>{{ .value }}</dd>
+                        </div>
+                        {{ end }}
+                    </dl>
+                    {{ end }}
+                    <div class="profile-card-links">
+                        <a href="{{ .url }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ open profile</a>
+                    </div>
+                </article>
+                {{ else }}
+                <p class="file-summary">No profiles configured yet.</p>
+                {{ end }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/profiles % cd ~</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
+                <a href="{{ "/projects/" | relURL }}" class="btn btn-outline-light">Projects</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
