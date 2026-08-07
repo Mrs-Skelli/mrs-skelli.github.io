@@ -1,0 +1,99 @@
+# Speaking engagements and conference roles — edit here.
+# All fields are rendered as escaped text; URLs open in a new tab with noopener.
+# Optional image paths are local static/ copies only (no remote embeds).
+
+- event: WICCON 2026
+  year: "2026"
+  date: "2026-10-29"
+  date_display: "29–30 Oct 2026"
+  talk: ""
+  role: speaker
+  tag: conference
+  weight: 1
+  blurb: Listed speaker at WICCON in Haarlem. Security research, DIVD volunteering, bug bounty, and community work with Digital Overdose and Hard Way Hacking and Coding.
+  url: https://wiccon.nl/speakers-2026
+  image: ""
+
+- event: DEF CON Holland
+  year: "2026"
+  date: "2026-04-09"
+  date_display: "9 Apr 2026"
+  talk: "Supabase Shenanigans: Hacking Websites With The Same Misconfiguration"
+  role: speaker
+  tag: meetup
+  weight: 2
+  blurb: Lightning talk at the DC3120 meetup in Amsterdam (Café Tapmarin) on Supabase RLS misconfigurations — same material as the writeup on this site.
+  url: https://www.defconholland.org/2026/04/09/2nd-meetup/
+  image: /images/speaking/defcon-holland-supabase.jpg
+
+- event: RSA Conference
+  year: "2022"
+  date: "2022-06-09"
+  date_display: "9 Jun 2022"
+  talk: "Are You Up to the Challenge? Join the AppSec CTF"
+  role: presenter
+  tag: conference
+  weight: 3
+  blurb: RSAC presentation tied to AppSec Village CTF programming. Expert profile lists role as App Sec Village Lead / Chaos Wrangler.
+  url: https://www.rsaconference.com/experts/eden-stroet
+  image: ""
+
+- event: RSA Conference
+  year: "2021"
+  date: "2021-05-20"
+  date_display: "20 May 2021"
+  talk: "AppSec Village CTF"
+  role: presenter
+  tag: conference
+  weight: 4
+  blurb: RSAC session for the AppSec Village CTF. Expert profile title at the time App Sec Village Lead, AppSec Village DEF CON.
+  url: https://www.rsaconference.com/experts/eden-stroet
+  image: ""
+
+- event: InfoSecGirls Ranchi Meetup
+  year: "2021"
+  date: "2021-05-30"
+  date_display: "2021"
+  talk: ""
+  role: speaker
+  tag: meetup
+  weight: 5
+  blurb: Guest speaker for an InfoSecGirls Ranchi community meetup. Recording published on the InfosecGirls YouTube channel.
+  url: https://www.youtube.com/watch?v=sCYspE6yvp4
+  image: ""
+
+- event: Digital Overdose Con (D.O. Con)
+  year: "2021–"
+  date: "2021-01-01"
+  date_display: "2021–"
+  talk: ""
+  role: conference co-host
+  tag: community
+  weight: 6
+  blurb: Co-founded and co-hosts the Digital Overdose rookie conference (D.O. Con) — Conference Bringer / Community Manager alongside the DO team.
+  url: https://digitaloverdose.tech/team/
+  image: ""
+
+- event: Young Women In Leadership Summit
+  year: "2023"
+  date: "2023-02-25"
+  date_display: "~2023"
+  talk: "Community intro"
+  role: speaker
+  tag: school
+  weight: 7
+  blurb: Intro talk for a Young Women In Leadership Summit at a school in Colorado — freelance AppSec in the Netherlands, DEF CON Safe Mode AppSec Village leadership, OWASP mentorship, and community tutoring.
+  url: ""
+  image: /images/speaking/young-women-leadership-summit.png
+
+- event: DEF CON Safe Mode — AppSec Village
+  year: "2020"
+  date: "2020-08-01"
+  date_display: "Aug 2020"
+  talk: ""
+  role: village lead
+  tag: village
+  weight: 8
+  blurb: Application Security Village Lead for DEF CON Safe Mode (virtual DEF CON 28). Later Chaos Wrangler for AppSec Village through August 2024.
+  url: https://www.defcon.org/html/defcon-safemode/dc-safemode-villages.html
+  image: ""

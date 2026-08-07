@@ -10,54 +10,84 @@
   margin-bottom: 0.65rem;
 }
 
-.post-filter-group {
+.post-filter-controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.45rem 0.65rem;
-  margin-bottom: 0.55rem;
+  align-items: flex-end;
+  gap: 0.55rem 0.85rem;
+}
+
+.post-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
   font-family: 'Courier New', monospace;
   font-size: 0.82rem;
+  min-width: 9.5rem;
 }
 
 .post-filter-label {
   color: var(--terminal-bright-blue);
-  flex-shrink: 0;
-  min-width: 6.5rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
 }
 
-.post-filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.post-filter-btn {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(0, 122, 204, 0.35);
+.post-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(0, 0, 0, 0.55);
+  background-image: linear-gradient(45deg, transparent 50%, var(--terminal-blue) 50%),
+    linear-gradient(135deg, var(--terminal-blue) 50%, transparent 50%);
+  background-position: calc(100% - 14px) calc(50% + 1px), calc(100% - 9px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(0, 122, 204, 0.45);
   border-radius: 3px;
-  color: rgba(57, 165, 255, 0.85);
+  color: var(--terminal-bright-blue);
   cursor: pointer;
   font-family: inherit;
-  font-size: 0.78rem;
-  line-height: 1.2;
-  padding: 3px 8px;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  max-width: 14rem;
+  min-width: 9.5rem;
+  padding: 5px 28px 5px 9px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.post-filter-btn:hover {
+.post-filter-select:hover,
+.post-filter-select:focus {
   border-color: var(--terminal-blue);
+  outline: none;
+  background-color: rgba(0, 122, 204, 0.1);
+}
+
+.post-filter-select option {
+  background: #0a0a0a;
   color: var(--terminal-bright-blue);
 }
 
-.post-filter-btn.is-active {
-  background: rgba(0, 122, 204, 0.2);
+.post-filter-clear {
+  background: transparent;
+  border: 1px dashed rgba(0, 122, 204, 0.45);
+  border-radius: 3px;
+  color: rgba(57, 165, 255, 0.75);
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 0.76rem;
+  line-height: 1.2;
+  margin-bottom: 1px;
+  padding: 5px 10px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.post-filter-clear:hover {
   border-color: var(--terminal-blue);
   color: var(--terminal-bright-blue);
 }
 
 .post-filter-status {
-  margin: 0.35rem 0 0;
+  margin: 0.45rem 0 0;
   font-family: 'Courier New', monospace;
   font-size: 0.78rem;
   color: rgba(57, 165, 255, 0.55);
@@ -169,6 +199,12 @@
 }
 
 @media (max-width: 520px) {
+  .post-filter-field,
+  .post-filter-select {
+    min-width: 100%;
+    max-width: none;
+  }
+
   .post-file-meta {
     font-size: 0.72rem;
   }

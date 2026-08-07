@@ -3,39 +3,49 @@
     const filtersRoot = document.getElementById('post-filters');
     const listing = document.getElementById('posts-file-listing');
     const status = document.getElementById('post-filter-status');
+    const clearBtn = document.getElementById('post-filter-clear');
 
     if (!filtersRoot || !listing) return;
 
     const items = Array.from(listing.querySelectorAll('.post-file-item'));
-    const groups = Array.from(filtersRoot.querySelectorAll('.post-filter-group'));
-    const active = { technology: 'all', vulnerability: 'all' };
+    const selects = Array.from(filtersRoot.querySelectorAll('.post-filter-select'));
+    const active = {};
+
+    selects.forEach(function (select) {
+      active[select.dataset.filterGroup] = 'all';
+    });
 
     function parseList(value) {
-      return value ? value.split(',').map(function (v) { return v.trim(); }).filter(Boolean) : [];
+      return value
+        ? value.split(',').map(function (v) { return v.trim(); }).filter(Boolean)
+        : [];
+    }
+
+    function knownValues(select) {
+      return Array.from(select.options).map(function (opt) { return opt.value; });
+    }
+
+    function isFiltered() {
+      return selects.some(function (select) {
+        return active[select.dataset.filterGroup] !== 'all';
+      });
     }
 
     function readQuery() {
       const params = new URLSearchParams(window.location.search);
-      groups.forEach(function (group) {
-        const key = group.dataset.filterGroup;
+      selects.forEach(function (select) {
+        const key = select.dataset.filterGroup;
         const value = params.get(key);
-        if (!value) return;
-        let known = null;
-        group.querySelectorAll('.post-filter-btn').forEach(function (btn) {
-          if (btn.dataset.filter === value) known = btn;
-        });
-        if (!known) return;
+        if (!value || knownValues(select).indexOf(value) === -1) return;
         active[key] = value;
-        group.querySelectorAll('.post-filter-btn').forEach(function (btn) {
-          btn.classList.toggle('is-active', btn.dataset.filter === value);
-        });
+        select.value = value;
       });
     }
 
     function writeQuery() {
       const params = new URLSearchParams(window.location.search);
-      groups.forEach(function (group) {
-        const key = group.dataset.filterGroup;
+      selects.forEach(function (select) {
+        const key = select.dataset.filterGroup;
         if (active[key] === 'all') {
           params.delete(key);
         } else {
@@ -50,9 +60,17 @@
     function matches(item) {
       const techs = parseList(item.dataset.technologies);
       const vulns = parseList(item.dataset.vulnerabilities);
+      const year = item.dataset.year || '';
 
-      if (active.technology !== 'all' && techs.indexOf(active.technology) === -1) return false;
-      if (active.vulnerability !== 'all' && vulns.indexOf(active.vulnerability) === -1) return false;
+      if (active.technology && active.technology !== 'all' && techs.indexOf(active.technology) === -1) {
+        return false;
+      }
+      if (active.vulnerability && active.vulnerability !== 'all' && vulns.indexOf(active.vulnerability) === -1) {
+        return false;
+      }
+      if (active.year && active.year !== 'all' && year !== active.year) {
+        return false;
+      }
       return true;
     }
 
@@ -72,34 +90,35 @@
         }
       }
 
+      if (clearBtn) {
+        clearBtn.hidden = !isFiltered();
+      }
+
       writeQuery();
     }
 
-    filtersRoot.addEventListener('click', function (e) {
-      const btn = e.target.closest('.post-filter-btn');
-      if (!btn) return;
+    function setSelectValue(select, value) {
+      const key = select.dataset.filterGroup;
+      const next = knownValues(select).indexOf(value) === -1 ? 'all' : value;
+      active[key] = next;
+      select.value = next;
+    }
 
-      const group = btn.closest('.post-filter-group');
-      if (!group) return;
-
-      const key = group.dataset.filterGroup;
-      const filter = btn.dataset.filter;
-
-      if (filter === 'all' || active[key] === filter) {
-        active[key] = 'all';
-      } else {
-        active[key] = filter;
-      }
-
-      group.querySelectorAll('.post-filter-btn').forEach(function (option) {
-        const selected = active[key] === 'all'
-          ? option.dataset.filter === 'all'
-          : option.dataset.filter === active[key];
-        option.classList.toggle('is-active', selected);
+    selects.forEach(function (select) {
+      select.addEventListener('change', function () {
+        setSelectValue(select, select.value);
+        applyFilters();
       });
-
-      applyFilters();
     });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        selects.forEach(function (select) {
+          setSelectValue(select, 'all');
+        });
+        applyFilters();
+      });
+    }
 
     readQuery();
     applyFilters();

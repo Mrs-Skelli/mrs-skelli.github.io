@@ -1,39 +1,60 @@
 {{ $technologies := slice }}
 {{ $vulnerabilities := slice }}
+{{ $years := slice }}
 {{ range .RegularPages }}
   {{ $technologies = union $technologies (.Params.technologies | default slice) }}
   {{ $vulnerabilities = union $vulnerabilities (.Params.vulnerabilities | default slice) }}
+  {{ if .Date }}
+    {{ $years = union $years (slice (.Date.Format "2006")) }}
+  {{ end }}
 {{ end }}
 {{ $technologies = sort $technologies }}
 {{ $vulnerabilities = sort $vulnerabilities }}
+{{ $years = sort $years }}
 
-{{ if or $technologies $vulnerabilities }}
+{{ if or $technologies $vulnerabilities $years }}
 <div class="post-filters" id="post-filters">
-  <p class="terminal-prompt post-filters-prompt">skelli@macbook ~/posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }} % grep -E 'technologies|vulnerabilities'</p>
+  <p class="terminal-prompt post-filters-prompt">skelli@macbook ~/posts/{{ path.Base (strings.TrimSuffix "/" .CurrentSection.RelPermalink) }} % ./filter.sh</p>
 
-  {{ if $technologies }}
-  <div class="post-filter-group" data-filter-group="technology">
-    <span class="post-filter-label">technology:</span>
-    <div class="post-filter-options" role="group" aria-label="Filter by technology">
-      <button type="button" class="post-filter-btn is-active" data-filter="all">all</button>
-      {{ range $technologies }}
-      <button type="button" class="post-filter-btn" data-filter="{{ . }}">{{ . | upper }}</button>
-      {{ end }}
-    </div>
-  </div>
-  {{ end }}
+  <div class="post-filter-controls">
+    {{ if $technologies }}
+    <label class="post-filter-field">
+      <span class="post-filter-label">tech</span>
+      <select class="post-filter-select" data-filter-group="technology" aria-label="Filter by technology">
+        <option value="all">all</option>
+        {{ range $technologies }}
+        <option value="{{ . }}">{{ . }}</option>
+        {{ end }}
+      </select>
+    </label>
+    {{ end }}
 
-  {{ if $vulnerabilities }}
-  <div class="post-filter-group" data-filter-group="vulnerability">
-    <span class="post-filter-label">vulnerability:</span>
-    <div class="post-filter-options" role="group" aria-label="Filter by vulnerability class">
-      <button type="button" class="post-filter-btn is-active" data-filter="all">all</button>
-      {{ range $vulnerabilities }}
-      <button type="button" class="post-filter-btn" data-filter="{{ . }}">{{ . | upper }}</button>
-      {{ end }}
-    </div>
+    {{ if $vulnerabilities }}
+    <label class="post-filter-field">
+      <span class="post-filter-label">vuln</span>
+      <select class="post-filter-select" data-filter-group="vulnerability" aria-label="Filter by vulnerability class">
+        <option value="all">all</option>
+        {{ range $vulnerabilities }}
+        <option value="{{ . }}">{{ . }}</option>
+        {{ end }}
+      </select>
+    </label>
+    {{ end }}
+
+    {{ if $years }}
+    <label class="post-filter-field">
+      <span class="post-filter-label">year</span>
+      <select class="post-filter-select" data-filter-group="year" aria-label="Filter by year">
+        <option value="all">all</option>
+        {{ range collections.Reverse $years }}
+        <option value="{{ . }}">{{ . }}</option>
+        {{ end }}
+      </select>
+    </label>
+    {{ end }}
+
+    <button type="button" class="post-filter-clear" id="post-filter-clear" hidden>clear</button>
   </div>
-  {{ end }}
 
   <p class="post-filter-status" id="post-filter-status" aria-live="polite"></p>
 </div>

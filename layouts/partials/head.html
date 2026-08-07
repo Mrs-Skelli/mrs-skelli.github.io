@@ -29,6 +29,10 @@
     <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
     <link rel="stylesheet" href="{{ ("/css/social.css" | relURL) }}?v={{ $cssVersion }}">
     {{ end }}
+    {{ if eq .Section "speaking" }}
+    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ ("/css/speaking.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ end }}
     {{ if or (eq .Layout "preview-bg") .IsHome }}
     <link rel="stylesheet" href="{{ ("/css/bg-patterns.css" | relURL) }}?v={{ $cssVersion }}">
     {{ end }}

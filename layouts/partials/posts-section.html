@@ -13,7 +13,8 @@
     {{ $slug := .File.ContentBaseName }}
     <article class="file-item post-file-item{{ if $external }} post-file-item-external{{ end }}"
         data-technologies="{{ delimit (.Params.technologies | default slice) "," }}"
-        data-vulnerabilities="{{ delimit (.Params.vulnerabilities | default slice) "," }}">
+        data-vulnerabilities="{{ delimit (.Params.vulnerabilities | default slice) "," }}"
+        data-year="{{ if .Date }}{{ .Date.Format "2006" }}{{ end }}">
         <div class="post-file-meta">
             <span class="post-file-perms">-rw-r--r--</span>
             <span class="file-date">{{ if .Date }}{{ .Date.Format "Jan 02 2006" }}{{ else }}---------{{ end }}</span>

@@ -1,0 +1,71 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd speaking</p>
+            <p class="terminal-prompt">skelli@macbook ~/speaking % ls -la engagements/</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/speaking % cat engagements/*.json</p>
+
+            <div class="file-listing speaking-file-listing">
+                {{ range sort hugo.Data.speaking "weight" }}
+                {{ $eng := . }}
+                <article class="file-item speaking-card">
+                    <div class="post-file-meta">
+                        <span class="post-file-perms">-rw-r--r--</span>
+                        {{ with $eng.date_display }}
+                        <span class="file-date">{{ . }}</span>
+                        {{ end }}
+                        <span class="post-file-slug">{{ $eng.event | urlize }}/{{ $eng.year | urlize }}.json</span>
+                        {{ with $eng.tag }}
+                        <span class="speaking-file-tag">[{{ . }}]</span>
+                        {{ end }}
+                        {{ with $eng.role }}
+                        <span class="speaking-file-role">[{{ . }}]</span>
+                        {{ end }}
+                    </div>
+                    <p class="post-file-title">
+                        {{ with $eng.url }}
+                        <a href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ $eng.event }}</a>
+                        {{ else }}
+                        {{ $eng.event }}
+                        {{ end }}
+                    </p>
+                    {{ with $eng.talk }}
+                    <p class="speaking-talk">talk: <span class="speaking-talk-value">{{ . }}</span></p>
+                    {{ end }}
+                    {{ with $eng.blurb }}
+                    <p class="file-summary post-file-summary speaking-blurb">{{ . }}</p>
+                    {{ end }}
+                    {{ with $eng.image }}
+                    <div class="speaking-card-image">
+                        <img src="{{ . | relURL }}" alt="{{ $eng.event }}" loading="lazy" width="640" height="360">
+                    </div>
+                    {{ end }}
+                    {{ with $eng.url }}
+                    <div class="speaking-card-links">
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ open source</a>
+                    </div>
+                    {{ end }}
+                </article>
+                {{ else }}
+                <p class="file-summary">No speaking engagements configured yet.</p>
+                {{ end }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/speaking % cd ~</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">← Home</a>
+                <a href="{{ "/projects/" | relURL }}" class="btn btn-outline-light">Projects</a>
+                <a href="{{ "/about/professional/" | relURL }}" class="btn btn-outline-light">About</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
