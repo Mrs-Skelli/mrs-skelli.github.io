@@ -1,0 +1,111 @@
+/* CVE inventory cards — extends blog file-list styling */
+
+.cve-file-listing {
+  margin-top: 0.5rem;
+  max-width: none;
+}
+
+.cve-file-listing .cve-card {
+  padding: 12px 14px 14px;
+  margin: 0;
+  border: 1px solid rgba(0, 122, 204, 0.4);
+  border-left: 3px solid var(--terminal-dim-blue);
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.3);
+  max-width: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.cve-file-listing .cve-card + .cve-card {
+  margin-top: 10px;
+}
+
+.cve-file-listing .cve-card:hover {
+  border-color: rgba(0, 122, 204, 0.65);
+  border-left-color: var(--terminal-bright-blue);
+  background: rgba(0, 122, 204, 0.08);
+}
+
+.cve-severity,
+.cve-role,
+.cve-tag {
+  font-family: 'Courier New', monospace;
+  font-size: 0.76rem;
+  opacity: 0.85;
+}
+
+.cve-severity {
+  color: var(--terminal-bright-blue);
+}
+
+.cve-severity-critical {
+  color: #ff6b6b;
+}
+
+.cve-severity-high {
+  color: #ffb347;
+}
+
+.cve-severity-medium {
+  color: #ffe066;
+}
+
+.cve-role {
+  color: rgba(57, 165, 255, 0.75);
+}
+
+.cve-tag {
+  color: rgba(57, 165, 255, 0.65);
+}
+
+.cve-product-line {
+  margin: 0 0 0.25rem;
+  padding: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: var(--terminal-text);
+}
+
+.cve-product {
+  color: var(--terminal-bright-blue);
+}
+
+.cve-affected {
+  color: rgba(57, 165, 255, 0.7);
+}
+
+.cve-title-sep {
+  color: rgba(57, 165, 255, 0.4);
+  margin: 0 0.2rem;
+}
+
+.cve-vuln-title {
+  color: var(--terminal-text);
+}
+
+.cve-meta-line {
+  margin: 0 0 0.35rem;
+  padding: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: rgba(57, 165, 255, 0.65);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+}
+
+.cve-meta-item::before {
+  content: "";
+}
+
+.cve-blurb {
+  -webkit-line-clamp: 4;
+}
+
+.cve-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 0.35rem;
+}

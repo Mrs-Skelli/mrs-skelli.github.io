@@ -54,6 +54,9 @@
     <link rel="stylesheet" href="{{ ("/css/custom.css" | relURL) }}?v={{ $cssVersion }}">
     {{ if and (eq .Kind "section") .Parent (eq .Parent.RelPermalink "/posts/") }}
     <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ if eq (path.Base (strings.TrimSuffix "/" .RelPermalink)) "cves" }}
+    <link rel="stylesheet" href="{{ ("/css/cves.css" | relURL) }}?v={{ $cssVersion }}">
+    {{ end }}
     {{ end }}
     {{ if eq .Section "projects" }}
     <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">

@@ -1,0 +1,40 @@
+# CVE inventory — CVEs found or assigned to Mrs Skelli.
+# All fields render as escaped text. External URLs open with noopener.
+
+- id: CVE-2026-61969
+  date: "2026-08-13"
+  date_display: "13 Aug 2026"
+  product: "WordPress Listdom"
+  vendor: "Webilia Inc."
+  affected: "<= 5.6.0"
+  fixed: "5.7.0"
+  title: "Unauthenticated SQL Injection"
+  cwe: "CWE-89"
+  cvss: "9.3"
+  severity: critical
+  role: finder
+  tag: wordpress
+  weight: 1
+  blurb: Unauthenticated SQL injection in the Listdom WordPress plugin through 5.6.0. Reported via the Patchstack Bug Bounty Program and assigned by Patchstack as CNA.
+  cve_url: https://www.cve.org/CVERecord?id=CVE-2026-61969
+  advisory_url: https://patchstack.com/database/wordpress/plugin/listdom/vulnerability/wordpress-listdom-plugin-5-6-0-sql-injection-vulnerability?_s_id=cve
+  writeup_url: ""
+
+- id: CVE-2026-36431
+  date: "2026-06-09"
+  date_display: "9 Jun 2026"
+  product: "GitBlit"
+  vendor: "gitblit"
+  affected: "<= 1.10.0"
+  fixed: ""
+  title: "Client-Side Template Injection leading to XSS"
+  cwe: "CWE-79"
+  cvss: ""
+  severity: high
+  role: finder
+  tag: gitblit
+  weight: 2
+  blurb: CSTI in GitBlit's Angular front-end through 1.10.0. Disclosed after the 90-day window with no maintainer response. MITRE labeled it CSRF; the writeup documents why that classification is wrong.
+  cve_url: https://www.cve.org/CVERecord?id=CVE-2026-36431
+  advisory_url: ""
+  writeup_url: /posts/blog/cve-2026-36431/

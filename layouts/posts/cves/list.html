@@ -1,0 +1,93 @@
+{{ define "main" }}
+<div class="mainbg">
+    <div class="terminal-window">
+        {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Title)) }}
+        <div class="terminal-content">
+            <p class="terminal-prompt">skelli@macbook ~ % cd posts/cves</p>
+            <p class="terminal-prompt">skelli@macbook ~/posts/cves % ls -la inventory/</p>
+
+            <div class="content-container mb-4">
+                {{ .Content }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/posts/cves % cat inventory/*.json</p>
+
+            <div class="file-listing cve-file-listing">
+                {{ range sort hugo.Data.cves "weight" }}
+                {{ $cve := . }}
+                <article class="file-item cve-card">
+                    <div class="post-file-meta">
+                        <span class="post-file-perms">-rw-r--r--</span>
+                        {{ with $cve.date_display }}
+                        <span class="file-date">{{ . }}</span>
+                        {{ end }}
+                        <span class="post-file-slug">{{ $cve.id | lower }}.json</span>
+                        {{ with $cve.severity }}
+                        <span class="cve-severity cve-severity-{{ . }}">[{{ . }}]</span>
+                        {{ end }}
+                        {{ with $cve.role }}
+                        <span class="cve-role">[{{ . }}]</span>
+                        {{ end }}
+                        {{ with $cve.tag }}
+                        <span class="cve-tag">[{{ . }}]</span>
+                        {{ end }}
+                    </div>
+                    <p class="post-file-title">
+                        {{ with $cve.cve_url }}
+                        <a href="{{ . }}" target="_blank" rel="noopener noreferrer">{{ $cve.id }}</a>
+                        {{ else }}
+                        {{ $cve.id }}
+                        {{ end }}
+                    </p>
+                    <p class="cve-product-line">
+                        <span class="cve-product">{{ $cve.product }}</span>
+                        {{ with $cve.affected }}
+                        <span class="cve-affected">{{ . }}</span>
+                        {{ end }}
+                        {{ with $cve.title }}
+                        <span class="cve-title-sep">·</span>
+                        <span class="cve-vuln-title">{{ . }}</span>
+                        {{ end }}
+                    </p>
+                    <p class="cve-meta-line">
+                        {{ with $cve.cwe }}
+                        <span class="cve-meta-item">{{ . }}</span>
+                        {{ end }}
+                        {{ with $cve.cvss }}
+                        <span class="cve-meta-item">CVSS {{ . }}</span>
+                        {{ end }}
+                        {{ with $cve.fixed }}
+                        <span class="cve-meta-item">fixed in {{ . }}</span>
+                        {{ end }}
+                    </p>
+                    {{ with $cve.blurb }}
+                    <p class="file-summary post-file-summary cve-blurb">{{ . }}</p>
+                    {{ end }}
+                    <div class="cve-card-links">
+                        {{ with $cve.cve_url }}
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ CVE record</a>
+                        {{ end }}
+                        {{ with $cve.advisory_url }}
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ advisory</a>
+                        {{ end }}
+                        {{ with $cve.writeup_url }}
+                        <a href="{{ . | relURL }}" class="post-file-action">→ writeup</a>
+                        {{ end }}
+                    </div>
+                </article>
+                {{ else }}
+                <p class="file-summary">No CVEs in the inventory yet.</p>
+                {{ end }}
+            </div>
+
+            <p class="terminal-prompt">skelli@macbook ~/posts/cves % cd ..</p>
+
+            <div class="mt-4 contentbtn">
+                <a href="{{ "/posts/" | relURL }}" class="btn btn-outline-light">← Blog</a>
+                <a href="{{ "/" | relURL }}" class="btn btn-outline-light">Home</a>
+                <a href="{{ "/profiles/" | relURL }}" class="btn btn-outline-light">Bug Bounty</a>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
