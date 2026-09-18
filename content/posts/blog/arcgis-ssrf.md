@@ -7,8 +7,6 @@ technologies: ["arcgis"]
 vulnerabilities: ["ssrf", "misconfiguration"]
 ---
 
-# The Proxy That Trusted Everyone: SSRF in ArcGIS Portal
-
 ---
 
 ## Preface

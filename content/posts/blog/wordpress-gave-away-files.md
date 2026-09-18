@@ -7,8 +7,6 @@ technologies: ["wordpress"]
 vulnerabilities: ["information-disclosure", "broken-access-control"]
 ---
 
-# WordPress Gave Away 8,000 Files and Nobody Noticed
-
 ---
 
 ## Preface
@@ -116,4 +114,3 @@ The WordPress REST API is not a hidden feature. It's a documented, and default-e
 So, if you're running WordPress at an enterprise scale with multiple contributors uploading documents, you need a media audit and a governance policy. The REST API will expose everything that's been uploaded, whether or not it was ever linked to a published page.
 
 Check your `/wp-json/wp/v2/media` endpoint. If it returns results without authentication, you have the same problem.
-

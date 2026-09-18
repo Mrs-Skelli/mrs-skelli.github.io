@@ -24,3 +24,5 @@ Disallow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://skelli.win/sitemap.xml

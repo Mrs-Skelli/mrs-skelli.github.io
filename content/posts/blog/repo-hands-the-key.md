@@ -8,8 +8,6 @@ technologies: ["kubernetes", "helm", "nexus", "docker"]
 vulnerabilities: ["credential-exposure", "misconfiguration"]
 ---
 
-# When Open Repos Hand You the Keys: Hardcoded Docker Credentials in a Public Helm Chart
-
 ---
 
 ## Preface

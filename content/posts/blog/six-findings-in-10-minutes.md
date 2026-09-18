@@ -8,8 +8,6 @@ technologies: ["nextjs", "react", "spring-boot", "vercel", "cloudflare"]
 vulnerabilities: ["rce", "information-disclosure", "misconfiguration", "credential-exposure"]
 ---
 
-# Six Findings in 10 Minutes: A Free Pentest Story
-
 ## Too Long, Didn't Read
 
 A developer friend asked me to pentest their portfolio site. Scope expanded to a production university recruitment platform with 20,000+ student records. Burp flagged a CVSS 10.0 RCE, which I confirmed, along with unauthenticated PII enumeration on a live student data API, Spring Boot Actuator fully exposed, and a hardcoded webhook in a public JavaScript bundle. Six findings total. Wrote it all up and delivered it the same day, and all in a matter of **minutes.** I was given permission on 8 June, 2026 19:45 and by 19:54, I already had my first crit.
@@ -231,4 +229,3 @@ This is that writeup.
 - [Next.js Security Advisories](https://nextjs.org/blog/security-advisories)
 - [Spring Boot Actuator: Production Ready Features](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
 - [Spring Security: Authorize HTTP Requests](https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html)
-

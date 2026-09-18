@@ -10,8 +10,6 @@ technologies: ["wordpress", "php", "wp-user-frontend"]
 vulnerabilities: ["privilege-escalation", "cryptographic-issues", "missing-authorization"]
 ---
 
-# WP User Frontend <= 4.3.8: Unauthenticated Registration Privilege Escalation (On EOL PHP Only)
-
 ---
 
 ## Preface

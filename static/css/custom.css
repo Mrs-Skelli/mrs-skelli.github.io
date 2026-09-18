@@ -676,6 +676,33 @@ footer {
   margin-right: auto;
 }
 
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-title {
+  margin-top: 0;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+}
+
+.home-intro {
+  max-width: 68ch;
+}
+
+.home-research {
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--terminal-dim-blue);
+}
+
+.home-research h2 {
+  font-size: 1.5rem;
+}
+
 /* Typography adjustments */
 p {
   margin-bottom: 1em;
@@ -806,4 +833,4 @@ body, html, .mainbg, .terminal-window, .terminal-content {
 /* Increase contrast for all text */
 .terminal-content, .content, .file-summary, .card-text, p, li {
   color: #d8e8ff !important;
-} 
+}

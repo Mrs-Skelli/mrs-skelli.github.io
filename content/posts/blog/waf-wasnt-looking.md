@@ -7,8 +7,6 @@ technologies: ["cloudflare", "iis", "oracle"]
 vulnerabilities: ["waf-bypass", "information-disclosure", "credential-exposure"]
 ---
 
-# The WAF Was There. It Just Wasn't Watching.
-
 ---
 
 ## Preface

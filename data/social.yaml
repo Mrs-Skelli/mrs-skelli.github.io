@@ -3,7 +3,7 @@
 
 - platform: BlueSky
   handle: skelli@skelli.win
-  url: https://bsky.app/profile/skelli@skelli.win
+  url: https://bsky.app/profile/skelli.win
   tag: microblog
   weight: 1
   blurb: Short-form posts, security chatter, and general chaos.

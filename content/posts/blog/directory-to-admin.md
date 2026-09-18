@@ -7,8 +7,6 @@ technologies: ["glpi", "php"]
 vulnerabilities: ["directory-listing", "session-hijacking", "information-disclosure"]
 ---
 
-# Directory Listing to Super-Admin: How an Open Folder Handed Me the Keys
-
 ---
 
 ## Preface

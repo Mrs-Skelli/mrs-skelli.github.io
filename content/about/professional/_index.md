@@ -2,6 +2,7 @@
 title: "Professional"
 date: 2026-06-05T00:00:00.000Z
 draft: false
+description: "Mrs Skelli's security research, application security experience, community work, speaking, and technical interests."
 ---
 
 ## Introduction
@@ -29,4 +30,3 @@ My name is Mrs Skelli. Welcome to my infosec blog and personal website. This is 
 - [InfoSecGirls Ranchi Meetup Speaker](https://www.youtube.com/watch?v=sCYspE6yvp4&pp=ygUYSW5mb3NlY0dpcmxzIE1lZXQgUmFuY2hp)
 - [RSA Conference](https://www.rsaconference.com/experts/eden-stroet)
 - [InfoSecurity Magazine](https://www.infosecurity-magazine.com/magazine-features/trolling-sexual-harassment-and/)
-
