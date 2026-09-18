@@ -1,6 +1,6 @@
 ---
-title: "A Sanitizer That Sanitizes Nothing: Unauthenticated SQLi in Listdom"
-date: 2026-08-13
+title: "Unauthenticated SQLi in Listdom"
+date: 2026-09-18
 draft: false
 aliases:
   - /posts/listdom-sqli/
@@ -11,9 +11,9 @@ technologies: ["wordpress", "listdom", "php", "mariadb"]
 vulnerabilities: ["sqli"]
 ---
 
-# A Sanitizer That Sanitizes Nothing: Unauthenticated SQLi in Listdom
+# A Sanitizer That Sanitizes Nothing
 
-**CVE-2026-61969** is assigned. Listdom is a business-directory and listings plugin, and it has one of my favourite kinds of bug: the code that was supposed to make it safe runs, looks reassuring in the diff, and does absolutely nothing. An unauthenticated visitor can read the whole database out of it, one character at a time, through a sort parameter.
+**CVE-2026-61969** is out. Listdom is a business-directory and listings plugin, and it has one of my favourite kinds of bug: the code that was supposed to make it safe runs, looks reassuring in the diff, and does absolutely nothing. An unauthenticated visitor can read the whole database out of it, one character at a time, through a sort parameter.
 
 Two things had to go wrong for this, and both of them did.
 
@@ -23,18 +23,19 @@ Two things had to go wrong for this, and both of them did.
 |---|---|
 | CVE | [CVE-2026-61969](https://www.cve.org/CVERecord?id=CVE-2026-61969) |
 | Software | Listdom (Business Directory & Listings) |
-| Slug | `listdom` |
+| Slug | [`listdom`](https://wordpress.org/plugins/listdom/) |
 | Affected | `<= 5.6.0` |
 | Fixed | `5.7.0` |
 | Type | Unauthenticated SQL Injection (CWE-89) |
-| CVSS | 9.3 Critical (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:L`) |
+| CVSS | 9.3 Critical |
 | Privilege | None |
 
 ## Wrong thing number one: the no-op sanitizer
 
-Listdom registers a pile of front-end AJAX actions for logged-out users, no nonce required:
+Listdom registers a pile of front-end AJAX actions for logged-out users. No nonce required. Things like `lsd_grid_load_more`, `lsd_grid_sort`, `lsd_listgrid_load_more`, `lsd_listgrid_sort`, and `lsd_ajax_search` all flow into the same query builder, fed from the attacker-supplied `atts` array:
 
 ```php
+// app/includes/skins/grid.php
 add_action( 'wp_ajax_nopriv_lsd_grid_load_more', array( $this, 'filter' ) );
 add_action( 'wp_ajax_nopriv_lsd_grid_sort',      array( $this, 'filter' ) );
 ```
@@ -50,9 +51,10 @@ Except `array_walk_recursive` passes values *by value*. `sanitize_text_field` re
 
 ## Wrong thing number two: string-built ORDER BY
 
-The sort config comes right out of that request data:
+The sort config comes right out of that request data, in `LSD_Skins::sort()`:
 
 ```php
+// app/includes/skins.php
 $this->sort_meta_type = isset($option['meta_type']) && trim($option['meta_type'])
     ? $option['meta_type'] : null;   // attacker-controlled
 ```
@@ -83,6 +85,17 @@ action=lsd_grid_load_more&atts[lsd_sorts][default][orderby]=lsd_x&atts[lsd_sorts
 
 That `meta_type` decodes to `DECIMAL) END, CASE WHEN SLEEP(5) THEN 1 ELSE (1`, and the server takes about five seconds to answer. `SLEEP(0)` returns instantly, and the delay tracks the argument linearly. That's server-side SQL running.
 
+What the database log actually saw:
+
+```sql
+... ORDER BY CASE WHEN lsd_sort_meta.meta_value IS NULL OR lsd_sort_meta.meta_value = ''
+        THEN 1 ELSE 0 END ASC,
+    CASE WHEN lsd_sort_meta.meta_value IS NULL OR lsd_sort_meta.meta_value = ''
+        THEN NULL ELSE CAST(lsd_sort_meta.meta_value AS DECIMAL) END,
+    CASE WHEN SLEEP(5) THEN 1 ELSE (1) END DESC,
+    wp_posts.post_date DESC, wp_posts.ID DESC LIMIT 0, 12
+```
+
 From there it's boolean extraction. This delays only if the first character of the DB version is the digit `1`:
 
 ```
@@ -99,11 +112,11 @@ No account, no interaction, and an attacker reads arbitrary data out of the Word
 
 Don't interpolate `meta_type`, or any request value, into SQL. Validate it against a fixed allow-list of cast types (`CHAR`, `DECIMAL`, `SIGNED`, `UNSIGNED`, `DATE`, `DATETIME`, `TIME`) and reject the rest. Stop building `ORDER BY` from a raw `posts_clauses` string. And if you're going to keep that `array_walk_recursive` line, assign the result back so it actually does something, though that's defense in depth, not the fix.
 
-Update Listdom to **5.7.0 or later**.
+Update to **5.7.0 or later**.
 
 ## Disclosure
 
-Found during independent research against a fresh install (WordPress 6.6 / PHP 8.2 / MariaDB 10.6 / Listdom 5.6.0) in a Docker lab. Reported through the Patchstack Bug Bounty Program.
+Found during independent research against a fresh install (WordPress 6.6 / PHP 8.2 / MariaDB 10.6 / Listdom 5.6.0) in a Docker lab. Reported through Patchstack.
 
 - Reported: 29 Jun 2026
 - Fixed: 5.7.0
