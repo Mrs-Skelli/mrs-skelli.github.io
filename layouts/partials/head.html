@@ -2,11 +2,17 @@
 {{- $pageTitle := cond .IsHome (.Site.Params.siteTitle | default $siteName) (printf "%s | %s" .Title $siteName) -}}
 {{- $rawDescription := .Params.description | default .Params.summary | default .Summary | default .Site.Params.description -}}
 {{- $description := $rawDescription | plainify | htmlUnescape | strings.TrimSpace | truncate 160 -}}
-{{- $socialImage := .Params.image | default .Site.Params.defaultImage -}}
+{{- $socialImage := "" -}}
+{{- with .Params.image -}}
+    {{- $socialImage = . -}}
+{{- end -}}
 {{- with .Params.images -}}
     {{- $socialImage = index . 0 -}}
 {{- end -}}
-{{- $socialImageURL := $socialImage | absURL -}}
+{{- $socialImageURL := "" -}}
+{{- if $socialImage -}}
+    {{- $socialImageURL = $socialImage | absURL -}}
+{{- end -}}
 {{- $author := .Site.Params.author | default $siteName -}}
 {{- $canonicalURL := .Params.canonicalURL | default .Params.external_url | default .Permalink -}}
 <head>
@@ -27,8 +33,10 @@
     <meta property="og:url" content="{{ $canonicalURL }}">
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="{{ if and .IsPage (eq .Section "posts") }}article{{ else }}website{{ end }}">
-    <meta property="og:image" content="{{ $socialImageURL }}">
+    {{ with $socialImageURL }}
+    <meta property="og:image" content="{{ . }}">
     <meta property="og:image:alt" content="{{ $pageTitle }}">
+    {{ end }}
     {{ if and .IsPage (eq .Section "posts") }}
     <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
     <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
@@ -36,11 +44,13 @@
     {{ range .Params.vulnerabilities }}<meta property="article:tag" content="{{ . }}">{{ end }}
     {{ end }}
 
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="{{ if $socialImageURL }}summary_large_image{{ else }}summary{{ end }}">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $description }}">
-    <meta name="twitter:image" content="{{ $socialImageURL }}">
+    {{ with $socialImageURL }}
+    <meta name="twitter:image" content="{{ . }}">
     <meta name="twitter:image:alt" content="{{ $pageTitle }}">
+    {{ end }}
 
     {{ with .OutputFormats.Get "RSS" }}
     <link rel="alternate" type="application/rss+xml" title="{{ $pageTitle }}" href="{{ .Permalink }}">
@@ -84,12 +94,14 @@
     <meta name="theme-color" content="#000000">
 
     {{ if .IsHome }}
-    {{- $person := dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "alternateName" "Skelli" "url" .Site.BaseURL "jobTitle" .Site.Params.role "description" .Site.Params.description "image" $socialImageURL "sameAs" .Site.Params.sameAs "knowsAbout" (slice "application security" "vulnerability research" "bug bounty" "WordPress security" "attack surface management") -}}
+    {{- $person := dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "alternateName" "Skelli" "url" .Site.BaseURL "jobTitle" .Site.Params.role "description" .Site.Params.description "sameAs" .Site.Params.sameAs "knowsAbout" (slice "application security" "vulnerability research" "bug bounty" "WordPress security" "attack surface management") -}}
+    {{- with $socialImageURL -}}{{- $person = merge $person (dict "image" .) -}}{{- end -}}
     {{- $website := dict "@type" "WebSite" "@id" (printf "%s#website" .Site.BaseURL) "url" .Site.BaseURL "name" $siteName "description" .Site.Params.description "inLanguage" "en" "author" (dict "@id" (printf "%s#person" .Site.BaseURL)) -}}
     {{- $schema := dict "@context" "https://schema.org" "@graph" (slice $person $website) -}}
     <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
     {{ else if and .IsPage (eq .Section "posts") (not .Params.noindex) }}
-    {{- $article := dict "@context" "https://schema.org" "@type" "BlogPosting" "headline" .Title "description" $description "url" $canonicalURL "mainEntityOfPage" $canonicalURL "image" $socialImageURL "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "inLanguage" "en" "author" (dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "url" .Site.BaseURL) -}}
+    {{- $article := dict "@context" "https://schema.org" "@type" "BlogPosting" "headline" .Title "description" $description "url" $canonicalURL "mainEntityOfPage" $canonicalURL "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "inLanguage" "en" "author" (dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "url" .Site.BaseURL) -}}
+    {{- with $socialImageURL -}}{{- $article = merge $article (dict "image" .) -}}{{- end -}}
     <script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
     {{ end }}
 </head>

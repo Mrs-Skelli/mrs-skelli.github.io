@@ -22,7 +22,6 @@ weight = 1
   role = "Security researcher"
   profileTitle = "Mrs Skelli — Security Researcher"
   tagline = "Independent security research, vulnerability writeups, CVE analysis, bug bounty notes, security tools, and conference talks."
-  defaultImage = "/images/cyberpunk-bg.jpg"
   sameAs = [
     "https://github.com/Mrs-Skelli",
     "https://bsky.app/profile/skelli.win",
