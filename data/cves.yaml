@@ -18,7 +18,7 @@
   blurb: Unauthenticated SQL injection in the Listdom WordPress plugin through 5.6.0. Reported via the Patchstack Bug Bounty Program and assigned by Patchstack as CNA.
   cve_url: https://www.cve.org/CVERecord?id=CVE-2026-61969
   advisory_url: https://patchstack.com/database/wordpress/plugin/listdom/vulnerability/wordpress-listdom-plugin-5-6-0-sql-injection-vulnerability?_s_id=cve
-  writeup_url: ""
+  writeup_url: /posts/blog/listdom-sqli/
 
 - id: CVE-2026-36431
   date: "2026-06-09"
