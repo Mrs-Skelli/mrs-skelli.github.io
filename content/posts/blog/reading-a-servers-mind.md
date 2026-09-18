@@ -7,8 +7,6 @@ technologies: ["linux"]
 vulnerabilities: ["path-traversal", "information-disclosure", "credential-exposure"]
 ---
 
-# Reading the Server's Mind: Path Traversal to Environment Variable Leak
-
 ---
 
 ## Preface

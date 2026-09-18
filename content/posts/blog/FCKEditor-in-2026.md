@@ -7,8 +7,6 @@ technologies: ["fckeditor", "ckeditor", "apache"]
 vulnerabilities: ["directory-listing", "file-upload", "xss", "credential-exposure", "misconfiguration"]
 ---
 
-# FCKeditor in 2026, an MD5 Bypass, and a Very Open Directory
-
 ---
 
 ## Preface
@@ -124,4 +122,3 @@ FCKeditor has been deprecated for fifteen years. Its file manager connector has 
 The MD5 backdoor is a different kind of problem altogether, and it suggests that at some point, someone intentionally added a hardcoded bypass to a production application, shipped it in client-side JavaScript, and either forgot about it or assumed nobody would look. Either way, both assumptions were wrong.
 
 These findings don't require sophisticated techniques. They require looking. If you're running applications that have been in production for more than a few years without a security review, there's a reasonable chance something like this is in there.
-

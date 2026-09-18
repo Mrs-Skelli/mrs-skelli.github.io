@@ -1,17 +1,55 @@
+{{- $siteName := .Site.Title -}}
+{{- $pageTitle := cond .IsHome (.Site.Params.siteTitle | default $siteName) (printf "%s | %s" .Title $siteName) -}}
+{{- $rawDescription := .Params.description | default .Params.summary | default .Summary | default .Site.Params.description -}}
+{{- $description := $rawDescription | plainify | htmlUnescape | strings.TrimSpace | truncate 160 -}}
+{{- $socialImage := .Params.image | default .Site.Params.defaultImage -}}
+{{- with .Params.images -}}
+    {{- $socialImage = index . 0 -}}
+{{- end -}}
+{{- $socialImageURL := $socialImage | absURL -}}
+{{- $author := .Site.Params.author | default $siteName -}}
+{{- $canonicalURL := .Params.canonicalURL | default .Params.external_url | default .Permalink -}}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ .Site.Params.description }}">
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $description }}">
+    <meta name="author" content="{{ $author }}">
+    <link rel="canonical" href="{{ $canonicalURL }}">
+    {{ if .Params.noindex }}<meta name="robots" content="noindex, follow">{{ else }}<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">{{ end }}
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com data:; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
-    
-    <!-- Bootstrap 5 (Grid Only) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:url" content="{{ $canonicalURL }}">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="{{ if and .IsPage (eq .Section "posts") }}article{{ else }}website{{ end }}">
+    <meta property="og:image" content="{{ $socialImageURL }}">
+    <meta property="og:image:alt" content="{{ $pageTitle }}">
+    {{ if and .IsPage (eq .Section "posts") }}
+    <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+    <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+    {{ range .Params.technologies }}<meta property="article:tag" content="{{ . }}">{{ end }}
+    {{ range .Params.vulnerabilities }}<meta property="article:tag" content="{{ . }}">{{ end }}
+    {{ end }}
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    <meta name="twitter:image" content="{{ $socialImageURL }}">
+    <meta name="twitter:image:alt" content="{{ $pageTitle }}">
+
+    {{ with .OutputFormats.Get "RSS" }}
+    <link rel="alternate" type="application/rss+xml" title="{{ $pageTitle }}" href="{{ .Permalink }}">
+    {{ end }}
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    
-    <!-- Custom CSS (load last to override) -->
-    <!-- Cache-bust so browsers don't keep old CSS after deploys. -->
+
     {{ $cssVersion := now.Unix }}
     <link rel="stylesheet" href="{{ ("/css/custom.css" | relURL) }}?v={{ $cssVersion }}">
     {{ if and (eq .Kind "section") .Parent (eq .Parent.RelPermalink "/posts/") }}
@@ -36,18 +74,19 @@
     {{ if or (eq .Layout "preview-bg") .IsHome }}
     <link rel="stylesheet" href="{{ ("/css/bg-patterns.css" | relURL) }}?v={{ $cssVersion }}">
     {{ end }}
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ "/favicon.ico" | relURL}}">
-    
-    <title>
-        {{ if .IsHome }}
-            {{ .Site.Params.title }}
-        {{ else }}
-            {{ .Title }} | {{ .Site.Params.title }}
-        {{ end }}
-    </title>
-    
-    <!-- Terminal Theme Meta Tags -->
+
+    <link rel="icon" type="image/x-icon" href="{{ "/favicon.ico" | relURL }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ "/favicon-32.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ "/favicon-16.png" | relURL }}">
     <meta name="theme-color" content="#000000">
+
+    {{ if .IsHome }}
+    {{- $person := dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "alternateName" "Skelli" "url" .Site.BaseURL "jobTitle" .Site.Params.role "description" .Site.Params.description "image" $socialImageURL "sameAs" .Site.Params.sameAs "knowsAbout" (slice "application security" "vulnerability research" "bug bounty" "WordPress security" "attack surface management") -}}
+    {{- $website := dict "@type" "WebSite" "@id" (printf "%s#website" .Site.BaseURL) "url" .Site.BaseURL "name" $siteName "description" .Site.Params.description "inLanguage" "en" "author" (dict "@id" (printf "%s#person" .Site.BaseURL)) -}}
+    {{- $schema := dict "@context" "https://schema.org" "@graph" (slice $person $website) -}}
+    <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
+    {{ else if and .IsPage (eq .Section "posts") (not .Params.noindex) }}
+    {{- $article := dict "@context" "https://schema.org" "@type" "BlogPosting" "headline" .Title "description" $description "url" $canonicalURL "mainEntityOfPage" $canonicalURL "image" $socialImageURL "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "inLanguage" "en" "author" (dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "url" .Site.BaseURL) -}}
+    <script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
+    {{ end }}
 </head>

@@ -1,6 +1,7 @@
 ---
 title: "Personal"
 draft: false
+description: "A personal introduction to Mrs Skelli, the security researcher and chaos gremlin behind skelli.win."
 ---
 
 ## About Me:

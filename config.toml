@@ -3,6 +3,7 @@ title = "Skelli"
 theme = "glim"
 defaultContentLanguage = "en"
 disableKinds = ["taxonomy", "term"]
+summaryLength = 32
 
 [languages.en]
 locale = "en-us"
@@ -15,7 +16,21 @@ weight = 1
 
 [params]
   title = "Skelli"
-  description = "Cyberpunk nonsense and writeups"
+  siteTitle = "Mrs Skelli | Security Researcher & Hacker"
+  description = "Security research, vulnerability writeups, CVE analysis, bug bounty notes, tools, and talks by Mrs Skelli."
+  author = "Mrs Skelli"
+  role = "Security researcher"
+  profileTitle = "Mrs Skelli — Security Researcher"
+  tagline = "Independent security research, vulnerability writeups, CVE analysis, bug bounty notes, security tools, and conference talks."
+  defaultImage = "/images/cyberpunk-bg.jpg"
+  sameAs = [
+    "https://github.com/Mrs-Skelli",
+    "https://bsky.app/profile/skelli.win",
+    "https://infosec.exchange/@Mrs_Skelli",
+    "https://www.linkedin.com/in/mrsskelli/",
+    "https://hackerone.com/mrsskelli",
+    "https://bugcrowd.com/h/mrs-skelli",
+  ]
   
   # Add phrases for the typewriter effect
   phrases = [
