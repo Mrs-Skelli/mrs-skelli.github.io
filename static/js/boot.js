@@ -25,7 +25,9 @@
 
       setTimeout(function () {
         bootScreen.remove();
-        revealTerminal(terminal);
+        revealTerminal(terminal, function () {
+          document.dispatchEvent(new Event('skelli:boot-complete'));
+        });
       }, 520);
     }, 350);
   }

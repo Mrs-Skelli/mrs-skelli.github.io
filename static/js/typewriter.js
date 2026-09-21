@@ -4,7 +4,11 @@
     if (!el) return [];
 
     try {
-      const parsed = JSON.parse(el.textContent);
+      let parsed = JSON.parse(el.textContent.trim());
+      // Older Hugo builds double-encoded the JSON as a string.
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
       return Array.isArray(parsed) ? parsed.filter(function (phrase) {
         return typeof phrase === 'string' && phrase.length > 0;
       }) : [];
@@ -14,11 +18,15 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    var started = false;
+
     function startTypewriter() {
+      if (started) return;
       const textElement = document.querySelector('.animatedText');
       const phrases = readPhrases();
 
       if (!textElement || phrases.length === 0) return;
+      started = true;
 
       let textArrayIndex = 0;
       let charIndex = 0;
@@ -52,8 +60,12 @@
       setTimeout(type, 600);
     }
 
-    if (document.getElementById('boot-screen')) {
+    const bootScreen = document.getElementById('boot-screen');
+    if (bootScreen) {
       document.addEventListener('skelli:boot-complete', startTypewriter, { once: true });
+      if (!document.body.contains(bootScreen) || document.body.classList.contains('boot-done')) {
+        startTypewriter();
+      }
     } else {
       startTypewriter();
     }
