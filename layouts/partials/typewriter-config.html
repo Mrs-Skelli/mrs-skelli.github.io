@@ -1,1 +1,2 @@
-<script type="application/json" id="typewriter-phrases">{{ .Site.Params.phrases | jsonify | safeHTML }}</script>
+{{- $phrases := .Site.Params.phrases | jsonify -}}
+{{ printf `<script type="application/json" id="typewriter-phrases">%s</script>` $phrases | safeHTML }}
