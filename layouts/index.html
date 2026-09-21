@@ -11,7 +11,7 @@
             <div class="terminal-content">
                 <p class="terminal-prompt">Last login: {{ now.Format "Mon Jan 2 15:04:05" }} on ttys000</p>
                 <p class="terminal-prompt">skelli@macbook ~ % whoami</p>
-                <p>{{ .Site.Params.profile_title | default "Security researcher" }}</p>
+                <p>{{ .Site.Params.profile_title | default "Eden Stroet - Mrs Skelli" }}</p>
                 
                 <p class="terminal-prompt">skelli@macbook ~ % cat welcome.txt</p>
                 <div class="welcome-message">
@@ -27,6 +27,25 @@
                     </a>
                     {{ end }}
                 </div>
+
+                {{ with .Site.GetPage "/posts/blog" }}
+                <section class="home-research" aria-labelledby="latest-research-heading">
+                    <p class="terminal-prompt">skelli@macbook ~ % ls -t research/ | head -3</p>
+                    <h2 id="latest-research-heading">Latest security research</h2>
+                    <div class="file-listing">
+                        {{ range first 3 .RegularPages.ByDate.Reverse }}
+                        <article class="file-item">
+                            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                            {{ with .Date }}<time class="file-date" datetime="{{ .Format "2006-01-02" }}">{{ .Format "Jan 02 2006" }}</time>{{ end }}
+                            {{ with (.Params.summary | default (.Summary | plainify | strings.TrimSpace)) }}
+                            <p class="file-summary">{{ . }}</p>
+                            {{ end }}
+                        </article>
+                        {{ end }}
+                    </div>
+                    <a href="{{ "/posts/blog/" | relURL }}" class="post-file-action">→ browse all research</a>
+                </section>
+                {{ end }}
             </div>
         </div>
     </div>
