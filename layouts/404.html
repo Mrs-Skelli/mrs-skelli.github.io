@@ -14,18 +14,28 @@
       min-height: 100%;
       z-index: -2;
       object-fit: cover;
+      filter: brightness(0.35) contrast(1.05);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(0, 8, 18, 0.72);
+      pointer-events: none;
     }
 
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: #00d5ff url('/bg.mp4') center center / cover no-repeat fixed;
+      background: #02080f;
       overflow: hidden;
       font-family: 'Fira Code', monospace;
-      color: #00a5c2;
+      color: #7ad7ef;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       flex-direction: column;
       text-align: center;
@@ -36,46 +46,55 @@
       top: 0;
       left: 0;
       width: 100vw;
-      height: 100vh;
-      background-size: 25%;
+      height: 55vh;
+      background: url('/skeleton-floating.png') no-repeat center top;
+      background-size: min(42vw, 280px);
       animation: bounce 6s ease-in-out infinite;
       z-index: 0;
-      background-color: transparent;
+      pointer-events: none;
     }
 
     @keyframes bounce {
       0% { transform: translateY(0); }
-      50% { transform: translateY(-30px); }
+      50% { transform: translateY(-24px); }
       100% { transform: translateY(0); }
     }
 
     h1 {
-      font-size: 6rem;
-      margin: 1rem 0 0.5rem 0;
-      color: #007eb0;
+      font-size: clamp(3.5rem, 12vw, 6rem);
+      margin: 0 0 0.5rem 0;
+      color: #9ae8ff;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85);
     }
 
     p {
       font-size: 1.3rem;
-      margin-bottom: 2rem;
+      margin: 0 0 1.25rem 0;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
     }
 
     a {
-      color: #1100fd;
+      color: #b8f0ff;
       text-decoration: underline;
     }
 
+    a:hover {
+      color: #ffffff;
+    }
+
     .content {
-      position: top;
-      z-index: 1;
+      position: relative;
+      z-index: 2;
+      padding: 0 1.5rem 12vh;
+      max-width: 36rem;
     }
   </style>
 </head>
 <body>
-  <video autoplay muted loop id="starfield">
+  <video autoplay muted loop playsinline id="starfield">
     <source src="/bg.mp4" type="video/mp4">
   </video>
-  <div class="astronaut" style="background: url('/skeleton-floating.png') no-repeat center; background-size: 25%;"></div>
+  <div class="astronaut" aria-hidden="true"></div>
   <div class="content">
     <h1>404</h1>
     <p>A spoopy skeleton got lost in the void…</p>
