@@ -6,8 +6,9 @@
     </span>
     <span class="terminal-title">{{ .title }}</span>
     {{ if .showThemeSwitcher }}
-    <div class="theme-switcher" id="theme-switcher" hidden>
+    <div class="theme-switcher" id="theme-switcher">
         <button type="button" class="theme-switcher-btn" id="theme-switcher-btn"
+            aria-label="Background theme"
             aria-haspopup="listbox" aria-expanded="false" aria-controls="theme-switcher-menu">
             theme
         </button>

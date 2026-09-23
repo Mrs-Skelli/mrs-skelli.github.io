@@ -280,14 +280,18 @@
     btn.className = className;
     btn.dataset.pattern = theme.id;
     btn.setAttribute('role', 'option');
+    btn.setAttribute('aria-label', theme.label);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
 
     const name = document.createElement('span');
     name.className = 'boot-theme-name';
     name.textContent = theme.label;
+    name.setAttribute('aria-hidden', 'true');
 
     const desc = document.createElement('span');
     desc.className = 'boot-theme-desc';
     desc.textContent = theme.desc;
+    desc.setAttribute('aria-hidden', 'true');
 
     btn.append(name, desc);
     btn.classList.toggle('is-active', isActive);

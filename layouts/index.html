@@ -3,27 +3,29 @@
         <div class="bg-layer bg-none" id="bg-layer" aria-hidden="true"></div>
         <div class="matrix-rain" id="matrix-layer" aria-hidden="true"></div>
         <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
-        <div class="boot-screen" id="boot-screen" aria-live="polite">
-            <div class="boot-lines" id="boot-lines"></div>
+        <div class="boot-screen" id="boot-screen" role="status" aria-live="polite" aria-atomic="true">
+            <p class="visually-hidden" id="boot-status-text">Loading terminal interface. Press Escape to skip.</p>
+            <div class="boot-lines" id="boot-lines" aria-hidden="true"></div>
         </div>
         <div class="terminal-window boot-hidden" id="terminal-window">
             {{ partial "terminal-header.html" (dict "title" (printf "%s ~ warp" .Site.Params.title) "showThemeSwitcher" true) }}
             <div class="terminal-content">
                 <p class="terminal-prompt">Last login: {{ now.Format "Mon Jan 2 15:04:05" }} on ttys000</p>
                 <p class="terminal-prompt">skelli@macbook ~ % whoami</p>
-                <p>{{ .Site.Params.profile_title | default "Eden Stroet - Mrs Skelli" }}</p>
+                <h1 class="home-whoami">{{ .Site.Params.profile_title | default "Eden Stroet - Mrs Skelli" }}</h1>
                 
                 <p class="terminal-prompt">skelli@macbook ~ % cat welcome.txt</p>
                 <div class="welcome-message">
-                    <div class="animatedText"></div>
+                    <p class="visually-hidden">Security researcher and hacker.</p>
+                    <div class="animatedText" aria-hidden="true"></div>
                 </div>
                 
                 <p class="terminal-prompt">skelli@macbook ~ % ls -la links/</p>
-                <div class="contentbtn">
+                <div class="contentbtn" role="navigation" aria-label="Site sections">
                     {{ range .Site.Params.links }}
                     <a href="{{ .url }}" class="btn btn-outline-light"
                         {{ if .newTab }}target="_blank" rel="noopener noreferrer"{{ end }}>
-                        {{ .name }}
+                        {{ .name }}{{ if .newTab }}<span class="visually-hidden"> (opens in a new tab)</span>{{ end }}
                     </a>
                     {{ end }}
                 </div>

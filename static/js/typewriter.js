@@ -28,6 +28,12 @@
       if (!textElement || phrases.length === 0) return;
       started = true;
 
+      // Respect reduced motion: show a stable phrase, no rapid updates.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        textElement.textContent = phrases[0];
+        return;
+      }
+
       let textArrayIndex = 0;
       let charIndex = 0;
       let isDeleting = false;

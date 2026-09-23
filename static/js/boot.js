@@ -64,6 +64,7 @@
     const list = document.createElement('div');
     list.className = 'boot-theme-list';
     list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-label', 'Background theme options');
 
     SkelliBg.bootThemes.forEach(function (theme) {
       list.appendChild(SkelliBg.createBootThemeButton(
@@ -75,6 +76,7 @@
           themeMgr.setPattern(selected);
           list.querySelectorAll('.boot-theme-option').forEach(function (option) {
             option.classList.toggle('is-active', option === btn);
+            option.setAttribute('aria-selected', option === btn ? 'true' : 'false');
           });
         }
       ));
@@ -86,6 +88,7 @@
     launch.type = 'button';
     launch.className = 'boot-theme-launch';
     launch.textContent = '→ launch terminal';
+    launch.setAttribute('aria-label', 'Launch terminal with selected theme');
 
     function launchTerminal() {
       document.removeEventListener('keydown', onKeydown);
@@ -96,6 +99,11 @@
       if (e.key === 'Enter') {
         e.preventDefault();
         launchTerminal();
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        document.removeEventListener('keydown', onKeydown);
+        skipBoot(bootScreen, terminal, mainbg);
       }
     }
 
@@ -207,10 +215,20 @@
       skipBoot(bootScreen, terminal, mainbg);
     }, 45000);
 
+    function onEscapeSkip(e) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      document.removeEventListener('keydown', onEscapeSkip);
+      clearTimeout(failsafe);
+      skipBoot(bootScreen, terminal, mainbg);
+    }
+    document.addEventListener('keydown', onEscapeSkip);
+
     runBootSequence(bootScreen, linesContainer, terminal, mainbg);
 
     document.addEventListener('skelli:boot-complete', function () {
       clearTimeout(failsafe);
+      document.removeEventListener('keydown', onEscapeSkip);
     }, { once: true });
   });
 })();

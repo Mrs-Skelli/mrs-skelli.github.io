@@ -2,7 +2,8 @@
 <html lang="{{ .Site.Language.Locale | default "en" }}">
     {{- partial "head.html" . -}}
     <body>
-        <main id="main-content">
+        {{- partial "skip-link.html" . -}}
+        <main id="main-content" tabindex="-1">
             {{- block "main" . }}{{- end }}
         </main>
         {{- partial "footer.html" . -}}

@@ -70,7 +70,6 @@
     function activate() {
       mgr.setPattern(mgr.getSaved());
       updateActive(mgr.getSaved());
-      switcher.hidden = false;
       switcher.classList.add('is-ready');
     }
 

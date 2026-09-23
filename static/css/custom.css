@@ -1,16 +1,17 @@
 /* Terminal Theme for skelli.win */
 
 :root {
-  --terminal-blue: #007acc;
-  --terminal-bright-blue: #39a5ff;
-  --terminal-dim-blue: #00477a;
+  --terminal-blue: #3aa0e8;
+  --terminal-bright-blue: #6bbcff;
+  --terminal-dim-blue: #5a9ecf;
   --terminal-black: #000;
   --terminal-dark: #111;
   --terminal-gray: #333;
   --terminal-header: #222;
-  --terminal-text: #c8e1ff;
-  --terminal-cursor: #39a5ff;
+  --terminal-text: #dcecff;
+  --terminal-cursor: #6bbcff;
   --crowskull-pattern: url('/img/bg/crowskull-blue.webp');
+  --focus-ring: #ffe08a;
 }
 
 html, body {
@@ -18,12 +19,68 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: var(--terminal-black);
-  color: #d8e8ff;
+  color: #dcecff;
   font-family: 'Courier New', monospace;
   font-size: 16px;
   line-height: 1.6;
   font-weight: normal;
   letter-spacing: 0.3px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 10000;
+  padding: 0.65rem 1rem;
+  background: var(--terminal-black);
+  color: var(--focus-ring);
+  border: 2px solid var(--focus-ring);
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+summary:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.btn-outline-light:focus-visible,
+.btn-primary:focus-visible,
+.theme-switcher-btn:focus-visible,
+.post-filter-select:focus-visible,
+.boot-theme-option:focus-visible,
+.boot-theme-launch:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 .mainbg {
@@ -109,9 +166,9 @@ html, body {
 }
 
 .terminal-window.boot-hidden {
+  /* Opacity-only hide keeps layout stable (avoids mobile CLS from transform). */
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.96) translateY(18px);
   pointer-events: none;
   transition: none;
 }
@@ -325,13 +382,13 @@ body.boot-done footer {
 }
 
 .terminal-title {
-  color: #aaa;
+  color: #d0d7e2;
   font-size: 13px;
   text-align: center;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Courier New', monospace;
 }
 
 .terminal-controls {
@@ -359,24 +416,31 @@ body.boot-done footer {
   background-color: #28c840;
 }
 
-.theme-switcher.is-ready {
-  display: block;
-}
-
 .theme-switcher {
-  display: none;
+  /* Always reserve header space so revealing the control does not shift layout. */
+  display: block;
   margin-left: auto;
   position: relative;
   z-index: 3;
   flex-shrink: 0;
   width: fit-content;
+  min-width: 4.75rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.theme-switcher.is-ready {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .theme-switcher-btn {
   background: transparent;
   border: 1px solid rgba(170, 170, 170, 0.35);
   border-radius: 4px;
-  color: #aaa;
+  color: #c8d6e8;
   cursor: pointer;
   font-family: 'Courier New', monospace;
   font-size: 11px;
@@ -554,8 +618,8 @@ a:not(.btn):hover {
 /* Terminal style buttons */
 .btn-outline-light, .btn-primary {
   background-color: var(--terminal-black);
-  color: var(--terminal-blue);
-  border: 1px solid var(--terminal-blue);
+  color: var(--terminal-bright-blue);
+  border: 1px solid var(--terminal-bright-blue);
   padding: 8px 16px;
   font-family: 'Courier New', monospace;
   cursor: pointer;
@@ -566,7 +630,7 @@ a:not(.btn):hover {
 }
 
 .btn-outline-light:hover, .btn-primary:hover {
-  background-color: var(--terminal-blue);
+  background-color: var(--terminal-bright-blue);
   color: var(--terminal-black);
 }
 
@@ -684,13 +748,25 @@ footer {
   margin-bottom: 0.5rem;
 }
 
-.home-title {
-  margin-top: 0;
-  font-size: clamp(1.8rem, 6vw, 2.5rem);
+.footer-nav a {
+  color: var(--terminal-bright-blue);
 }
 
-.home-intro {
-  max-width: 68ch;
+.footer-tagline {
+  color: var(--terminal-text);
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.home-whoami {
+  margin: 0 0 1em;
+  padding: 0;
+  color: #dcecff;
+  font-family: 'Courier New', monospace;
+  font-size: 1em;
+  font-weight: normal;
+  letter-spacing: 0.3px;
+  line-height: 1.6;
 }
 
 .home-research {
@@ -701,6 +777,7 @@ footer {
 
 .home-research h2 {
   font-size: 1.5rem;
+  color: var(--terminal-bright-blue);
 }
 
 /* Typography adjustments */
