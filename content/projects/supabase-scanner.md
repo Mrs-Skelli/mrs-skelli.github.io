@@ -3,7 +3,7 @@ title: "Supabase Scanner"
 date: 2025-01-15
 draft: false
 weight: 3
-description: "Internet-wide scanner for Supabase RLS misconfigurations."
+description: "An open-source Python scanner for identifying Supabase Row Level Security misconfigurations across internet-accessible deployments."
 summary: "Python tool built to scan Supabase instances across the internet for Row Level Security misconfigurations."
 source_url: "https://github.com/Mrs-Skelli/supabase-scanner"
 technologies: ["python", "supabase", "security"]

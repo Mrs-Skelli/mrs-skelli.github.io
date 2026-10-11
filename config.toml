@@ -4,6 +4,10 @@ theme = "glim"
 defaultContentLanguage = "en"
 disableKinds = ["taxonomy", "term"]
 summaryLength = 32
+enableGitInfo = true
+
+[frontmatter]
+  lastmod = ["lastmod", ":git", "date", "publishDate"]
 
 [languages.en]
 locale = "en-us"
@@ -19,6 +23,7 @@ weight = 1
   siteTitle = "Mrs Skelli | Security Researcher & Hacker"
   description = "Security research, vulnerability writeups, CVE analysis, bug bounty notes, tools, and talks by Mrs Skelli."
   author = "Mrs Skelli"
+  authorFullName = "Eden Stroet"
   role = "Security researcher"
   profile_title = "Eden Stroet - Mrs Skelli"
   sameAs = [

@@ -1,5 +1,6 @@
 {{- $siteName := .Site.Title -}}
-{{- $pageTitle := cond .IsHome (.Site.Params.siteTitle | default $siteName) (printf "%s | %s" .Title $siteName) -}}
+{{- $seoTitle := .Params.seoTitle | default .Title -}}
+{{- $pageTitle := cond .IsHome (.Site.Params.siteTitle | default $siteName) (printf "%s | %s" $seoTitle $siteName) -}}
 {{- $rawDescription := .Params.description | default .Params.summary | default .Summary | default .Site.Params.description -}}
 {{- $description := $rawDescription | plainify | htmlUnescape | strings.TrimSpace | truncate 160 -}}
 {{- $socialImage := "" -}}
@@ -13,14 +14,15 @@
 {{- if $socialImage -}}
     {{- $socialImageURL = $socialImage | absURL -}}
 {{- end -}}
-{{- $author := .Site.Params.author | default $siteName -}}
+{{- $authorDisplay := .Site.Params.author | default $siteName -}}
+{{- $authorName := .Site.Params.authorFullName | default $authorDisplay -}}
 {{- $canonicalURL := .Params.canonicalURL | default .Params.external_url | default .Permalink -}}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $description }}">
-    <meta name="author" content="{{ $author }}">
+    <meta name="author" content="{{ $authorName }}">
     <link rel="canonical" href="{{ $canonicalURL }}">
     {{ if .Params.noindex }}<meta name="robots" content="noindex, follow">{{ else }}<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">{{ end }}
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -60,32 +62,31 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    {{ $cssVersion := now.Unix }}
-    <link rel="stylesheet" href="{{ ("/css/custom.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/custom.css" | relURL }}">
     {{ if and (eq .Kind "section") .Parent (eq .Parent.RelPermalink "/posts/") }}
-    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/posts.css" | relURL }}">
     {{ if eq (path.Base (strings.TrimSuffix "/" .RelPermalink)) "cves" }}
-    <link rel="stylesheet" href="{{ ("/css/cves.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/cves.css" | relURL }}">
     {{ end }}
     {{ end }}
     {{ if eq .Section "projects" }}
-    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
-    <link rel="stylesheet" href="{{ ("/css/projects.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/posts.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "/css/projects.css" | relURL }}">
     {{ end }}
     {{ if eq .Section "profiles" }}
-    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
-    <link rel="stylesheet" href="{{ ("/css/profiles.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/posts.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "/css/profiles.css" | relURL }}">
     {{ end }}
     {{ if eq .Section "social" }}
-    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
-    <link rel="stylesheet" href="{{ ("/css/social.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/posts.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "/css/social.css" | relURL }}">
     {{ end }}
     {{ if eq .Section "speaking" }}
-    <link rel="stylesheet" href="{{ ("/css/posts.css" | relURL) }}?v={{ $cssVersion }}">
-    <link rel="stylesheet" href="{{ ("/css/speaking.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/posts.css" | relURL }}">
+    <link rel="stylesheet" href="{{ "/css/speaking.css" | relURL }}">
     {{ end }}
     {{ if or (eq .Layout "preview-bg") .IsHome }}
-    <link rel="stylesheet" href="{{ ("/css/bg-patterns.css" | relURL) }}?v={{ $cssVersion }}">
+    <link rel="stylesheet" href="{{ "/css/bg-patterns.css" | relURL }}">
     {{ end }}
 
     <link rel="icon" type="image/x-icon" href="{{ "/favicon.ico" | relURL }}">
@@ -94,14 +95,24 @@
     <meta name="theme-color" content="#000000">
 
     {{ if .IsHome }}
-    {{- $person := dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "alternateName" "Skelli" "url" .Site.BaseURL "jobTitle" .Site.Params.role "description" .Site.Params.description "sameAs" .Site.Params.sameAs "knowsAbout" (slice "application security" "vulnerability research" "bug bounty" "WordPress security" "attack surface management") -}}
+    {{- $personID := printf "%s#person" .Site.BaseURL -}}
+    {{- $websiteID := printf "%s#website" .Site.BaseURL -}}
+    {{- $profileID := printf "%s#profile" .Site.BaseURL -}}
+    {{- $person := dict "@type" "Person" "@id" $personID "name" $authorName "alternateName" $authorDisplay "url" .Site.BaseURL "jobTitle" .Site.Params.role "description" .Site.Params.description "sameAs" .Site.Params.sameAs "knowsAbout" (slice "application security" "vulnerability research" "bug bounty" "WordPress security" "attack surface management") -}}
     {{- with $socialImageURL -}}{{- $person = merge $person (dict "image" .) -}}{{- end -}}
-    {{- $website := dict "@type" "WebSite" "@id" (printf "%s#website" .Site.BaseURL) "url" .Site.BaseURL "name" $siteName "description" .Site.Params.description "inLanguage" "en" "author" (dict "@id" (printf "%s#person" .Site.BaseURL)) -}}
-    {{- $schema := dict "@context" "https://schema.org" "@graph" (slice $person $website) -}}
+    {{- $website := dict "@type" "WebSite" "@id" $websiteID "url" .Site.BaseURL "name" $siteName "description" .Site.Params.description "inLanguage" "en" "author" (dict "@id" $personID) -}}
+    {{- $profile := dict "@type" "ProfilePage" "@id" $profileID "url" .Site.BaseURL "name" .Site.Params.siteTitle "description" .Site.Params.description "inLanguage" "en" "mainEntity" (dict "@id" $personID) "isPartOf" (dict "@id" $websiteID) -}}
+    {{- $schema := dict "@context" "https://schema.org" "@graph" (slice $person $website $profile) -}}
     <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
     {{ else if and .IsPage (eq .Section "posts") (not .Params.noindex) }}
-    {{- $article := dict "@context" "https://schema.org" "@type" "BlogPosting" "headline" .Title "description" $description "url" $canonicalURL "mainEntityOfPage" $canonicalURL "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "inLanguage" "en" "author" (dict "@type" "Person" "@id" (printf "%s#person" .Site.BaseURL) "name" $author "url" .Site.BaseURL) -}}
+    {{- $personID := printf "%s#person" .Site.BaseURL -}}
+    {{- $websiteID := printf "%s#website" .Site.BaseURL -}}
+    {{- $articleID := printf "%s#article" $canonicalURL -}}
+    {{- $person := dict "@type" "Person" "@id" $personID "name" $authorName "alternateName" $authorDisplay "url" .Site.BaseURL "sameAs" .Site.Params.sameAs -}}
+    {{- $website := dict "@type" "WebSite" "@id" $websiteID "url" .Site.BaseURL "name" $siteName "inLanguage" "en" -}}
+    {{- $article := dict "@type" "BlogPosting" "@id" $articleID "headline" .Title "description" $description "url" $canonicalURL "mainEntityOfPage" $canonicalURL "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00") "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "inLanguage" "en" "author" (dict "@id" $personID) "publisher" (dict "@id" $personID) "isPartOf" (dict "@id" $websiteID) -}}
     {{- with $socialImageURL -}}{{- $article = merge $article (dict "image" .) -}}{{- end -}}
-    <script type="application/ld+json">{{ $article | jsonify | safeJS }}</script>
+    {{- $schema := dict "@context" "https://schema.org" "@graph" (slice $person $website $article) -}}
+    <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
     {{ end }}
 </head>

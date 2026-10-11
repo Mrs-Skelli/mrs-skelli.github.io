@@ -1,5 +1,6 @@
 ---
 title: "Reading the Server's Mind: Path Traversal to Environment Variable Leak"
+seoTitle: "Path Traversal to Environment Variable Leak"
 date: 2026-06-05
 draft: false
 summary: "Path traversal via a name parameter exposed /proc/self/environ and leaked a CLIENT_SECRET from the running process."

@@ -6,51 +6,47 @@
   <meta name="robots" content="noindex, follow" />
   <title>404 – Lost Bones</title>
   <style>
-    #starfield {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -2;
-      object-fit: cover;
-      filter: brightness(0.35) contrast(1.05);
-    }
-
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
+      z-index: 0;
       background: rgba(0, 8, 18, 0.72);
       pointer-events: none;
     }
 
     body {
       margin: 0;
-      padding: 0;
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: clamp(1rem, 3vw, 2rem);
+      box-sizing: border-box;
       background: #02080f;
-      overflow: hidden;
       font-family: 'Fira Code', monospace;
       color: #7ad7ef;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      flex-direction: column;
+      display: grid;
+      place-items: center;
       text-align: center;
+      overflow-x: hidden;
+    }
+
+    .error-page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 48rem;
+      min-width: 0;
+      display: grid;
+      justify-items: center;
+      gap: clamp(0.5rem, 2vh, 1.25rem);
     }
 
     .astronaut {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 55vh;
-      background: url('/skeleton-floating.png') no-repeat center top;
-      background-size: min(42vw, 280px);
+      width: clamp(11rem, 42vmin, 24rem);
+      aspect-ratio: 1;
+      background: url('/skeleton-floating.png') no-repeat center;
+      background-size: contain;
       animation: bounce 6s ease-in-out infinite;
-      z-index: 0;
       pointer-events: none;
     }
 
@@ -68,9 +64,11 @@
     }
 
     p {
-      font-size: 1.3rem;
+      font-size: clamp(1rem, 3.4vw, 1.3rem);
+      line-height: 1.5;
       margin: 0 0 1.25rem 0;
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+      overflow-wrap: anywhere;
     }
 
     a {
@@ -82,23 +80,41 @@
       color: #ffffff;
     }
 
+    a:focus-visible {
+      color: #ffffff;
+      outline: 3px solid #ffe08a;
+      outline-offset: 0.3rem;
+    }
+
     .content {
-      position: relative;
-      z-index: 2;
-      padding: 0 1.5rem 12vh;
+      width: 100%;
       max-width: 36rem;
+      min-width: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astronaut {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 40rem) {
+      .error-page,
+      .content {
+        width: calc(100vw - 2rem);
+        max-width: calc(100vw - 2rem);
+      }
     }
   </style>
 </head>
 <body>
-  <video autoplay muted loop playsinline id="starfield">
-    <source src="/bg.mp4" type="video/mp4">
-  </video>
-  <div class="astronaut" aria-hidden="true"></div>
-  <div class="content">
-    <h1>404</h1>
-    <p>A spoopy skeleton got lost in the void…</p>
-    <p><a href="/">Return to safety</a></p>
-  </div>
+  <main class="error-page" aria-labelledby="error-title">
+    <div class="astronaut" aria-hidden="true"></div>
+    <div class="content">
+      <h1 id="error-title">404</h1>
+      <p>A spoopy skeleton got lost in the void…</p>
+      <p><a href="/">Return to safety</a></p>
+    </div>
+  </main>
 </body>
 </html>

@@ -1,5 +1,6 @@
 ---
 title: "FCKeditor in 2026, an MD5 Bypass, and a Very Open Directory"
+seoTitle: "FCKeditor MD5 Bypass and Open Directory"
 date: 2026-06-04
 draft: false
 summary: "Open directories, an unauthenticated FCKeditor upload connector, stored XSS, and a hardcoded MD5 backdoor in client-side JavaScript."

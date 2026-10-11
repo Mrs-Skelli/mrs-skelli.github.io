@@ -4,7 +4,7 @@ date: 2026-02-20
 draft: false
 aliases:
   - /posts/supabase-shenanigans/
-description: "Supabase Shenanigans: If you're going to use Supabase, implement RLS"
+description: "How missing Row Level Security in Supabase applications exposed personal data, and how developers can prevent the same failure."
 summary: "Supabase is quite permissive by default, by not implementing Row-Level Security, you could be exposing PII of thousands of users."
 technologies: ["supabase", "postgresql"]
 vulnerabilities: ["broken-access-control", "information-disclosure"]

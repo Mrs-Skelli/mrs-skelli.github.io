@@ -1,5 +1,6 @@
 ---
 title: "Directory Listing to Super-Admin: How an Open Folder Handed Me the Keys"
+seoTitle: "GLPI Directory Listing to Super-Admin"
 date: 2026-06-03
 draft: false
 summary: "Open directories on a GLPI instance exposed live session files and a full database backup."

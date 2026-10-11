@@ -1,5 +1,6 @@
 ---
 title: "When Open Repos Hand You the Keys: Hardcoded Docker Credentials in a Public Helm Chart"
+seoTitle: "Hardcoded Docker Credentials in a Public Helm Chart"
 date: 2026-06-05
 draft: false
 description: "How a misconfigured Nexus repo and committed Helm secret exposed 50+ private Docker image repositories."

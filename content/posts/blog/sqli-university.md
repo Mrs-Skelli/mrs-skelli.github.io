@@ -4,7 +4,7 @@ date: 2025-11-18
 draft: false
 aliases:
   - /posts/sqli-university/
-description: "An SQL Injection Attack found on a European university."
+description: "A practical writeup of discovering and exploiting SQL injection in a European university web application, including impact and remediation."
 summary: "An SQL Injection Attack found on a European university."
 technologies: ["web-app"]
 vulnerabilities: ["sqli"]
@@ -133,5 +133,4 @@ Finding this SQL injection in the wild was a significant milestone for me. It re
 - [CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')](https://cwe.mitre.org/data/definitions/89.html)
 - [OWASP: SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection)
 - [PortSwigger: SQL Injection](https://portswigger.net/web-security/sql-injection)
-
 

@@ -1,5 +1,6 @@
 ---
 title: "WP User Frontend <= 4.3.8: Unauthenticated Registration Privilege Escalation (On EOL PHP Only)"
+seoTitle: "WP User Frontend 4.3.8 Privilege Escalation"
 date: 2026-07-01
 draft: false
 aliases:

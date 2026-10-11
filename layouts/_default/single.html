@@ -9,7 +9,10 @@
             <div class="content-title">
                 <h1>{{ .Title }}</h1>
                 {{ if .Date }}
-                <p class="terminal-date">{{ .Date.Format "January 2, 2006" }}</p>
+                <p class="terminal-date">
+                    {{ if eq .Section "posts" }}By <a href="{{ "/about/professional/" | relURL }}">{{ .Site.Params.authorFullName }} ({{ .Site.Params.author }})</a> · {{ end }}
+                    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+                </p>
                 {{ end }}
             </div>
             
