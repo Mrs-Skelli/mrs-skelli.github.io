@@ -510,6 +510,38 @@ body:has(.preview-mainbg) .mainbg::after {
   opacity: 0.55;
 }
 
+.fx-layer.fx-skull-rain {
+  background: radial-gradient(ellipse at center, rgba(0, 76, 150, 0.16), transparent 70%);
+  contain: layout style paint;
+  opacity: 0.78;
+}
+
+.fx-skull {
+  position: absolute;
+  top: -12vh;
+  color: rgba(107, 188, 255, 0.72);
+  font-family: "Apple Symbols", "Segoe UI Symbol", sans-serif;
+  font-size: var(--skull-size);
+  line-height: 1;
+  text-shadow: 0 0 7px rgba(57, 165, 255, 0.75), 0 0 16px rgba(0, 122, 204, 0.35);
+  transform: translate3d(0, -15vh, 0);
+  will-change: transform, opacity;
+  animation: skull-rain-fall var(--skull-duration) linear var(--skull-delay) infinite;
+}
+
+@keyframes skull-rain-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -15vh, 0) rotate(0deg);
+  }
+  10% { opacity: 0.72; }
+  85% { opacity: 0.58; }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--skull-drift), 125vh, 0) rotate(var(--skull-spin));
+  }
+}
+
 .fx-cursor {
   position: absolute;
   font-size: 14px;
@@ -595,7 +627,15 @@ body:has(.preview-mainbg) .mainbg::after {
   .fx-boot-line,
   .fx-packet,
   .fx-port,
-  .fx-hash-column {
+  .fx-hash-column,
+  .fx-skull {
     animation: none !important;
+  }
+
+  .fx-skull {
+    top: calc(var(--skull-rest-y) * 1%);
+    opacity: 0.18;
+    transform: rotate(var(--skull-rest-rotate));
+    will-change: auto;
   }
 }

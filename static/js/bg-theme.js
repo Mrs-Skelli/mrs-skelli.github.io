@@ -4,7 +4,7 @@
 
   const patterns = [
     'none', 'hex', 'circuit', 'dots', 'topo', 'crowskull',
-    'aurora', 'datastream', 'pulse-hex', 'matrix',
+    'aurora', 'datastream', 'pulse-hex', 'matrix', 'skull-rain',
     'circuit-pulse', 'hex-scan', 'dot-twinkle', 'topo-drift',
     'phosphor', 'scan-sweep', 'cursor-field', 'boot-log',
     'packet-sniff', 'port-scan', 'hash-rain', 'glitch',
@@ -12,12 +12,13 @@
   ];
 
   const jsPatterns = new Set([
-    'matrix', 'cursor-field', 'boot-log', 'packet-sniff', 'port-scan', 'hash-rain'
+    'matrix', 'skull-rain', 'cursor-field', 'boot-log', 'packet-sniff', 'port-scan', 'hash-rain'
   ]);
 
   const managerCache = new WeakMap();
 
   const bootThemes = [
+    { id: 'skull-rain', label: 'Skull Rain', desc: 'Skulls & bones cascade' },
     { id: 'matrix', label: 'Matrix Rain', desc: 'Digital cascade' },
     { id: 'none', label: 'Classic', desc: 'Pure terminal black' },
     { id: 'port-scan', label: 'Port Scan', desc: 'Security recon mode' },
@@ -198,6 +199,26 @@
       }
     }
 
+    function buildSkullRain() {
+      const symbols = ['☠', '☠', '🦴'];
+      const count = Math.max(10, Math.min(22, Math.ceil(window.innerWidth / 75)));
+
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        el.className = 'fx-skull';
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        el.style.left = (2 + Math.random() * 94) + '%';
+        el.style.setProperty('--skull-size', (16 + Math.random() * 16) + 'px');
+        el.style.setProperty('--skull-duration', (8 + Math.random() * 9) + 's');
+        el.style.setProperty('--skull-delay', (-Math.random() * 16) + 's');
+        el.style.setProperty('--skull-drift', (-45 + Math.random() * 90) + 'px');
+        el.style.setProperty('--skull-spin', (-240 + Math.random() * 480) + 'deg');
+        el.style.setProperty('--skull-rest-y', (5 + Math.random() * 88));
+        el.style.setProperty('--skull-rest-rotate', (-20 + Math.random() * 40) + 'deg');
+        fxLayer.appendChild(el);
+      }
+    }
+
     function initJsPattern(name) {
       fxLayer.classList.add('is-active', 'fx-' + name);
       if (name === 'cursor-field') buildCursorField();
@@ -205,6 +226,7 @@
       if (name === 'packet-sniff') buildPacketSniff();
       if (name === 'port-scan') buildPortScan();
       if (name === 'hash-rain') buildHashRain();
+      if (name === 'skull-rain') buildSkullRain();
     }
 
     function setPattern(name) {
@@ -244,6 +266,9 @@
     function save(name) {
       if (!bootThemes.some(function (t) { return t.id === name; })) return;
       localStorage.setItem(THEME_KEY, name);
+      document.dispatchEvent(new CustomEvent('skelli:theme-change', {
+        detail: { theme: name }
+      }));
     }
 
     const manager = {
