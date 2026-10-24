@@ -39,6 +39,11 @@
       });
     }
 
+    document.addEventListener('skelli:theme-change', function (event) {
+      if (!event.detail || !event.detail.theme) return;
+      updateActive(event.detail.theme);
+    });
+
     function openMenu() {
       isOpen = true;
       switcher.classList.add('is-open');
