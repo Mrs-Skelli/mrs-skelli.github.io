@@ -208,7 +208,7 @@
         el.className = 'fx-skull';
         el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
         el.style.left = (2 + Math.random() * 94) + '%';
-        el.style.setProperty('--skull-size', (16 + Math.random() * 16) + 'px');
+        el.style.setProperty('--skull-size', (28 + Math.random() * 26) + 'px');
         el.style.setProperty('--skull-duration', (8 + Math.random() * 9) + 's');
         el.style.setProperty('--skull-delay', (-Math.random() * 16) + 's');
         el.style.setProperty('--skull-drift', (-45 + Math.random() * 90) + 'px');
