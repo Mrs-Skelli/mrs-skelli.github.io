@@ -911,3 +911,49 @@ body, html, .mainbg, .terminal-window, .terminal-content {
 .terminal-content, .content, .file-summary, .card-text, p, li {
   color: #d8e8ff !important;
 }
+
+/* Compact campaign embed; use the site's terminal palette instead of the vendor's red banner. */
+.android-support {
+  max-width: 640px;
+  margin: 1.25rem auto 0;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--terminal-gray);
+  border-left: 2px solid var(--terminal-blue);
+  background: var(--terminal-dark);
+  text-align: left;
+}
+
+.android-support-title {
+  color: var(--terminal-bright-blue);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.android-support-title:hover {
+  text-decoration: underline;
+}
+
+#keep-android-open .kao-banner {
+  background: transparent;
+  border: 0;
+  color: var(--terminal-text);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  text-align: left;
+  text-shadow: none;
+  padding: 0.3rem 0 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+#keep-android-open .kao-banner a {
+  color: var(--terminal-text);
+}
+
+#keep-android-open .kao-banner > span {
+  color: var(--terminal-bright-blue);
+  white-space: nowrap;
+}
