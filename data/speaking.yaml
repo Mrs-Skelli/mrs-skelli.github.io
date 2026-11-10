@@ -5,13 +5,14 @@
 - event: WICCON 2026
   year: "2026"
   date: "2026-10-29"
-  date_display: "29–30 Oct 2026"
-  talk: ""
+  date_display: "29 Oct 2026"
+  talk: "Supabase Shenaningans: Extended Edition"
   role: speaker
   tag: conference
   weight: 1
-  blurb: Listed speaker at WICCON in Haarlem. Security research, DIVD volunteering, bug bounty, and community work with Digital Overdose and Hard Way Hacking and Coding.
+  blurb: Main Hall talk at WICCON in Haarlem on Supabase Row Level Security misconfigurations, access-control failures, and the security research behind the open-source Supabase scanner.
   url: https://wiccon.nl/speakers-2026
+  recording_url: https://youtu.be/H506ZYfhfV0
   image: ""
 
 - event: DEF CON Holland
