@@ -51,9 +51,14 @@
                         <img src="{{ . | relURL }}" alt="{{ $eng.event }}" loading="lazy" width="640" height="360">
                     </div>
                     {{ end }}
-                    {{ with $eng.url }}
+                    {{ if or $eng.recording_url $eng.url }}
                     <div class="speaking-card-links">
+                        {{ with $eng.recording_url }}
+                        <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ watch recording</a>
+                        {{ end }}
+                        {{ with $eng.url }}
                         <a href="{{ . }}" class="post-file-action" target="_blank" rel="noopener noreferrer">→ open source</a>
+                        {{ end }}
                     </div>
                     {{ end }}
                 </article>
