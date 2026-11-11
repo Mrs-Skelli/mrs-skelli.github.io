@@ -27,6 +27,6 @@ My name is Mrs Skelli. Welcome to my infosec blog and personal website. This is 
 
 ## Speaking Engagements and Contributions
 
-- [InfoSecGirls Ranchi Meetup Speaker](https://www.youtube.com/watch?v=sCYspE6yvp4&pp=ygUYSW5mb3NlY0dpcmxzIE1lZXQgUmFuY2hp)
-- [RSA Conference](https://www.rsaconference.com/experts/eden-stroet)
-- [InfoSecurity Magazine](https://www.infosecurity-magazine.com/magazine-features/trolling-sexual-harassment-and/)
+My conference talks, meetup sessions, recordings, and community roles are collected on the [Speaking page](/speaking/).
+
+- [InfoSecurity Magazine feature](https://www.infosecurity-magazine.com/magazine-features/trolling-sexual-harassment-and/)
