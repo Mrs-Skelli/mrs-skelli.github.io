@@ -196,6 +196,8 @@ def main() -> int:
         if refresh:
             require("noindex" in robots, f"alias page must be noindex: {page_url}")
             require(len(canonicals) == 1, f"alias page must have one canonical: {page_url}")
+        elif canonicals and not canonicals[0].startswith(BASE_URL):
+            require(False, f"external-canonical page must not be rendered locally: {page_url} -> {canonicals[0]}")
         elif "noindex" not in robots and canonicals and canonicals[0].startswith(BASE_URL):
             require(canonicals[0] in sitemap_set, f"indexable canonical page omitted from sitemap: {page_url}")
 
