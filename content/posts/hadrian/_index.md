@@ -5,10 +5,15 @@ description: "Application security, attack surface management, DevSecOps, and vu
 noindex: false
 sitemap:
   disable: false
+build:
+  render: always
 cascade:
-  noindex: true
-  sitemap:
-    disable: true
+  - build:
+      list: local
+      render: never
+    noindex: true
+    sitemap:
+      disable: true
 ---
 
 Research and writeups from my work at Hadrian Security.
